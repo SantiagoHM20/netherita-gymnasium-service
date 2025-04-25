@@ -15,9 +15,9 @@ import java.util.List;
 @Data
 public class Report {
     @Id
-    private int id;
+    private String id;
     @DBRef
-    private User generatedBy;
+    private User coachId;
     @ElementCollection
     private List<ReportEntry> entries;
     private LocalDate generatedAt;

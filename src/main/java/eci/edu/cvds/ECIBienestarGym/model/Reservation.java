@@ -12,9 +12,9 @@ import java.time.LocalDateTime;
 @Data
 public class Reservation {
     @Id
-    private int id;
+    private String id;
     @DBRef
-    private int userId;
+    private User userId;
     @DBRef
     private GymSession gymSessionId;
     private LocalDateTime reservationDate;

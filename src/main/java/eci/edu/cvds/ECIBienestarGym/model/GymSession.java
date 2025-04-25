@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Data
 public class GymSession {
     @Id
-    private int id;
+    private String id;
     @DBRef
     private User coachId;
     private LocalDateTime schedule;

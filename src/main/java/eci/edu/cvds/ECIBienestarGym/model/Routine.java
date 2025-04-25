@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 public class Routine {
     @Id
-    private int id;
+    private String id;
     private String routineName;
     private String description;
     @ElementCollection

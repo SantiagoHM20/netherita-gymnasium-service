@@ -7,12 +7,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
-@Tag("Session")
-public class SessionController {
+@Tag("GymSession")
+public class GymSessionController {
 
-    private final GymSessionService sessionService;
+    private final GymSessionService gymSessionService;
 
-    public SessionController(GymSessionService sessionService) {
-        this.sessionService = sessionService;
+    public GymSessionController(GymSessionService gymSessionService) {
+
+        this.gymSessionService = gymSessionService;
     }
 }

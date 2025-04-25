@@ -14,9 +14,9 @@ import java.util.List;
 @Data
 public class PhysicalProgress {
     @Id
-    private int id;
+    private String id;
     @DBRef
-    private int userId;
+    private User userId;
     @DBRef
     private Routine routine;
     private String goal;
