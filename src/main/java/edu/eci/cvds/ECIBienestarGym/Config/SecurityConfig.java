@@ -1,4 +1,4 @@
-package edu.eci.cvds.ECIBienestarGym.util;
+package edu.eci.cvds.ECIBienestarGym.Config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
