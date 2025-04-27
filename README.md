@@ -157,3 +157,8 @@ Ir a EciBienestarGymApplication
 
 Colocar en el terminal mvn spring-boot:run
 
+### Link expuesto en azure:
+
+http://netherita-gymnasium-service-d8hvgjameybudsh3.canadacentral-01.azurewebsites.net/
+
+
