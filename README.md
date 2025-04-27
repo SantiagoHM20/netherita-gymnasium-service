@@ -3,15 +3,11 @@ BackEnd del componente de Gimnasio del proyecto ECIBienestar
 
 ### Tecnologias
 
-MongoDB
-
-Azure DevOps (CI/CD)
-
-Java 17
-
-SpringBoot
-
-Spring Data MongoDB
+Lenguaje: Java 17
+Construcción: Apache Maven 3.9.x.
+Framework: SpringBoot 3.3.4.
+Despliegue: AzureDevops.
+Base de Datos: MongoDB.
 
 ### Módulo de Gestión de Gimnasio
 
@@ -143,4 +139,21 @@ Get / getUsersByRole: Obtener el usuario segun su rol
 Get / getUsersByRegistrationDate: Obtener el usuario segun su fechya de registro
 (Entrada: date, Salida: Usuarios segun su fecha de registro)
  
+## Como ejecutar el proyecto
+
+1: Clonar repositorio
+
+git clone https://github.com/ECIBienestar/netherita-gymnasium-service.git
+
+cd ECIBienestar
+
+2 Correr poryecto con mvn 
+
+mvn clean install
+
+3: Iniciar el back:
+
+Ir a EciBienestarGymApplication
+
+Colocar en el terminal mvn spring-boot:run
 
