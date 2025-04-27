@@ -109,6 +109,9 @@ respectivos endpoints.
 | `GET /getUsersByRole` | Obtener usuario por rol | role | Usuarios según rol |
 | `GET /getUsersByRegistrationDate` | Obtener usuario por fecha de registro | date | Usuarios según fecha |
 
+### Estructura del proyecto
+
+![image](assets/Arbol.png)
  
 ## Como ejecutar el proyecto
 
