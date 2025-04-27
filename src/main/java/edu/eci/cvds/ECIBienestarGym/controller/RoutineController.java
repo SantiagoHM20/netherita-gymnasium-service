@@ -56,7 +56,7 @@ public class RoutineController {
 
     @Operation(summary = "Obtener rutinas por lista de ejercicios")
     @ApiResponse(responseCode = "200", description = "Rutinas encontradas que contienen los ejercicios especificados")
-    @PostMapping("/exercises")
+    @GetMapping("/exercises")
     public List<Routine> getRoutinesByExercises(@RequestBody List<Exercise> exercises) {
         return routineService.getRoutinesByExercises(exercises);
     }
