@@ -3,6 +3,7 @@ package edu.eci.cvds.ECIBienestarGym.controller;
 import edu.eci.cvds.ECIBienestarGym.model.GymSession;
 import edu.eci.cvds.ECIBienestarGym.model.User;
 import edu.eci.cvds.ECIBienestarGym.service.GymSessionService;
+import edu.eci.cvds.ECIBienestarGym.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -13,11 +14,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/gym-sessions")
-@RequiredArgsConstructor
+
 @Tag(name = "Gym Sessions", description = "Operaciones relacionadas con las sesiones de gimnasio")
 public class GymSessionController {
 
     private final GymSessionService gymSessionService;
+
+    public GymSessionController(GymSessionService gymSessionService){
+        this.gymSessionService = gymSessionService;
+    }
 
     @GetMapping("/")
     @Operation(summary = "Obtener todas las sesiones de gimnasio")
@@ -35,7 +40,7 @@ public class GymSessionController {
     @Operation(summary = "Obtener sesiones de gimnasio por ID de entrenador")
     public List<GymSession> getGymSessionsByCoachId(@PathVariable String coachId) {
         User coach = new User();
-        coach.setId(coachId); // O usa tu constructor adecuado si tienes
+        coach.setId(coachId);
         return gymSessionService.getGymSessionsByCoachId(coach);
     }
 

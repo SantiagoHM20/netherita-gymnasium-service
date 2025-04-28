@@ -3,6 +3,7 @@ package edu.eci.cvds.ECIBienestarGym.controller;
 import edu.eci.cvds.ECIBienestarGym.model.PhysicalProgress;
 import edu.eci.cvds.ECIBienestarGym.model.User;
 import edu.eci.cvds.ECIBienestarGym.service.PhysicalProgressService;
+import edu.eci.cvds.ECIBienestarGym.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -13,11 +14,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/physical-progress")
-@RequiredArgsConstructor
 @Tag(name = "Physical Progress", description = "Operaciones relacionadas con el progreso físico")
 public class PhysicalProgressController {
 
     private final PhysicalProgressService physicalProgressService;
+
+    public PhysicalProgressController(PhysicalProgressService physicalProgressService){
+        this.physicalProgressService = physicalProgressService;
+    }
 
     @GetMapping
     @Operation(summary = "Obtener todos los registros de progreso físico")
