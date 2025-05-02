@@ -28,10 +28,4 @@ public class Report {
     private LocalDate generatedAt;
     private ReportType type;
     private String description;
-
-
-
-
-
-
 }

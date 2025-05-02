@@ -7,10 +7,7 @@ import edu.eci.cvds.ECIBienestarGym.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,6 +22,14 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
+
+
+     @PostMapping
+     @Operation(summary = "Crear un nuevo usuario", description = "Crea un nuevo usuario en el sistema")
+     public User createUser(@RequestBody User user) {
+     return userService.createUser(user);
+     }
+
 
     @GetMapping
     @Operation(summary = "Obtener todos los usuarios", description = "Retorna una lista con todos los usuarios registrados")
