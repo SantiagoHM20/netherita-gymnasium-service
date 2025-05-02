@@ -46,6 +46,12 @@ jobs:
         with:
           name: java-app
 
+      - name: Debug secrets (TEMPORAL)
+        run: |
+          echo "Client ID: ${{ secrets.AZUREAPPSERVICE_CLIENTID_7499F8B0F62C46EB96544339EB30C3AA }}"
+          echo "Tenant ID: ${{ secrets.AZUREAPPSERVICE_TENANTID_4E302D64281944B59216BD8A997A215E }}"
+          echo "Subscription ID: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_63D16E1D2D35495ABF1C1493B6CF93C9 }}"
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
