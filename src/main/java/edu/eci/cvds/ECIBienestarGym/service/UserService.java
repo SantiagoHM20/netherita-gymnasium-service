@@ -16,6 +16,10 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    public User createUser(User user) {
+
+    }
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -35,5 +39,7 @@ public class UserService {
     public List<User> getUsersByRegistrationDate(LocalDate registrationDate) {
         return userRepository.findByRegistrationDate(registrationDate);
     }
+
+
 }
 
