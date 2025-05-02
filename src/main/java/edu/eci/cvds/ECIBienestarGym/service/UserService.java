@@ -17,7 +17,7 @@ public class UserService {
     }
 
     public User createUser(User user) {
-
+    return null;
     }
 
     public List<User> getAllUsers() {
