@@ -61,6 +61,5 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'netherita-gymnasium-service-test'
-          slot-name: 'Production'
           package: '*.jar'
           
