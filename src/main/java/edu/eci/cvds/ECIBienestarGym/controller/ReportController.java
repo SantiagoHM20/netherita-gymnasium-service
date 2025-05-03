@@ -14,11 +14,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/reports")
-@RequiredArgsConstructor
 @Tag(name = "Reports", description = "Operaciones relacionadas con los reportes")
 public class ReportController {
 
     private final ReportService reportService;
+
+    public ReportController(ReportService reportService){
+        this.reportService = reportService;
+    }
 
     @GetMapping
     @Operation(summary = "Obtener todos los reportes")

@@ -1,4 +1,4 @@
-package edu.eci.cvds.ECIBienestarGym.util;
+package edu.eci.cvds.ECIBienestarGym.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,8 +15,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .requestMatchers("/**").permitAll() 
+                        .requestMatchers("/api/register", "/api/login", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-ui/index.html").permitAll()
+                        .requestMatchers("/**").permitAll()
+
                 )
                 .csrf(csrf -> csrf.disable())
                 .build();
