@@ -12,10 +12,10 @@ import java.util.List;
 @NoArgsConstructor
 public class RoutineDTO {
     private String id;
-    private String routineName;
+    private String name;
     private String description;
     private List<ExerciseDTO> exercises;
     private int durationDays;
-    private DifficultyLevel difficult;
+    private DifficultyLevel difficulty;
 }
 

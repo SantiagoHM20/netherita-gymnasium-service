@@ -18,23 +18,6 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User createUser(UserDTO userDTO){
-        if(userDTO.getName() == null || userDTO.getEmail() == null || userDTO.getPassword() == null || userDTO.getRole() == null) {
-            throw new IllegalArgumentException();
-        }
-        if(userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
-            throw new IllegalArgumentException();
-        }else{
-            User user = new User();
-            user.setName(userDTO.getName());
-            user.setEmail(userDTO.getEmail());
-            user.setPassword(userDTO.getPassword());
-            user.setRole(userDTO.getRole());
-
-            return userRepository.save(user);
-        }
-    }
-
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -51,13 +34,25 @@ public class UserService {
         return userRepository.findByRole(role);
     }
 
-    public List<User> getUsersByRegistrationDate(LocalDate registrationDate) {
-        return userRepository.findByRegistrationDate(registrationDate);
-    }
+    public List<User> getUsersByRegistrationDate(LocalDate registrationDate) {return userRepository.findByRegistrationDate(registrationDate);}
 
+    public User getUsersById(String id) {return userRepository.findById(id).orElse(null);}
 
-    public User getUsersById(String id) {
-        return userRepository.findById(id).orElse(null);
+    public User createUser(UserDTO userDTO){
+        if(userDTO.getName() == null || userDTO.getEmail() == null || userDTO.getPassword() == null || userDTO.getRole() == null) {
+            throw new IllegalArgumentException();
+        }
+        if(userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
+            throw new IllegalArgumentException();
+        }else{
+            User user = new User();
+            user.setName(userDTO.getName());
+            user.setEmail(userDTO.getEmail());
+            user.setPassword(userDTO.getPassword());
+            user.setRole(userDTO.getRole());
+
+            return userRepository.save(user);
+        }
     }
 
     public User updateUser(String id, UserDTO userDTO) {

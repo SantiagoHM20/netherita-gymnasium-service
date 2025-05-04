@@ -18,10 +18,10 @@ import java.util.List;
 public class Routine {
     @Id
     private String id;
-    private String routineName;
+    private String name;
     private String description;
     @Field("exercises")
     private List<Exercise> exercises;
     private int durationDays;
-    private DifficultyLevel difficult;
+    private DifficultyLevel difficulty;
 }

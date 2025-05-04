@@ -1,5 +1,6 @@
 package edu.eci.cvds.ECIBienestarGym.controller;
 
+import edu.eci.cvds.ECIBienestarGym.dto.ReservationDTO;
 import edu.eci.cvds.ECIBienestarGym.enums.Status;
 import edu.eci.cvds.ECIBienestarGym.model.ApiResponse;
 import edu.eci.cvds.ECIBienestarGym.model.GymSession;
@@ -81,5 +82,34 @@ public class ReservationController {
     public ResponseEntity<ApiResponse<List<Reservation>>> getReservationsByState(
             @Parameter(description = "Estado de la reserva") @PathVariable Status status) {
         return ResponseEntity.ok(new ApiResponse<>(true, "Reservas encontradas por estado", reservationService.getReservationsByState(status)));
+    }
+
+    @Operation(summary = "Crear una nueva reserva", description = "Crea una nueva reserva en el sistema.")
+    @PostMapping
+    @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Reservation>> createReservation(
+            @Parameter(description = "Detalles de la reserva") @RequestBody ReservationDTO reservation) {
+        Reservation createdReservation = reservationService.createReservation(reservation);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(true, "Reserva creada exitosamente", createdReservation));
+    }
+
+    @Operation(summary = "Actualizar una reserva existente", description = "Actualiza los detalles de una reserva existente.")
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Reservation>> updateReservation(
+            @Parameter(description = "ID de la reserva a actualizar") @PathVariable String id,
+            @Parameter(description = "Detalles actualizados de la reserva") @RequestBody ReservationDTO reservation) {
+        Reservation updatedReservation = reservationService.updateReservation(id, reservation);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Reserva actualizada exitosamente", updatedReservation));
+    }
+
+    @Operation(summary = "Eliminar una reserva", description = "Elimina una reserva del sistema.")
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Void>> deleteReservation(
+            @Parameter(description = "ID de la reserva a eliminar") @PathVariable String id) {
+        reservationService.deleteReservation(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,5 +1,6 @@
 package edu.eci.cvds.ECIBienestarGym.controller;
 
+import edu.eci.cvds.ECIBienestarGym.dto.RoutineDTO;
 import edu.eci.cvds.ECIBienestarGym.embeddables.Exercise;
 import edu.eci.cvds.ECIBienestarGym.enums.DifficultyLevel;
 import edu.eci.cvds.ECIBienestarGym.model.ApiResponse;
@@ -70,5 +71,33 @@ public class RoutineController {
     public ResponseEntity<ApiResponse<List<Routine>>> getRoutinesByExercises(
             @Parameter(description = "Lista de ejercicios") @RequestBody List<Exercise> exercises) {
         return ResponseEntity.ok(new ApiResponse<>(true, "Rutinas encontradas", routineService.getRoutinesByExercises(exercises)));
+    }
+
+    @Operation(summary = "Crear rutina", description = "Crea una nueva rutina de entrenamiento.")
+    @PostMapping
+    @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Routine>> createRoutine(@RequestBody RoutineDTO routine) {
+        Routine createdRoutine = routineService.createRoutine(routine);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(true, "Rutina creada exitosamente", createdRoutine));
+    }
+
+    @Operation(summary = "Actualizar rutina", description = "Actualiza una rutina existente.")
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Routine>> updateRoutine(
+            @Parameter(description = "ID de la rutina a actualizar", required = true) @PathVariable String id,
+            @RequestBody RoutineDTO routine) {
+        Routine updatedRoutine = routineService.updateRoutine(id, routine);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Rutina actualizada exitosamente", updatedRoutine));
+    }
+
+    @Operation(summary = "Eliminar rutina", description = "Elimina una rutina existente.")
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Void>> deleteRoutine(
+            @Parameter(description = "ID de la rutina a eliminar", required = true) @PathVariable String id) {
+        routineService.deleteRoutine(id);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Rutina eliminada exitosamente", null));
     }
 }

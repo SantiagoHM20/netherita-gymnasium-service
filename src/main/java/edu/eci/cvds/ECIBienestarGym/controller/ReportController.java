@@ -1,5 +1,6 @@
 package edu.eci.cvds.ECIBienestarGym.controller;
 
+import edu.eci.cvds.ECIBienestarGym.dto.ReportDTO;
 import edu.eci.cvds.ECIBienestarGym.enums.ReportType;
 import edu.eci.cvds.ECIBienestarGym.model.ApiResponse;
 import edu.eci.cvds.ECIBienestarGym.model.Report;
@@ -79,4 +80,33 @@ public class ReportController {
         List<Report> reports = reportService.getReportsByType(type);
         return ResponseEntity.ok(new ApiResponse<>(true, "Reportes encontrados por tipo", reports));
     }
+
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN', 'TEACHER')")
+    @Operation(summary = "Crear un nuevo reporte")
+    public ResponseEntity<ApiResponse<Report>> createReport(@RequestBody ReportDTO report) {
+        Report createdReport = reportService.createReport(report);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(true, "Reporte creado exitosamente", createdReport));
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Actualizar un reporte existente")
+    public ResponseEntity<ApiResponse<Report>> updateReport(
+            @Parameter(description = "ID del reporte a actualizar", example = "abc123") @PathVariable String id,
+            @RequestBody ReportDTO report) {
+        Report updatedReport = reportService.updateReport(id, report);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Reporte actualizado exitosamente", updatedReport));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Eliminar un reporte existente")
+    public ResponseEntity<ApiResponse<Void>> deleteReport(
+            @Parameter(description = "ID del reporte a eliminar", example = "abc123") @PathVariable String id) {
+        reportService.deleteReport(id);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Reporte eliminado exitosamente", null));
+    }
+
 }

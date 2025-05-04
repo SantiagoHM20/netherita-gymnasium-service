@@ -15,11 +15,11 @@ public interface RoutineRepository extends MongoRepository<Routine, String> {
 
 
 
-    List<Routine> findByRoutineName(String routineName);
+    List<Routine> findByName(String routineName);
 
     List<Routine> findByExercises(List<Exercise> exercises);
 
-    List<Routine> findByDifficult(DifficultyLevel difficult);
+    List<Routine> findByDifficulty(DifficultyLevel difficult);
 
 
 
