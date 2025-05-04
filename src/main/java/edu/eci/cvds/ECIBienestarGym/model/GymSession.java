@@ -8,7 +8,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Document(collection = "gymSessions")
 @Data
@@ -19,7 +20,9 @@ public class GymSession {
     private String id;
     @DBRef
     private User coachId;
-    private LocalDateTime schedule;
+    private LocalDate date;
+    private LocalTime startTime;
+    private LocalTime endTime;
     private int capacity;
     private int currentReservations;
 }

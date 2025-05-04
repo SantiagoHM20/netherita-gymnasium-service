@@ -15,10 +15,6 @@ public interface PhysicalProgressRepository extends MongoRepository<PhysicalProg
 
     List<PhysicalProgress> findByUserId(User userId);
     List<PhysicalProgress> findByRegistrationDate(LocalDate registrationDate);
-
-
-
-
-
-
+    List<PhysicalProgress> findByUserIdAndRegistrationDate(User userId, LocalDate registrationDate);
+    List<PhysicalProgress> findByUserIdAndRegistrationDateBetween(User userId, LocalDate startDate, LocalDate endDate);
 }

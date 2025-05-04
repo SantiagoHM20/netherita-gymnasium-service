@@ -1,5 +1,7 @@
 package edu.eci.cvds.ECIBienestarGym.service;
 
+import edu.eci.cvds.ECIBienestarGym.dto.ExerciseDTO;
+import edu.eci.cvds.ECIBienestarGym.dto.RoutineDTO;
 import edu.eci.cvds.ECIBienestarGym.embeddables.Exercise;
 import edu.eci.cvds.ECIBienestarGym.enums.DifficultyLevel;
 import edu.eci.cvds.ECIBienestarGym.model.Routine;
@@ -20,21 +22,40 @@ public class RoutineService {
         return routineRepository.findAll();
     }
 
-    public Routine getRoutineById(String id){
-        return routineRepository.findById(id).orElseThrow(() -> new RuntimeException("No se encontró la rutina"));
+    public Routine getRoutineById(String id){return routineRepository.findById(id).orElseThrow(() -> new RuntimeException("No se encontró la rutina"));}
+
+    public List<Routine> getRoutinesByName(String name){return  routineRepository.findByName(name);}
+
+    public List<Routine> getRoutinesByExercises(List<Exercise> exercises) {return routineRepository.findByExercises(exercises);}
+
+    public List<Routine> getRoutinesByDifficulty(DifficultyLevel difficultyLevel) {return routineRepository.findByDifficulty(difficultyLevel);}
+
+     public Routine createRoutine(RoutineDTO routineDTO) {
+        Routine routine = new Routine();
+        routine.setName(routineDTO.getName());
+        routine.setDescription(routineDTO.getDescription());
+        routine.setDifficulty(routineDTO.getDifficulty());
+        routine.setExercises(mapToExercises(routineDTO.getExercises()));
+        return routineRepository.save(routine);
     }
 
-    public List<Routine> getRoutinesByName(String name){
-        return  routineRepository.findByRoutineName(name);
+    private List<Exercise> mapToExercises(List<ExerciseDTO> exerciseDTOs) {
+        return exerciseDTOs.stream()
+                .map(dto -> new Exercise(dto.getName(), dto.getRepetitions(), dto.getSets(), dto.getDuration(), dto.getType()))
+                .toList();
     }
 
-    public List<Routine> getRoutinesByExercises(List<Exercise> exercises) {
-        return routineRepository.findByExercises(exercises);
+     public Routine updateRoutine(String id, RoutineDTO routineDTO) {
+        Routine routine = routineRepository.findById(id).orElseThrow(() -> new RuntimeException("No se encontró la rutina"));
+        routine.setName(routineDTO.getName());
+        routine.setDescription(routineDTO.getDescription());
+        routine.setDifficulty(routineDTO.getDifficulty());
+        routine.setExercises(mapToExercises(routineDTO.getExercises()));
+        return routineRepository.save(routine);
     }
 
-
-    public List<Routine> getRoutinesByDifficulty(DifficultyLevel difficultyLevel) {
-        return routineRepository.findByDifficult(difficultyLevel);
+    public void deleteRoutine(String id) {
+        Routine routine = routineRepository.findById(id).orElseThrow(() -> new RuntimeException("No se encontró la rutina"));
+        routineRepository.delete(routine);
     }
-
 }

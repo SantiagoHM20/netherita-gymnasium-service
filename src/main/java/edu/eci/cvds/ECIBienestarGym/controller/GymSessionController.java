@@ -1,20 +1,27 @@
 package edu.eci.cvds.ECIBienestarGym.controller;
 
+import edu.eci.cvds.ECIBienestarGym.dto.GymSessionDTO;
+import edu.eci.cvds.ECIBienestarGym.model.ApiResponse;
 import edu.eci.cvds.ECIBienestarGym.model.GymSession;
 import edu.eci.cvds.ECIBienestarGym.model.User;
 import edu.eci.cvds.ECIBienestarGym.service.GymSessionService;
 import edu.eci.cvds.ECIBienestarGym.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/gym-sessions")
-
 @Tag(name = "Gym Sessions", description = "Operaciones relacionadas con las sesiones de gimnasio")
 public class GymSessionController {
 
@@ -25,35 +32,115 @@ public class GymSessionController {
     }
 
     @GetMapping("/")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     @Operation(summary = "Obtener todas las sesiones de gimnasio")
-    public List<GymSession> getAllGymSessions() {
-        return gymSessionService.getAllGymSessions();
+    public ResponseEntity<ApiResponse<List<GymSession>>> getAllGymSessions() {
+        List<GymSession> sessions = gymSessionService.getAllGymSessions();
+        return ResponseEntity.ok(new ApiResponse<>(true, "Sesiones de gimnasio obtenidas", sessions));
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     @Operation(summary = "Obtener una sesión de gimnasio por su ID")
-    public GymSession getGymSessionById(@PathVariable String id) {
-        return gymSessionService.getGymSessionById(id);
+    public ResponseEntity<ApiResponse<GymSession>> getGymSessionById(
+            @Parameter(description = "ID de la sesión", example = "sess123") @PathVariable String id) {
+        GymSession session = gymSessionService.getGymSessionById(id);
+        if (session == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>(false, "Sesión de gimnasio no encontrada", null));
+        }
+        return ResponseEntity.ok(new ApiResponse<>(true, "Sesión de gimnasio encontrada", session));
     }
 
     @GetMapping("/coach/{coachId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     @Operation(summary = "Obtener sesiones de gimnasio por ID de entrenador")
-    public List<GymSession> getGymSessionsByCoachId(@PathVariable String coachId) {
+    public ResponseEntity<ApiResponse<List<GymSession>>> getGymSessionsByCoachId(
+            @Parameter(description = "ID del entrenador", example = "coach456") @PathVariable String coachId) {
         User coach = new User();
         coach.setId(coachId);
-        return gymSessionService.getGymSessionsByCoachId(coach);
+        List<GymSession> sessions = gymSessionService.getGymSessionsByCoachId(coach);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Sesiones de gimnasio del entrenador obtenidas", sessions));
     }
 
     @GetMapping("/capacity/{capacity}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     @Operation(summary = "Obtener sesiones de gimnasio por capacidad")
-    public List<GymSession> getGymSessionsByCapacity(@PathVariable int capacity) {
-        return gymSessionService.getGymSessionsByCapacity(capacity);
+    public ResponseEntity<ApiResponse<List<GymSession>>> getGymSessionsByCapacity(
+            @Parameter(description = "Capacidad de la sesión", example = "30") @PathVariable int capacity) {
+        List<GymSession> sessions = gymSessionService.getGymSessionsByCapacity(capacity);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Sesiones de gimnasio con capacidad " + capacity + " obtenidas", sessions));
     }
 
-    @GetMapping("/schedule")
-    @Operation(summary = "Obtener sesiones de gimnasio por horario")
-    public List<GymSession> getGymSessionsBySchedule(@RequestParam("dateTime") String dateTime) {
-        LocalDateTime schedule = LocalDateTime.parse(dateTime);
-        return gymSessionService.getGymSessionsBySchedule(schedule);
+    @GetMapping("/date/{date}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
+    @Operation(summary = "Obtener sesiones de gimnasio por fecha")
+    public ResponseEntity<ApiResponse<List<GymSession>>> getGymSessionsByDate(
+            @Parameter(description = "Fecha de la sesión", example = "2023-10-01T10:00:00") @PathVariable LocalDateTime date) {
+        List<GymSession> sessions = gymSessionService.getGymSessionsByDate(date);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Sesiones de gimnasio en la fecha " + date + " obtenidas", sessions));
+    }
+
+    @GetMapping("/date/{date}/time-range")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
+    @Operation(summary = "Obtener sesiones de gimnasio por fecha y rango de tiempo")
+    public ResponseEntity<ApiResponse<List<GymSession>>> getGymSessionsByDateAndTime(
+            @Parameter(description = "Fecha de la sesión", example = "2023-10-01") @PathVariable LocalDate date,
+            @Parameter(description = "Hora de inicio en formato ISO (HH:mm:ss)", example = "10:00:00") @RequestParam("startTime") String startTime,
+            @Parameter(description = "Hora de fin en formato ISO (HH:mm:ss)", example = "12:00:00") @RequestParam("endTime") String endTime) {
+        LocalTime startTimeParsed = LocalTime.parse(startTime);
+        LocalTime endTimeParsed = LocalTime.parse(endTime);
+        List<GymSession> sessions = gymSessionService.getGymSessionsByDateAndTime(date, startTimeParsed, endTimeParsed);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Sesiones de gimnasio obtenidas por fecha y rango de tiempo", sessions));
+    }
+
+    @GetMapping("/time-range")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
+    @Operation(summary = "Obtener sesiones de gimnasio por rango de tiempo")
+    public ResponseEntity<ApiResponse<List<GymSession>>> getGymSessionsByStartTimeAndEndTime(
+            @Parameter(description = "Hora de inicio en formato ISO (HH:mm:ss)", example = "10:00:00") @RequestParam("startTime") String startTime,
+            @Parameter(description = "Hora de fin en formato ISO (HH:mm:ss)", example = "12:00:00") @RequestParam("endTime") String endTime) {
+        List<GymSession> sessions = gymSessionService.getGymSessionsByStartTimeAndEndTime(
+                LocalTime.parse(startTime), LocalTime.parse(endTime));
+        return ResponseEntity.ok(new ApiResponse<>(true, "Sesiones de gimnasio obtenidas por rango de tiempo", sessions));
+    }
+
+    @GetMapping("/end-time/{endTime}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
+    @Operation(summary = "Obtener sesiones de gimnasio por hora de fin")
+    public ResponseEntity<ApiResponse<List<GymSession>>> getGymSessionsByEndTime(
+            @Parameter(description = "Hora de fin en formato ISO (HH:mm:ss)", example = "12:00:00") @PathVariable String endTime) {
+        List<GymSession> sessions = gymSessionService.getGymSessionsByEndTime(LocalTime.parse(endTime));
+        return ResponseEntity.ok(new ApiResponse<>(true, "Sesiones de gimnasio obtenidas por hora de fin", sessions));
+    }
+
+    @PostMapping("/")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    @Operation(summary = "Crear una nueva sesión de gimnasio")
+    public ResponseEntity<ApiResponse<GymSession>> createGymSession(
+            @Parameter(description = "Detalles de la sesión de gimnasio") @RequestBody GymSessionDTO gymSession) {
+        GymSession createdSession = gymSessionService.createGymSession(gymSession);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(true, "Sesión de gimnasio creada", createdSession));
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    @Operation(summary = "Actualizar una sesión de gimnasio")
+    public ResponseEntity<ApiResponse<GymSession>> updateGymSession(
+            @Parameter(description = "ID de la sesión", example = "sess123") @PathVariable String id,
+            @Parameter(description = "Detalles actualizados de la sesión de gimnasio") @RequestBody GymSessionDTO gymSession) {
+        GymSession updatedSession = gymSessionService.updateGymSession(id, gymSession);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Sesión de gimnasio actualizada", updatedSession));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    @Operation(summary = "Eliminar una sesión de gimnasio")
+    public ResponseEntity<ApiResponse<Void>> deleteGymSession(
+            @Parameter(description = "ID de la sesión", example = "sess123") @PathVariable String id) {
+        gymSessionService.deleteGymSession(id);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Sesión de gimnasio eliminada", null));
     }
 }
+
