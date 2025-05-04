@@ -54,8 +54,10 @@ public class ReservationController {
     @GetMapping("/user/{userId}")
     @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
     public ResponseEntity<ApiResponse<List<Reservation>>> getReservationsByUserId(
-            @Parameter(description = "ID del usuario") @PathVariable User userId) {
-        return ResponseEntity.ok(new ApiResponse<>(true, "Reservas del usuario encontradas", reservationService.getReservationsByUserId(userId)));
+            @Parameter(description = "ID del usuario") @PathVariable String userId) {
+        User user = new User();
+        user.setId(userId); // Crear un objeto User con el ID proporcionado
+        return ResponseEntity.ok(new ApiResponse<>(true, "Reservas del usuario encontradas", reservationService.getReservationsByUserId(user)));
     }
 
     @Operation(summary = "Obtener reservas por sesión de gimnasio", description = "Devuelve las reservas asociadas a una sesión específica del gimnasio.")
