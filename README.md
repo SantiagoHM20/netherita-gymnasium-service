@@ -45,7 +45,22 @@ estudiantes.
 Las funcionalidades estan repartidos en difentes controladores con sus 
 respectivos endpoints.
 
-## Endpoints expuestos:
+## Endpoints expuestos (Swagger):
+
+![image](assets/PhysicalProgressSwagger.png)
+
+![image](assets/UsersSwagger.png)
+
+![image](assets/GymSessionSwagger.png)
+
+![image](assets/ReservationsSwagger.png)
+
+![image](assets/ReportsSwagger.png)
+
+![image](assets/RoutinesSwagger.png)
+
+
+## Endpoints expuestos (Funcionalidad):
 
 ### GymSessionController:
 
@@ -133,6 +148,15 @@ Colocar en el terminal mvn spring-boot:run
 
 ### Link expuesto en azure:
 
+Producción:
+
+
 http://netherita-gymnasium-service-d8hvgjameybudsh3.canadacentral-01.azurewebsites.net/
+
+
+Pruebas:
+
+
+ netherita-gymnasium-service-test-gcdue7cad9btb3eg.canadacentral-01.azurewebsites.net
 
 
