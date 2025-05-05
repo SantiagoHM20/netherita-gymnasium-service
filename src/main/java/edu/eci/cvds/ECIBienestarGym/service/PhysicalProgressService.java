@@ -58,8 +58,9 @@ public class PhysicalProgressService {
     }
 
     public void deletePhysicalProgress(String id) {
-        PhysicalProgress progress = physicalProgressRepository.findById(id).orElseThrow(() -> new RuntimeException("No se encontró el progreso Físico"));
-        physicalProgressRepository.delete(progress);
+        PhysicalProgress progress = physicalProgressRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("PhysicalProgress not found with id: " + id));
+        physicalProgressRepository.deleteById(id);
     }
 
     private PhysicalProgress mapToPhysicalProgress(PhysicalProgressDTO physicalProgressDTO) {

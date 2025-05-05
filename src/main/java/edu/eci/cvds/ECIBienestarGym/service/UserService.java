@@ -38,21 +38,27 @@ public class UserService {
 
     public User getUsersById(String id) {return userRepository.findById(id).orElse(null);}
 
-    public User createUser(UserDTO userDTO){
-        if(userDTO.getName() == null || userDTO.getEmail() == null || userDTO.getPassword() == null || userDTO.getRole() == null) {
-            throw new IllegalArgumentException();
+    public User createUser(UserDTO userDTO) {
+        if (userDTO.getId() == null || userDTO.getId().isEmpty()) {
+            throw new IllegalArgumentException("User ID cannot be null or empty");
         }
-        if(userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
-            throw new IllegalArgumentException();
-        }else{
-            User user = new User();
-            user.setName(userDTO.getName());
-            user.setEmail(userDTO.getEmail());
-            user.setPassword(userDTO.getPassword());
-            user.setRole(userDTO.getRole());
+        if (userDTO.getName() == null || userDTO.getName().isEmpty()) {
+            throw new IllegalArgumentException("User name cannot be null or empty");
+        }
+        if (userDTO.getEmail() == null || userDTO.getEmail().isEmpty()) {
+            throw new IllegalArgumentException("User email cannot be null or empty");
+        }
+        if (userDTO.getRole() == null) {
+            throw new IllegalArgumentException("User role cannot be null");
+        }
 
-            return userRepository.save(user);
-        }
+        User user = new User();
+        user.setId(userDTO.getId());
+        user.setName(userDTO.getName());
+        user.setEmail(userDTO.getEmail());
+        user.setRole(userDTO.getRole());
+
+        return userRepository.save(user);
     }
 
     public User updateUser(String id, UserDTO userDTO) {
@@ -69,10 +75,14 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void deleteUser(String id){
-        if(!userRepository.existsById(id)){
-            throw new IllegalArgumentException();
+    public void deleteUser(String id) {
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("El Id no puede ser nulo o vacío");
         }
+
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con el id: " + id));
+
         userRepository.deleteById(id);
     }
 }

@@ -48,8 +48,9 @@ public class ReportService {
     }
 
     public void deleteReport(String id) {
-        Report report = reportRepository.findById(id).orElseThrow(() -> new RuntimeException("No se encontró el reporte"));
-        reportRepository.delete(report);
+        reportRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Report not found with id: " + id));
+        reportRepository.deleteById(id);
     }
 
     private Report mapToReport(ReportDTO reportDTO, Report report) {
