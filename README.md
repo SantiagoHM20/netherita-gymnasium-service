@@ -146,7 +146,7 @@ Ir a EciBienestarGymApplication
 
 Colocar en el terminal mvn spring-boot:run
 
-### Link expuesto en azure:
+## Links expuestos en azure:
 
 Producción:
 
@@ -158,5 +158,9 @@ Pruebas:
 
 
  netherita-gymnasium-service-test-gcdue7cad9btb3eg.canadacentral-01.azurewebsites.net
+
+ ## Covertura de pruebas
+
+ ![img](assets/covertura.png)
 
 
