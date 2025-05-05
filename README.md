@@ -47,6 +47,10 @@ respectivos endpoints.
 
 ## Endpoints expuestos (Swagger):
 
+Documentacion con Swagger de los endpoints principales:
+
+https://netherita-gymnasium-service-d8hvgjameybudsh3.canadacentral-01.azurewebsites.net/swagger-ui/index.html
+
 ![image](assets/PhysicalProgressSwagger.png)
 
 ![image](assets/UsersSwagger.png)
@@ -58,7 +62,6 @@ respectivos endpoints.
 ![image](assets/ReportsSwagger.png)
 
 ![image](assets/RoutinesSwagger.png)
-
 
 ## Endpoints expuestos (Funcionalidad):
 
