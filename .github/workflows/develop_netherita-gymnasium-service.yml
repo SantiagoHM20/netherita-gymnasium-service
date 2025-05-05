@@ -1,4 +1,4 @@
-name: Build and deploy JAR app to Azure Web App - netherita-gymnasium-service
+name: CI/CD - netherita-gymnasium-service
 
 on:
   push:
@@ -30,9 +30,26 @@ jobs:
           name: java-app
           path: '${{ github.workspace }}/target/*.jar'
 
-  deploy:
+  test:
     runs-on: windows-latest
     needs: build
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurate JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Run tests
+        run: mvn test
+
+  deploy:
+    runs-on: windows-latest
+    needs: test
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
