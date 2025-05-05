@@ -148,27 +148,6 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			<!-- Plugin de JaCoCo -->
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.12</version>
-				<executions>
-					<!-- Generar el informe después de las pruebas -->
-					<execution>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>report</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 			<!-- Configuración del informe de JaCoCo -->
 			<plugin>
 				<groupId>org.jacoco</groupId>
