@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -24,7 +25,7 @@ public class Report {
     @DBRef
     private User coachId;
     @Field("entries")
-    private List<ReportEntry> entries;
+    private List<ReportEntry> entries = new ArrayList<>();
     private LocalDate generatedAt;
     private ReportType type;
     private String description;

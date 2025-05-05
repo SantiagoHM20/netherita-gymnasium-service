@@ -87,7 +87,8 @@ public class UserController {
     @Operation(summary = "Crear nuevo usuario", description = "Crea un nuevo usuario en el sistema.")
     public ResponseEntity<ApiResponse<User>> createUser(
             @Parameter(description = "Datos del usuario a crear", required = true) @RequestBody UserDTO userDTO) {
-        return ResponseEntity.ok(new ApiResponse<>(true, "Usuario creado", userService.createUser(userDTO)));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(true, "Usuario creado", userService.createUser(userDTO)));
     }
 
     @PutMapping("/{id}")
