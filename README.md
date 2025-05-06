@@ -1,53 +1,84 @@
-# ECIBienestarGym
-BackEnd del componente de Gimnasio del proyecto ECIBienestar
+# ECIBienestarGymService
 
-### Tecnologias
+Gym management microservice for the ECI-Wellness platform. She manages Gym Sessions, Reservations, Physical Routines, Physical Progress and Trainer Reports for wellness services at the Julio Garavito Colombian School of Engineering.
 
-Lenguaje: Java 17
+## Overview
 
-Construcción: Apache Maven 3.9.x.
+This module allows students to book training sessions, design their personalized routines, and track their physical progress in detail.
 
-Framework: SpringBoot 3.3.4.
+With the accompaniment of a coach, users receive feedback on their progress, get recommendations tailored to their goals, and access sessions structured according to their needs.
 
-Despliegue: AzureDevops.
+In addition, coaches can generate individual and group performance reports, as well as reports on sessions, manage routines, and optimize the training experience.
 
-Base de Datos: MongoDB.
+## Technologies
 
-### Módulo de Gestión de Gimnasio
+Java 17
 
-Este módulo permite a los estudiantes reservar sesiones de entrenamiento, diseñar sus rutinas personalizadas y realizar un seguimiento detallado de su progreso físico.
+Apache Maven 3.9.x.
 
-Con el acompañamiento de un profesor, los usuarios reciben comentarios sobre su evolución, obtienen recomendaciones adaptadas a sus objetivos y acceden a sesiones estructuradas según sus necesidades. 
+SpringBoot 3.3.4.
 
-Además, los entrenadores pueden generar reportes de desempeño individuales y grupales, así como reportes sobre sesiones, gestionar rutinas y optimizar la experiencia de entrenamiento.
+Maven
 
-### Funcion del modulo
+Lombok
 
-Para la funcionalidad del modulo estamos usando el patron de diseño de Modelo Vista Controlador,
-usamos el modulo 6 de gestion de usuarios para manejar que funciones tiene el rol de administrador, entrenador y de 
-estudiantes.
+JaCoCo
 
-### Diagrama de datos:
+SonarCloud
+
+AzureDevops.
+
+MongoDB.
+
+##  Project Structure
+
+![image](assets/Arbol.png)
+
+## How to run
+
+1: Clone this repository
+
+git clone https://github.com/ECIBienestar/netherita-gymnasium-service.git
+
+_cd ECIBienestar_
+
+2: Run Project with mvn 
+
+mvn clean install
+
+3: Run with SpringBoot:
+
+Go to EciBienestarGymApplication
+
+type _mvn spring-boot:run_ in terminal
+
+
+## Diagrams
+
+### Data:
 
 ![image](assets/Diagrama%20de%20datps.png)
 
-### Diagrama de clases
+### Clases
 
 ![image](assets/Diagrama%20de%20clases.png)
 
-### Diagrama de componentes
+### Components
 
 ![image](assets/Diagrama%20de%20componentes.png)
 
+### Architecture
 
-### Funcionalidades
 
-Las funcionalidades estan repartidos en difentes controladores con sus 
-respectivos endpoints.
 
-## Endpoints expuestos (Swagger):
 
-Documentacion con Swagger de los endpoints principales:
+## Functionalities
+
+The functionalities are distributed across different controllers with their respective endpoints.
+
+## Endpoints (Swagger):
+
+Swagger documentation of the main endpoints:
 
 https://netherita-gymnasium-service-d8hvgjameybudsh3.canadacentral-01.azurewebsites.net/swagger-ui/index.html
 
@@ -63,109 +94,149 @@ https://netherita-gymnasium-service-d8hvgjameybudsh3.canadacentral-01.azurewebsi
 
 ![image](assets/RoutinesSwagger.png)
 
-## Endpoints expuestos (Funcionalidad):
+## Endpoints (Functionalities):
 
 ### GymSessionController:
 
-| **Endpoint** | **Descripción** | **Entrada** | **Salida** |
-|:-------------|:----------------|:------------|:-----------|
-| `GET /getAllGymSessions` | Obtener todas las sesiones del gimnasio | - | Todas las sesiones |
-| `GET /getGymSessionsById` | Obtener la sesión según su ID | id | Sesión correspondiente |
-| `GET /getGymSessionByCoachId` | Obtener sesiones según el coach | coach | Sesiones del coach |
-| `GET /getGymSessionByCapacity` | Obtener sesiones según capacidad | capacity | Sesiones filtradas por capacidad |
-| `GET /getGymSessionsBySchedule` | Obtener sesiones según fecha | schedule | Sesiones en esa fecha |
+| **Endpoint** | **Description** | **Input** | **Output** |
+|:-------------|:----------------|:----------|:-----------|
+| `GET /api/gym-sessions` | Retrieve all gym sessions | - | All sessions |
+| `GET /api/gym-sessions/{id}` | Retrieve a gym session by ID | id | Session by ID |
+| `GET /api/gym-sessions/coach/{coachId}` | Retrieve sessions by coach ID | coachId | Sessions by coach |
+| `GET /api/gym-sessions/capacity/{capacity}` | Retrieve sessions by capacity | capacity | Filtered sessions |
+| `GET /api/gym-sessions/date/{date}` | Retrieve sessions by date | date | Sessions by date |
+| `GET /api/gym-sessions/date/{date}/time-range` | Retrieve sessions by date and time range | date | Sessions by date and time range |
+| `GET /api/gym-sessions/end-time/{endTime}` | Retrieve sessions by end time | endTime | Sessions by end time |
+| `GET /api/gym-sessions/time-range` | Retrieve sessions within a time range | - | Sessions by time range |
+| `POST /api/gym-sessions` | Create a new gym session | GymSession | Created session |
+| `PUT /api/gym-sessions/{id}` | Update a gym session | id, GymSession | Updated session |
+| `DELETE /api/gym-sessions/{id}` | Delete a gym session | id | Deleted status |
 
-### PhysicalProgressControler:
+### PhysicalProgressController:
 
-| **Endpoint** | **Descripción** | **Entrada** | **Salida** |
-|:-------------|:----------------|:------------|:-----------|
-| `GET /getAllPhysicalProgress` | Obtener todos los progresos físicos | - | Todos los progresos |
-| `GET /getPhysicalProgressById` | Obtener progreso por ID | id | Progreso correspondiente |
-| `GET /getPhysicalProgressByUserId` | Obtener progreso según usuario | user | Progresos del usuario |
-| `GET /getPhysicalProgressByRegistrationDate` | Obtener progresos por fecha | date | Progresos según fecha |
+| **Endpoint** | **Description** | **Input** | **Output** |
+|:-------------|:----------------|:----------|:-----------|
+| `GET /api/physical-progress` | Retrieve all physical progress records | - | All progress records |
+| `GET /api/physical-progress/{id}` | Retrieve a progress record by ID | id | Progress by ID |
+| `GET /api/physical-progress/user/{userId}` | Retrieve progress by user ID | userId | User's progress |
+| `GET /api/physical-progress/user/{userId}/date` | Retrieve progress by user ID and date | userId, date | Progress by user and date |
+| `GET /api/physical-progress/user/{userId}/date-range` | Retrieve progress by user ID and date range | userId, date range | Progress by range |
+| `GET /api/physical-progress/date` | Retrieve progress by date | date | Progress by date |
+| `POST /api/physical-progress` | Create a new progress record | PhysicalProgress | Created progress |
+| `PUT /api/physical-progress/{id}` | Update a progress record | id, PhysicalProgress | Updated progress |
+| `DELETE /api/physical-progress/{id}` | Delete a progress record | id | Deleted status |
 
-### ReportController:
+### UserController:
 
-| **Endpoint** | **Descripción** | **Entrada** | **Salida** |
-|:-------------|:----------------|:------------|:-----------|
-| `GET /getAllReport` | Obtener todos los reportes | - | Todos los reportes |
-| `GET /getReportById` | Obtener reporte por ID | id | Reporte correspondiente |
-| `GET /getReportsByCoach` | Obtener reportes por coach | coach | Reportes del coach |
-| `GET /getReportsByGeneratedAt` | Obtener reportes por fecha | date | Reportes según fecha |
-| `GET /getReportsByType` | Obtener reportes por tipo | type | Reportes según tipo |
+| **Endpoint** | **Description** | **Input** | **Output** |
+|:-------------|:----------------|:----------|:-----------|
+| `GET /api/users` | Retrieve all users | - | All users |
+| `GET /api/users/{id}` | Retrieve a user by ID | id | User by ID |
+| `GET /api/users/name/{name}` | Retrieve users by name | name | Users by name |
+| `GET /api/users/email` | Retrieve user by email | email | User by email |
+| `GET /api/users/role/{role}` | Retrieve users by role | role | Users by role |
+| `GET /api/users/registration-date/{registrationDate}` | Retrieve users by registration date | registrationDate | Users by date |
+| `POST /api/users` | Create a new user | User | Created user |
+| `PUT /api/users/{id}` | Update a user | id, User | Updated user |
+| `DELETE /api/users/{id}` | Delete a user | id | Deleted status |
 
 
 ### ReservationController:
 
-| **Endpoint** | **Descripción** | **Entrada** | **Salida** |
-|:-------------|:----------------|:------------|:-----------|
-| `GET /getAllReservations` | Obtener todas las reservas | - | Todas las reservas |
-| `GET /getReservationById` | Obtener reserva por ID | id | Reserva correspondiente |
-| `GET /getReservationsByUserId` | Obtener reservas por usuario | userId | Reservas del usuario |
-| `GET /getReservationsByGymSession` | Obtener reservas por sesión de gimnasio | gymSession | Reservas de la sesión |
-| `GET /getReservationsByReservationDate` | Obtener reservas por fecha | reservationDate | Reservas según fecha |
-| `GET /getReservationsByState` | Obtener reservas por estado | status | Reservas según estado |
+| **Endpoint** | **Description** | **Input** | **Output** |
+|:-------------|:----------------|:----------|:-----------|
+| `GET /api/reservations` | Retrieve all reservations | - | All reservations |
+| `GET /api/reservations/{id}` | Retrieve a reservation by ID | id | Reservation by ID |
+| `GET /api/reservations/user/{userId}` | Retrieve reservations by user ID | userId | Reservations by user |
+| `GET /api/reservations/session/{sessionId}` | Retrieve reservations by session ID | sessionId | Reservations by session |
+| `GET /api/reservations/date` | Retrieve reservations by date | date | Reservations by date |
+| `GET /api/reservations/status/{status}` | Retrieve reservations by status | status | Reservations by status |
+| `POST /api/reservations` | Create a new reservation | Reservation | Created reservation |
+| `PUT /api/reservations/{id}` | Update a reservation | id, Reservation | Updated reservation |
+| `DELETE /api/reservations/{id}` | Delete a reservation | id | Deleted status |
+
+
+### ReportController:
+
+| **Endpoint** | **Description** | **Input** | **Output** |
+|:-------------|:----------------|:----------|:-----------|
+| `GET /api/reports` | Retrieve all reports | - | All reports |
+| `GET /api/reports/{id}` | Retrieve a report by ID | id | Report by ID |
+| `GET /api/reports/coach/{coachId}` | Retrieve reports by coach ID | coachId | Reports by coach |
+| `GET /api/reports/type` | Retrieve reports by type | type | Reports by type |
+| `GET /api/reports/date` | Retrieve reports by generation date | date | Reports by date |
+| `POST /api/reports` | Create a new report | Report | Created report |
+| `PUT /api/reports/{id}` | Update a report | id, Report | Updated report |
+| `DELETE /api/reports/{id}` | Delete a report | id | Deleted status |
 
 
 ### RoutineController:
 
-| **Endpoint** | **Descripción** | **Entrada** | **Salida** |
-|:-------------|:----------------|:------------|:-----------|
-| `GET /getAllRoutines` | Obtener todas las rutinas | - | Todas las rutinas |
-| `GET /getRoutineById` | Obtener rutina por ID | id | Rutina correspondiente |
-| `GET /getRoutinesByName` | Obtener rutina por nombre | name | Rutina según nombre |
-| `GET /getRoutinesByDifficulty` | Obtener rutinas por dificultad | level | Rutinas según dificultad |
-| `GET /getRoutinesByExercises` | Obtener rutinas que contengan un ejercicio | exercises | Rutinas con ejercicio |
+| **Endpoint** | **Description** | **Input** | **Output** |
+|:-------------|:----------------|:----------|:-----------|
+| `GET /api/routines` | Retrieve all routines | - | All routines |
+| `GET /api/routines/{id}` | Retrieve a routine by ID | id | Routine by ID |
+| `GET /api/routines/name/{name}` | Retrieve routines by name | name | Routines by name |
+| `GET /api/routines/difficulty/{level}` | Retrieve routines by difficulty | level | Routines by level |
+| `GET /api/routines/exercises` | Retrieve routines by exercise list | exercises | Routines with exercise |
+| `POST /api/routines` | Create a new routine | Routine | Created routine |
+| `PUT /api/routines/{id}` | Update a routine | id, Routine | Updated routine |
+| `DELETE /api/routines/{id}` | Delete a routine | id | Deleted status |
 
 
-### UserController:
-| **Endpoint** | **Descripción** | **Entrada** | **Salida** |
-|:-------------|:----------------|:------------|:-----------|
-| `GET /getAllUsers` | Obtener todos los usuarios | - | Todos los usuarios |
-| `GET /getUsersByName` | Obtener usuario por nombre | name | Usuario según nombre |
-| `GET /getUsersByEmail` | Obtener usuario por email | email | Usuario según email |
-| `GET /getUsersByRole` | Obtener usuario por rol | role | Usuarios según rol |
-| `GET /getUsersByRegistrationDate` | Obtener usuario por fecha de registro | date | Usuarios según fecha |
+## Running Tests
 
-### Estructura del proyecto
+How tu run Test
 
-![image](assets/Arbol.png)
- 
-## Como ejecutar el proyecto
-
-1: Clonar repositorio
-
-git clone https://github.com/ECIBienestar/netherita-gymnasium-service.git
-
-cd ECIBienestar
-
-2 Correr poryecto con mvn 
-
-mvn clean install
-
-3: Iniciar el back:
-
-Ir a EciBienestarGymApplication
-
-Colocar en el terminal mvn spring-boot:run
-
-## Links expuestos en azure:
-
-Producción:
+Open a terminal and type _mvn test_
 
 
-http://netherita-gymnasium-service-d8hvgjameybudsh3.canadacentral-01.azurewebsites.net/
+## CI/CD
+
+This project uses GitHub Actions to automate building, testing, and deployment:
+
+Staging Pipeline: It is used when there is a commit on the develop branch or any branch derived from it, it is deployed in the Staging environment.
+
+Link: http://netherita-gymnasium-service-d8hvgjameybudsh3.canadacentral-01.azurewebsites.net/
+
+Production Pipeline: It is used when there is a commit on the main branch, it is deployed in the Production environment
+
+Link: http://netherita-gymnasium-service-test-gcdue7cad9btb3eg.canadacentral-01.azurewebsites.net
 
 
-Pruebas:
+Build: Compiles the application and creates the JAR package
+
+Test: Runs unit tests and generates code coverage reports
+
+Deploy: Deploys the application to the AWS environment
+
+Configuration files are located in the .github/workflows/ directory.
 
 
- netherita-gymnasium-service-test-gcdue7cad9btb3eg.canadacentral-01.azurewebsites.net
 
- ## Covertura de pruebas
+ ## Test coverage
 
  ![img](assets/covertura.png)
 
+## Future Improvements
+
+Integrate the project with JWT.
+
+Integrate the service with the authentication module to receive a token and validate it.
+
+Integrate the service with the ECIBienestar frontend to make HTTP requests to this service.
+
+Increase unit test coverage.
+
+Edit the endpoint path to increase security.
+
+
+## Authors
+
+* **Andrés Felipe Calderón Ramirez** - [andrescalderonr](https://github.com/andrescalderonr)
+* **Natalia Espitia Espinel** - [Natalia-Espitia](https://github.com/Natalia-Espitia)
+* **Jesus Alberto Jauregui Conde** - [JesusJC15](https://github.com/JesusJC15)
+* **Santiago Hurtado Martínez** - [SantiagoHM20](https://github.com/SantiagoHM20)
 
 
 
