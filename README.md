@@ -32,7 +32,7 @@ MongoDB.
 
 ##  Project Structure
 
-![image](assets/Arbol.png)
+![image](assets/scafolding.png)
 
 ## How to run
 
@@ -57,19 +57,41 @@ type _mvn spring-boot:run_ in terminal
 
 ### Data:
 
-![image](assets/Diagrama%20de%20datps.png)
-
+![image](assets/Data.png)
 ### Clases
 
-![image](assets/Diagrama%20de%20clases.png)
+![image](assets/Clases.png)
+
+### DTO
+
+![image](assets/DTOS.png)
 
 ### Components
 
-![image](assets/Diagrama%20de%20componentes.png)
-
-### Architecture
+![image](assets/modelo%20arquitectura.drawio.png)
 
 
+### Sequence
+
+Situation: A student records his current physical measurements.
+
+![image](assets/Sequence%20User.png)
+
+Situation: The student or coach consults the physical history.
+
+![image](assets/Sequence%20User.png)
+
+Situation: A coach assigns a routine to a student.
+
+![image](assets/Sequence%20Coach.png)
+
+Situation: The student reserves an available space in the gym.
+
+![image](assets/Sequence%20User3.png)
+
+Situation: An administrator requests a physical progress report for each user.
+
+![image](assets/Sequence%20Admin.png)
 
 
 ## Functionalities
