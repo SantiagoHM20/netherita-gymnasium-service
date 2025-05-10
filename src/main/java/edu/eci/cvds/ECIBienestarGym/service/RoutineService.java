@@ -4,6 +4,7 @@ import edu.eci.cvds.ECIBienestarGym.dto.ExerciseDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.RoutineDTO;
 import edu.eci.cvds.ECIBienestarGym.embeddables.Exercise;
 import edu.eci.cvds.ECIBienestarGym.enums.DifficultyLevel;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.Routine;
 import edu.eci.cvds.ECIBienestarGym.repository.RoutineRepository;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class RoutineService {
         return routineRepository.findAll();
     }
 
-    public Routine getRoutineById(String id){return routineRepository.findById(id).orElseThrow(() -> new RuntimeException("No se encontró la rutina"));}
+    public Routine getRoutineById(String id){return routineRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.ROUTINE_NOT_FOUND));}
 
     public List<Routine> getRoutinesByName(String name){return  routineRepository.findByName(name);}
 
@@ -45,8 +46,8 @@ public class RoutineService {
                 .toList();
     }
 
-     public Routine updateRoutine(String id, RoutineDTO routineDTO) {
-        Routine routine = routineRepository.findById(id).orElseThrow(() -> new RuntimeException("No se encontró la rutina"));
+     public Routine updateRoutine(String id, RoutineDTO routineDTO) throws GYMException {
+        Routine routine = routineRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.ROUTINE_NOT_FOUND));
         routine.setName(routineDTO.getName());
         routine.setDescription(routineDTO.getDescription());
         routine.setDifficulty(routineDTO.getDifficulty());
@@ -54,8 +55,8 @@ public class RoutineService {
         return routineRepository.save(routine);
     }
 
-    public void deleteRoutine(String id) {
-        Routine routine = routineRepository.findById(id).orElseThrow(() -> new RuntimeException("No se encontró la rutina"));
+    public void deleteRoutine(String id) throws GYMException {
+        Routine routine = routineRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.ROUTINE_NOT_FOUND));
         routineRepository.delete(routine);
     }
 }

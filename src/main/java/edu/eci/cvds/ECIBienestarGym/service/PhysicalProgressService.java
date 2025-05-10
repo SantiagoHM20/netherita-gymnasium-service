@@ -5,6 +5,7 @@ import edu.eci.cvds.ECIBienestarGym.dto.PhysicalProgressDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.RoutineDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.UserDTO;
 import edu.eci.cvds.ECIBienestarGym.embeddables.Exercise;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.PhysicalProgress;
 import edu.eci.cvds.ECIBienestarGym.model.Routine;
 import edu.eci.cvds.ECIBienestarGym.model.User;
@@ -26,8 +27,8 @@ public class PhysicalProgressService {
         return physicalProgressRepository.findAll();
     }
 
-    public PhysicalProgress getPhysicalProgressById(String id){
-        return physicalProgressRepository.findById(id).orElseThrow(() -> new RuntimeException("No se encontró el progreso Físico"));
+    public PhysicalProgress getPhysicalProgressById(String id) throws GYMException {
+        return physicalProgressRepository.findById(id).orElseThrow(() -> new  GYMException(GYMException.PHYSICAL_PROGRESS_NOT_FOUND));
     }
 
     public List<PhysicalProgress> getPhysicalProgressByUserId(User userId){
@@ -49,17 +50,17 @@ public class PhysicalProgressService {
         return physicalProgressRepository.save(progress);
     }
 
-    public PhysicalProgress updatePhysicalProgress(String id, PhysicalProgressDTO physicalProgressDTO) {
+    public PhysicalProgress updatePhysicalProgress(String id, PhysicalProgressDTO physicalProgressDTO) throws GYMException {
         PhysicalProgress progress = physicalProgressRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("No se encontró el progreso físico"));
+            .orElseThrow(() -> new  GYMException(GYMException.REPORT_NOT_FOUND));
         PhysicalProgress updatedProgress = mapToPhysicalProgress(physicalProgressDTO);
         updatedProgress.setId(progress.getId());
         return physicalProgressRepository.save(updatedProgress);
     }
 
-    public void deletePhysicalProgress(String id) {
+    public void deletePhysicalProgress(String id) throws GYMException{
         PhysicalProgress progress = physicalProgressRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("PhysicalProgress not found with id: " + id));
+                .orElseThrow(() -> new  GYMException(GYMException.REPORT_NOT_FOUND));
         physicalProgressRepository.deleteById(id);
     }
 

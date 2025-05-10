@@ -4,6 +4,7 @@ import edu.eci.cvds.ECIBienestarGym.dto.GymSessionDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.ReservationDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.UserDTO;
 import edu.eci.cvds.ECIBienestarGym.enums.Status;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.GymSession;
 import edu.eci.cvds.ECIBienestarGym.model.Reservation;
 import edu.eci.cvds.ECIBienestarGym.model.User;
@@ -23,7 +24,7 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    public Reservation getReservationById(String id){return reservationRepository.findById(id).orElseThrow(() -> new RuntimeException("No se encontró la reserva"));}
+    public Reservation getReservationById(String id){return reservationRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.RESERVE_NOT_FOUND));}
 
     public List<Reservation> getReservationsByUserId(User userId){
         return reservationRepository.findByUserId(userId);
@@ -44,8 +45,8 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
-    public Reservation updateReservation(String id, ReservationDTO reservationDTO) {
-        Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new RuntimeException("No se encontró la reserva"));
+    public Reservation updateReservation(String id, ReservationDTO reservationDTO) throws GYMException {
+        Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.RESERVE_NOT_FOUND));
         reservation.setUserId(mapToUser(reservationDTO.getUserId()));
         reservation.setGymSessionId(mapToGymSession(reservationDTO.getGymSessionId()));
         reservation.setReservationDate(reservationDTO.getReservationDate());
@@ -54,7 +55,7 @@ public class ReservationService {
     }
 
     public void deleteReservation(String id) {
-        Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new RuntimeException("No se encontró la reserva"));
+        Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.RESERVE_NOT_FOUND));
         reservationRepository.delete(reservation);
     }
 

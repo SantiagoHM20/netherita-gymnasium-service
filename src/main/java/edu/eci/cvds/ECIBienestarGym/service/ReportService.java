@@ -5,6 +5,7 @@ import edu.eci.cvds.ECIBienestarGym.dto.ReportEntryDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.UserDTO;
 import edu.eci.cvds.ECIBienestarGym.embeddables.ReportEntry;
 import edu.eci.cvds.ECIBienestarGym.enums.ReportType;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.Report;
 import edu.eci.cvds.ECIBienestarGym.model.User;
 import edu.eci.cvds.ECIBienestarGym.repository.ReportRepository;
@@ -25,7 +26,7 @@ public class ReportService {
     return reportRepository.findAll();
     }
 
-    public Report getReportById(String id){return reportRepository.findById(id).orElseThrow(() -> new RuntimeException("No se encontró el reporte"));}
+    public Report getReportById(String id){return reportRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.REPORT_NOT_FOUND));}
 
     public List<Report> getReportsByCoach(User coachId){
         return reportRepository.findByCoachId(coachId);
@@ -42,14 +43,14 @@ public class ReportService {
         return reportRepository.save(mapToReport(reportDTO, report));
     }
 
-    public Report updateReport(String id, ReportDTO reportDTO) {
-        Report report = reportRepository.findById(id).orElseThrow(() -> new RuntimeException("No se encontró el reporte"));
+    public Report updateReport(String id, ReportDTO reportDTO) throws GYMException {
+        Report report = reportRepository.findById(id).orElseThrow(() -> new  GYMException(GYMException.REPORT_NOT_FOUND));
         return reportRepository.save(mapToReport(reportDTO, report));
     }
 
-    public void deleteReport(String id) {
+    public void deleteReport(String id) throws GYMException {
         reportRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Report not found with id: " + id));
+            .orElseThrow(() -> new  GYMException(GYMException.REPORT_NOT_FOUND));
         reportRepository.deleteById(id);
     }
 
