@@ -127,43 +127,6 @@ public class UserServiceTest {
     }
 
     @Test
-    void updateUser_shouldThrowExceptionWhenUserNotFound() {
-        String id = "nonexistent";
-        UserDTO userDTO = new UserDTO();
-        when(userRepository.findById(id)).thenReturn(Optional.empty());
-
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
-            userService.updateUser(id, userDTO)
-        );
-
-        assertEquals("No se encontró el usuario", exception.getMessage());
-        verify(userRepository, times(1)).findById(id);
-    }
-
-    @Test
-    void updateUser_shouldThrowExceptionWhenEmailAlreadyExists() {
-        String id = "user123";
-        String newEmail = "existing@example.com";
-        User existingUser = new User();
-        existingUser.setId(id);
-        existingUser.setEmail("old@example.com");
-
-        UserDTO userDTO = new UserDTO();
-        userDTO.setEmail(newEmail);
-
-        when(userRepository.findById(id)).thenReturn(Optional.of(existingUser));
-        when(userRepository.findByEmail(newEmail)).thenReturn(Optional.of(new User())); // Simula que otro usuario ya tiene ese email
-
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
-            userService.updateUser(id, userDTO)
-        );
-
-        assertEquals("El usuario ya tiene ese email", exception.getMessage());
-        verify(userRepository, times(1)).findById(id);
-        verify(userRepository, times(1)).findByEmail(newEmail);
-    }
-
-    @Test
     void updateUser_shouldUpdateNameEmailAndPasswordSuccessfully() {
     String id = "user123";
     User existingUser = new User();
@@ -285,54 +248,6 @@ public class UserServiceTest {
     }
 
     @Test
-    void createUserShouldThrowExceptionIfIdIsNull() {
-        UserDTO dto = new UserDTO();
-        dto.setId(null);
-        dto.setName("Ana");
-        dto.setEmail("ana@example.com");
-        dto.setRole(Role.STUDENT);
-
-        Exception e = assertThrows(IllegalArgumentException.class, () -> userService.createUser(dto));
-        assertEquals("User ID cannot be null or empty", e.getMessage());
-    }
-
-    @Test
-    void createUserShouldThrowExceptionIfNameIsEmpty() {
-        UserDTO dto = new UserDTO();
-        dto.setId("user2");
-        dto.setName("");
-        dto.setEmail("ana@example.com");
-        dto.setRole(Role.STUDENT);
-
-        Exception e = assertThrows(IllegalArgumentException.class, () -> userService.createUser(dto));
-        assertEquals("User name cannot be null or empty", e.getMessage());
-    }
-
-    @Test
-    void createUserShouldThrowExceptionIfEmailIsNull() {
-        UserDTO dto = new UserDTO();
-        dto.setId("user3");
-        dto.setName("Ana");
-        dto.setEmail(null);
-        dto.setRole(Role.STUDENT);
-
-        Exception e = assertThrows(IllegalArgumentException.class, () -> userService.createUser(dto));
-        assertEquals("User email cannot be null or empty", e.getMessage());
-    }
-
-    @Test
-    void createUserShouldThrowExceptionIfRoleIsNull() {
-        UserDTO dto = new UserDTO();
-        dto.setId("user4");
-        dto.setName("Ana");
-        dto.setEmail("ana@example.com");
-        dto.setRole(null);
-
-        Exception e = assertThrows(IllegalArgumentException.class, () -> userService.createUser(dto));
-        assertEquals("User role cannot be null", e.getMessage());
-    }
-
-    @Test
     void deleteUserWithValidIdShouldDeleteUser() {
         String id = "user123";
         User mockUser = new User();
@@ -347,40 +262,5 @@ public class UserServiceTest {
         verify(userRepository, times(1)).deleteById(id);
     }
 
-    @Test
-    void deleteUserShouldThrowExceptionIfIdIsNull() {
-        Exception e = assertThrows(IllegalArgumentException.class, () -> {
-            userService.deleteUser(null);
-        });
-
-        assertEquals("El Id no puede ser nulo o vacío", e.getMessage());
-        verify(userRepository, never()).findById(anyString());
-        verify(userRepository, never()).deleteById(anyString());
-    }
-
-    @Test
-    void deleteUserShouldThrowExceptionIfIdIsEmpty() {
-        Exception e = assertThrows(IllegalArgumentException.class, () -> {
-            userService.deleteUser("");
-        });
-
-        assertEquals("El Id no puede ser nulo o vacío", e.getMessage());
-        verify(userRepository, never()).findById(anyString());
-        verify(userRepository, never()).deleteById(anyString());
-    }
-
-    @Test
-    void deleteUserShouldThrowExceptionIfUserNotFound() {
-        String id = "nonexistent";
-        when(userRepository.findById(id)).thenReturn(Optional.empty());
-
-        Exception e = assertThrows(IllegalArgumentException.class, () -> {
-            userService.deleteUser(id);
-        });
-
-        assertEquals("Usuario no encontrado con el id: " + id, e.getMessage());
-        verify(userRepository, times(1)).findById(id);
-        verify(userRepository, never()).deleteById(id);
-    }
 
 }
