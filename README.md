@@ -1,6 +1,6 @@
 # ECIBienestarGymService
 
-Gym management microservice for the ECI-Wellness platform. She manages Gym Sessions, Reservations, Physical Routines, Physical Progress and Trainer Reports for wellness services at the Julio Garavito Colombian School of Engineering.
+Gym management microservice for the ECIBienestar platform. She manages Gym Sessions, Reservations, Physical Routines, Physical Progress and Trainer Reports for wellness services at the Julio Garavito Colombian School of Engineering.
 
 ## Overview
 
@@ -9,6 +9,46 @@ This module allows students to book training sessions, design their personalized
 With the accompaniment of a coach, users receive feedback on their progress, get recommendations tailored to their goals, and access sessions structured according to their needs.
 
 In addition, coaches can generate individual and group performance reports, as well as reports on sessions, manage routines, and optimize the training experience.
+
+[Requirements document](https://pruebacorreoescuelaingeduco-my.sharepoint.com/:w:/g/personal/natalia_espitia-e_mail_escuelaing_edu_co/EX6-qkp0pjRIqnNsfk-fmf4B9goEp3F88Bhoo5ZOZSjhCQ?e=9uvX4f)
+
+
+## Interaction with other modules
+
+The module operates as an independent microservice, orchestrated within a microservices-based architecture and exposed through an API Gateway that manages authentication and request routing.
+
+General Interaction Flow:
+
+    -Client (Web/Mobile): Sends requests for medical shifts to the API Gateway.
+
+API Gateway:
+
+    -Obtains a JWT token from the Auth Service.
+
+    -Validates the token and routes the request to the corresponding microservice.
+
+Medical Shifts Service:
+
+    -Verifies the user and their roles through the Users Service.
+
+    -Processes the request, records the information in its database, and emits events to the Event Bus.
+
+Statistics Service:
+
+    -Consumes generated events to generate historical reports and care statistics.
+
+| Service           | Description                                      |
+|-------------------|--------------------------------------------------|
+| Auth Service      | Authentication and JWT token issuance            |
+| API Gateway       | Routing and access control                        |
+| Users Service     | User query and validation                         |
+| Statistics Service| Historical record and report generation          |
+| Event Bus         | Asynchronous event middleware (Kafka + Cloud Bus)|
+
+### Microservices diagram
+
+![image](assets/microservices.png)
+
 
 ## Technologies
 
@@ -31,6 +71,11 @@ AzureDevops.
 MongoDB.
 
 ##  Project Structure
+
+### Architectural Style
+
+[Architecture Document](https://pruebacorreoescuelaingeduco-my.sharepoint.com/:w:/r/personal/jesus_jauregui-c_mail_escuelaing_edu_co/_layouts/15/Doc.aspx?sourcedoc=%7BAD957616-FA57-4AB0-9ECC-028873C057AF%7D&)
+
 
 ![image](assets/scafolding.png)
 
@@ -115,6 +160,42 @@ https://netherita-gymnasium-service-d8hvgjameybudsh3.canadacentral-01.azurewebsi
 ![image](assets/ReportsSwagger.png)
 
 ![image](assets/RoutinesSwagger.png)
+
+## Happy Path - Gym Tracking and Management Module
+
+| Scenario                                | Expected Result                                                   |
+|------------------------------------------|-------------------------------------------------------------------|
+| Student logs into the system             | The student is successfully authenticated                        |
+| Student accesses Gym Tracking section    | The module loads and displays correctly                           |
+| Student sees initial registration page   | The registration page is displayed                                |
+| Student selects to register              | The system proceeds to registration form                          |
+| Student fills in personal data form      | The form is accepted and validated                                |
+| Student clicks next                      | The system moves to the next step                                 |
+| Student selects body objective option    | The option is saved and registration continues                    |
+| Student finishes registration            | Registration is completed and confirmation is shown               |
+| Student views gym main page              | The page displays reservations, routines, and latest measures     |
+| Student accesses "Progress Record" tab   | Progress record form is displayed                                 |
+| Student fills progress record form       | Data is saved and validated                                       |
+| Student completes progress registration  | Progress is recorded and confirmation is shown                    |
+| Student accesses "Routines" tab          | A list of available routines is displayed                          |
+| Student selects a routine                | The routine details and exercises are shown                       |
+| Student accesses "My Reservations" tab   | The student's reservations are listed                             |
+| Student accesses "Evolution" tab         | Graphs and comparison tables are displayed                        |
+| Student accesses "Reserve" tab           | Available gym sessions are listed                                 |
+| Student selects an available session     | Session details are displayed                                     |
+| Student confirms reservation             | Reservation is created and confirmed                              |
+
+## Error Handling
+
+| HTTP Code | Scenario                                | Message                                               |
+|-----------|------------------------------------------|-------------------------------------------------------|
+| 400 Bad Request | Incomplete or invalid data              | "Missing required fields", "Incorrect format"          |
+| 401 Unauthorized | Token not sent or invalid                | "Invalid or expired token"                             |
+| 403 Forbidden  | Role not authorized for the action    | "Access denied for your role"                          |
+| 404 Not Found  | Resource not found                     | "Routine does not exist", "Session not available"      |
+| 409 Conflict   | Duplicate reservation, no available slots | "You already have an active reservation", "Session full" |
+| 500 Internal Server Error | Unexpected failure                  | "Internal server error, please try again later"         |
+
 
 ## Endpoints (Functionalities):
 
