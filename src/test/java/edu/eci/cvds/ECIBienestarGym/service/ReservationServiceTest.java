@@ -4,6 +4,7 @@ import edu.eci.cvds.ECIBienestarGym.dto.GymSessionDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.ReservationDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.UserDTO;
 import edu.eci.cvds.ECIBienestarGym.enums.Status;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.GymSession;
 import edu.eci.cvds.ECIBienestarGym.model.Reservation;
 import edu.eci.cvds.ECIBienestarGym.model.User;
@@ -49,7 +50,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void getReservationById() {
+    void getReservationById() throws GYMException {
         String id = "res123";
         Reservation mockReservation = new Reservation();
         when(reservationRepository.findById(id)).thenReturn(Optional.of(mockReservation));
@@ -131,7 +132,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void updateReservation() {
+    void updateReservation() throws GYMException {
         String id = "res123";
         ReservationDTO reservationDTO = new ReservationDTO();
         reservationDTO.setUserId(new UserDTO("user123", "John Doe", "johndoe@example.com"));
@@ -152,7 +153,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void deleteReservation() {
+    void deleteReservation() throws GYMException {
         String id = "res123";
         Reservation mockReservation = new Reservation();
         mockReservation.setId(id);

@@ -6,6 +6,7 @@ import edu.eci.cvds.ECIBienestarGym.dto.RoutineDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.UserDTO;
 import edu.eci.cvds.ECIBienestarGym.enums.ExerciseType;
 import edu.eci.cvds.ECIBienestarGym.enums.Role;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.PhysicalProgress;
 import edu.eci.cvds.ECIBienestarGym.repository.PhysicalProgressRepository;
 import edu.eci.cvds.ECIBienestarGym.model.User;
@@ -50,7 +51,7 @@ public class PhysicalProgressServiceTest {
     }
 
     @Test
-    void getPhysicalProgressById() {
+    void getPhysicalProgressById() throws GYMException {
         String id = "progress123";
         PhysicalProgress mockProgress = new PhysicalProgress();
         when(physicalProgressRepository.findById(id)).thenReturn(Optional.of(mockProgress));
@@ -74,7 +75,7 @@ public class PhysicalProgressServiceTest {
     }
 
     @Test
-    void updatePhysicalProgress() {
+    void updatePhysicalProgress() throws GYMException {
         String id = "progress123";
 
         UserDTO userDTO = new UserDTO();
@@ -121,7 +122,7 @@ public class PhysicalProgressServiceTest {
         }
 
     @Test
-    void deletePhysicalProgress() {
+    void deletePhysicalProgress() throws GYMException {
         String id = "progress123";
 
         // Mock del repositorio

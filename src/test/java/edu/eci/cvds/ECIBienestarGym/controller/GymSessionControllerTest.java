@@ -1,5 +1,6 @@
 package edu.eci.cvds.ECIBienestarGym.controller;
 
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.GymSession;
 import edu.eci.cvds.ECIBienestarGym.model.ApiResponse;
 import edu.eci.cvds.ECIBienestarGym.dto.GymSessionDTO;
@@ -117,7 +118,7 @@ public class GymSessionControllerTest {
     }
 
     @Test
-    void updateGymSession() {
+    void updateGymSession() throws GYMException {
         String sessionId = "sess123";
         GymSessionDTO gymSessionDTO = new GymSessionDTO();
         GymSession mockSession = new GymSession();
@@ -131,7 +132,7 @@ public class GymSessionControllerTest {
     }
 
     @Test
-    void deleteGymSession() {
+    void deleteGymSession() throws GYMException {
         String sessionId = "sess123";
         doNothing().when(gymSessionService).deleteGymSession(sessionId);
 
@@ -175,7 +176,7 @@ public class GymSessionControllerTest {
     }
 
     @Test
-    void getGymSessionById(){
+    void getGymSessionById() throws GYMException {
         String sessionId = "sess123";
         GymSession mockSession = new GymSession();
         when(gymSessionService.getGymSessionById(sessionId)).thenReturn(mockSession);
@@ -188,7 +189,7 @@ public class GymSessionControllerTest {
     }
 
     @Test
-    void getGymSessionByIdNotFound() {
+    void getGymSessionByIdNotFound() throws GYMException {
         String sessionId = "sess123";
         when(gymSessionService.getGymSessionById(sessionId)).thenReturn(null);
 

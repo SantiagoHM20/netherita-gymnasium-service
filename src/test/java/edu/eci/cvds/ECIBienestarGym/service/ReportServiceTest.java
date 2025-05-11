@@ -6,6 +6,7 @@ import edu.eci.cvds.ECIBienestarGym.dto.UserDTO;
 import edu.eci.cvds.ECIBienestarGym.embeddables.ReportEntry;
 import edu.eci.cvds.ECIBienestarGym.enums.ReportType;
 import edu.eci.cvds.ECIBienestarGym.enums.Role;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.Report;
 import edu.eci.cvds.ECIBienestarGym.model.User;
 import edu.eci.cvds.ECIBienestarGym.repository.ReportRepository;
@@ -50,7 +51,7 @@ public class ReportServiceTest {
     }
 
     @Test
-    void getReportById() {
+    void getReportById() throws GYMException {
         String id = "report123";
         Report mockReport = new Report();
         when(reportRepository.findById(id)).thenReturn(Optional.of(mockReport));
@@ -99,7 +100,7 @@ public class ReportServiceTest {
     }
 
     @Test
-    void updateReport() {
+    void updateReport() throws GYMException {
         String id = "report123";
 
         ReportDTO reportDTO = new ReportDTO();
@@ -128,7 +129,7 @@ public class ReportServiceTest {
     }
 
     @Test
-    void deleteReport() {
+    void deleteReport() throws GYMException {
         String id = "report123";
 
         Report mockReport = new Report();

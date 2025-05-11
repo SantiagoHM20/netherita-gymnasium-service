@@ -3,6 +3,7 @@ package edu.eci.cvds.ECIBienestarGym.service;
 import edu.eci.cvds.ECIBienestarGym.dto.GymSessionDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.UserDTO;
 import edu.eci.cvds.ECIBienestarGym.enums.Role;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.GymSession;
 import edu.eci.cvds.ECIBienestarGym.model.User;
 import edu.eci.cvds.ECIBienestarGym.repository.GymSessionRepository;
@@ -47,7 +48,7 @@ public class GymSessionServiceTest {
     }
 
     @Test
-    void getGymSessionById() {
+    void getGymSessionById() throws GYMException {
         String id = "sess123";
         GymSession mockSession = new GymSession();
         when(gymSessionRepository.findById(id)).thenReturn(Optional.of(mockSession));
@@ -161,7 +162,7 @@ public class GymSessionServiceTest {
     }
 
     @Test
-    void updateGymSession() {
+    void updateGymSession() throws GYMException {
         String id = "sess123";
 
         UserDTO coachDTO = new UserDTO();
@@ -189,7 +190,7 @@ public class GymSessionServiceTest {
     }
 
     @Test
-    void deleteGymSession() {
+    void deleteGymSession() throws GYMException {
         String id = "sess123";
         GymSession mockSession = new GymSession();
         mockSession.setId(id);

@@ -23,7 +23,7 @@ public class RoutineService {
         return routineRepository.findAll();
     }
 
-    public Routine getRoutineById(String id){return routineRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.ROUTINE_NOT_FOUND));}
+    public Routine getRoutineById(String id) throws GYMException{return routineRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.ROUTINE_NOT_FOUND));}
 
     public List<Routine> getRoutinesByName(String name){return  routineRepository.findByName(name);}
 

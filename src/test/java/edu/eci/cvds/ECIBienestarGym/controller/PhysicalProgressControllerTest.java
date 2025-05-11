@@ -1,6 +1,7 @@
 package edu.eci.cvds.ECIBienestarGym.controller;
 
 import edu.eci.cvds.ECIBienestarGym.dto.PhysicalProgressDTO;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.ApiResponse;
 import edu.eci.cvds.ECIBienestarGym.model.PhysicalProgress;
 import edu.eci.cvds.ECIBienestarGym.model.User;
@@ -45,7 +46,7 @@ public class PhysicalProgressControllerTest {
     }
 
     @Test
-    void getPhysicalProgressById() {
+    void getPhysicalProgressById() throws GYMException {
         String id = "progress123";
         PhysicalProgress mockProgress = new PhysicalProgress();
         when(physicalProgressService.getPhysicalProgressById(id)).thenReturn(mockProgress);
@@ -130,7 +131,7 @@ public class PhysicalProgressControllerTest {
     }
 
     @Test
-    void updatePhysicalProgress() {
+    void updatePhysicalProgress() throws GYMException {
         String id = "progress123";
         PhysicalProgressDTO progressDTO = new PhysicalProgressDTO();
         PhysicalProgress mockProgress = new PhysicalProgress();
@@ -144,7 +145,7 @@ public class PhysicalProgressControllerTest {
     }
 
     @Test
-    void deletePhysicalProgress() {
+    void deletePhysicalProgress() throws GYMException {
         String id = "progress123";
         doNothing().when(physicalProgressService).deletePhysicalProgress(id);
 

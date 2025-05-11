@@ -23,7 +23,7 @@ public class GymSessionService {
         return gymSessionRepository.findAll();
     }
 
-    public GymSession getGymSessionById(String id) {return gymSessionRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.GYM_SESION_NOT_FOUND));}
+    public GymSession getGymSessionById(String id) throws GYMException {return gymSessionRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.GYM_SESION_NOT_FOUND));}
 
     public List<GymSession> getGymSessionsByCoachId(User coachId){return gymSessionRepository.findByCoachId(coachId);}
 

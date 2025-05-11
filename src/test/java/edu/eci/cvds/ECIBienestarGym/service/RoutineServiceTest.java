@@ -5,6 +5,7 @@ import edu.eci.cvds.ECIBienestarGym.dto.RoutineDTO;
 import edu.eci.cvds.ECIBienestarGym.embeddables.Exercise;
 import edu.eci.cvds.ECIBienestarGym.enums.DifficultyLevel;
 import edu.eci.cvds.ECIBienestarGym.enums.ExerciseType;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.Routine;
 import edu.eci.cvds.ECIBienestarGym.repository.RoutineRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +46,7 @@ public class RoutineServiceTest {
     }
 
     @Test
-    void getRoutineById() {
+    void getRoutineById() throws GYMException {
         String id = "routine123";
         Routine mockRoutine = new Routine();
         when(routineRepository.findById(id)).thenReturn(Optional.of(mockRoutine));
@@ -110,7 +111,7 @@ public class RoutineServiceTest {
     }
 
     @Test
-    void updateRoutine() {
+    void updateRoutine() throws GYMException {
         String id = "routine123";
         RoutineDTO routineDTO = new RoutineDTO();
         routineDTO.setName("Updated Routine");
@@ -130,7 +131,7 @@ public class RoutineServiceTest {
     }
 
     @Test
-    void deleteRoutine() {
+    void deleteRoutine() throws GYMException {
         String id = "routine123";
         Routine mockRoutine = new Routine();
         when(routineRepository.findById(id)).thenReturn(Optional.of(mockRoutine));

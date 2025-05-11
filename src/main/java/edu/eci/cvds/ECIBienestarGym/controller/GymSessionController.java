@@ -1,6 +1,7 @@
 package edu.eci.cvds.ECIBienestarGym.controller;
 
 import edu.eci.cvds.ECIBienestarGym.dto.GymSessionDTO;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.ApiResponse;
 import edu.eci.cvds.ECIBienestarGym.model.GymSession;
 import edu.eci.cvds.ECIBienestarGym.model.User;
@@ -31,8 +32,8 @@ public class GymSessionController {
         this.gymSessionService = gymSessionService;
     }
 
-    @GetMapping("/")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    @GetMapping("/trainer/")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Obtener todas las sesiones de gimnasio")
     public ResponseEntity<ApiResponse<List<GymSession>>> getAllGymSessions() {
         List<GymSession> sessions = gymSessionService.getAllGymSessions();
@@ -40,10 +41,10 @@ public class GymSessionController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Obtener una sesión de gimnasio por su ID")
     public ResponseEntity<ApiResponse<GymSession>> getGymSessionById(
-            @Parameter(description = "ID de la sesión", example = "sess123") @PathVariable String id) {
+            @Parameter(description = "ID de la sesión", example = "sess123") @PathVariable String id) throws GYMException {
         GymSession session = gymSessionService.getGymSessionById(id);
         if (session == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -53,7 +54,7 @@ public class GymSessionController {
     }
 
     @GetMapping("/coach/{coachId}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Obtener sesiones de gimnasio por ID de entrenador")
     public ResponseEntity<ApiResponse<List<GymSession>>> getGymSessionsByCoachId(
             @Parameter(description = "ID del entrenador", example = "coach456") @PathVariable String coachId) {
@@ -64,7 +65,7 @@ public class GymSessionController {
     }
 
     @GetMapping("/capacity/{capacity}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Obtener sesiones de gimnasio por capacidad")
     public ResponseEntity<ApiResponse<List<GymSession>>> getGymSessionsByCapacity(
             @Parameter(description = "Capacidad de la sesión", example = "30") @PathVariable int capacity) {
@@ -73,7 +74,7 @@ public class GymSessionController {
     }
 
     @GetMapping("/date/{date}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER', 'STUDENT')")
     @Operation(summary = "Obtener sesiones de gimnasio por fecha")
     public ResponseEntity<ApiResponse<List<GymSession>>> getGymSessionsByDate(
             @Parameter(description = "Fecha de la sesión", example = "2023-10-01T10:00:00") @PathVariable LocalDateTime date) {
@@ -82,7 +83,7 @@ public class GymSessionController {
     }
 
     @GetMapping("/date/{date}/time-range")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER', 'STUDENT')")
     @Operation(summary = "Obtener sesiones de gimnasio por fecha y rango de tiempo")
     public ResponseEntity<ApiResponse<List<GymSession>>> getGymSessionsByDateAndTime(
             @Parameter(description = "Fecha de la sesión", example = "2023-10-01") @PathVariable LocalDate date,
@@ -95,7 +96,7 @@ public class GymSessionController {
     }
 
     @GetMapping("/time-range")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER', 'STUDENT')")
     @Operation(summary = "Obtener sesiones de gimnasio por rango de tiempo")
     public ResponseEntity<ApiResponse<List<GymSession>>> getGymSessionsByStartTimeAndEndTime(
             @Parameter(description = "Hora de inicio en formato ISO (HH:mm:ss)", example = "10:00:00") @RequestParam("startTime") String startTime,
@@ -106,7 +107,7 @@ public class GymSessionController {
     }
 
     @GetMapping("/end-time/{endTime}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER', 'STUDENT')")
     @Operation(summary = "Obtener sesiones de gimnasio por hora de fin")
     public ResponseEntity<ApiResponse<List<GymSession>>> getGymSessionsByEndTime(
             @Parameter(description = "Hora de fin en formato ISO (HH:mm:ss)", example = "12:00:00") @PathVariable String endTime) {
@@ -115,7 +116,7 @@ public class GymSessionController {
     }
 
     @PostMapping("/")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Crear una nueva sesión de gimnasio")
     public ResponseEntity<ApiResponse<GymSession>> createGymSession(
             @Parameter(description = "Detalles de la sesión de gimnasio") @RequestBody GymSessionDTO gymSession) {
@@ -125,20 +126,20 @@ public class GymSessionController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Actualizar una sesión de gimnasio")
     public ResponseEntity<ApiResponse<GymSession>> updateGymSession(
             @Parameter(description = "ID de la sesión", example = "sess123") @PathVariable String id,
-            @Parameter(description = "Detalles actualizados de la sesión de gimnasio") @RequestBody GymSessionDTO gymSession) {
+            @Parameter(description = "Detalles actualizados de la sesión de gimnasio") @RequestBody GymSessionDTO gymSession) throws GYMException {
         GymSession updatedSession = gymSessionService.updateGymSession(id, gymSession);
         return ResponseEntity.ok(new ApiResponse<>(true, "Sesión de gimnasio actualizada", updatedSession));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Eliminar una sesión de gimnasio")
     public ResponseEntity<ApiResponse<Void>> deleteGymSession(
-            @Parameter(description = "ID de la sesión", example = "sess123") @PathVariable String id) {
+            @Parameter(description = "ID de la sesión", example = "sess123") @PathVariable String id) throws GYMException {
         gymSessionService.deleteGymSession(id);
         return ResponseEntity.ok(new ApiResponse<>(true, "Sesión de gimnasio eliminada", null));
     }

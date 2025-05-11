@@ -1,6 +1,7 @@
 package edu.eci.cvds.ECIBienestarGym.controller;
 
 import edu.eci.cvds.ECIBienestarGym.dto.ReservationDTO;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.ApiResponse;
 import edu.eci.cvds.ECIBienestarGym.model.Reservation;
 import edu.eci.cvds.ECIBienestarGym.model.User;
@@ -45,7 +46,7 @@ public class ReservationControllerTest {
     }
 
     @Test
-    void getReservationById() {
+    void getReservationById() throws GYMException {
         String id = "reservation123";
         Reservation mockReservation = new Reservation();
         when(reservationService.getReservationById(id)).thenReturn(mockReservation);
@@ -99,7 +100,7 @@ public class ReservationControllerTest {
     }
 
     @Test
-    void updateReservation() {
+    void updateReservation() throws GYMException {
         String id = "reservation123";
         ReservationDTO reservationDTO = new ReservationDTO();
         Reservation mockReservation = new Reservation();
@@ -113,7 +114,7 @@ public class ReservationControllerTest {
     }
 
     @Test
-    void deleteReservation() {
+    void deleteReservation() throws GYMException {
         String id = "reservation123";
         doNothing().when(reservationService).deleteReservation(id);
 
@@ -124,7 +125,7 @@ public class ReservationControllerTest {
     }
 
     @Test
-    void getReservationByIdNotFound() {
+    void getReservationByIdNotFound() throws GYMException {
         String id = "nonExistentReservationId";
         when(reservationService.getReservationById(id)).thenReturn(null); // Simula que no se encontró la reserva
 

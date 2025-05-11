@@ -24,7 +24,7 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    public Reservation getReservationById(String id){return reservationRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.RESERVE_NOT_FOUND));}
+    public Reservation getReservationById(String id) throws GYMException{return reservationRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.RESERVE_NOT_FOUND));}
 
     public List<Reservation> getReservationsByUserId(User userId){
         return reservationRepository.findByUserId(userId);
@@ -54,7 +54,7 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
-    public void deleteReservation(String id) {
+    public void deleteReservation(String id) throws GYMException {
         Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.RESERVE_NOT_FOUND));
         reservationRepository.delete(reservation);
     }

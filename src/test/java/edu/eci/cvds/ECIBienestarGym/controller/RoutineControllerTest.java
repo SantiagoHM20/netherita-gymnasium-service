@@ -3,6 +3,7 @@ package edu.eci.cvds.ECIBienestarGym.controller;
 import edu.eci.cvds.ECIBienestarGym.dto.RoutineDTO;
 import edu.eci.cvds.ECIBienestarGym.embeddables.Exercise;
 import edu.eci.cvds.ECIBienestarGym.enums.DifficultyLevel;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.ApiResponse;
 import edu.eci.cvds.ECIBienestarGym.model.Routine;
 import edu.eci.cvds.ECIBienestarGym.service.RoutineService;
@@ -45,7 +46,7 @@ public class RoutineControllerTest {
     }
 
     @Test
-    void getRoutineById() {
+    void getRoutineById() throws GYMException {
         String id = "routine123";
         Routine mockRoutine = new Routine();
         when(routineService.getRoutineById(id)).thenReturn(mockRoutine);
@@ -71,7 +72,7 @@ public class RoutineControllerTest {
     }
 
     @Test
-    void updateRoutine() {
+    void updateRoutine() throws GYMException {
         String id = "routine123";
         RoutineDTO routineDTO = new RoutineDTO();
         Routine mockRoutine = new Routine();
@@ -85,7 +86,7 @@ public class RoutineControllerTest {
     }
 
     @Test
-    void deleteRoutine() {
+    void deleteRoutine() throws GYMException {
         String id = "routine123";
         doNothing().when(routineService).deleteRoutine(id);
 
@@ -96,7 +97,7 @@ public class RoutineControllerTest {
     }
 
     @Test
-    void getRoutineById_NotFound() {
+    void getRoutineById_NotFound() throws GYMException {
         String id = "nonexistent123";
         when(routineService.getRoutineById(id)).thenReturn(null);
 

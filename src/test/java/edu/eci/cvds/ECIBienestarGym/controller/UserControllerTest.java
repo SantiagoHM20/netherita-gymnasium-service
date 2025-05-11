@@ -2,6 +2,7 @@ package edu.eci.cvds.ECIBienestarGym.controller;
 
 import edu.eci.cvds.ECIBienestarGym.dto.UserDTO;
 import edu.eci.cvds.ECIBienestarGym.enums.Role;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.ApiResponse;
 import edu.eci.cvds.ECIBienestarGym.model.User;
 import edu.eci.cvds.ECIBienestarGym.service.UserService;
@@ -118,7 +119,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void createUser() {
+    void createUser() throws GYMException {
         UserDTO userDTO = new UserDTO();
         User mockUser = new User();
         when(userService.createUser(userDTO)).thenReturn(mockUser);
@@ -131,7 +132,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void updateUser() {
+    void updateUser() throws GYMException {
         String id = "user123";
         UserDTO userDTO = new UserDTO();
         User mockUser = new User();
@@ -145,7 +146,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void deleteUser() {
+    void deleteUser() throws GYMException {
         String id = "user123";
         doNothing().when(userService).deleteUser(id);
 

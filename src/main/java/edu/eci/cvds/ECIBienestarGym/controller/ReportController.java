@@ -2,6 +2,7 @@ package edu.eci.cvds.ECIBienestarGym.controller;
 
 import edu.eci.cvds.ECIBienestarGym.dto.ReportDTO;
 import edu.eci.cvds.ECIBienestarGym.enums.ReportType;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.ApiResponse;
 import edu.eci.cvds.ECIBienestarGym.model.Report;
 import edu.eci.cvds.ECIBienestarGym.model.User;
@@ -38,10 +39,10 @@ public class ReportController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Obtener un reporte por su ID")
     public ResponseEntity<ApiResponse<Report>> getReportById(
-            @Parameter(description = "ID del reporte", example = "abc123") @PathVariable String id) {
+            @Parameter(description = "ID del reporte", example = "abc123") @PathVariable String id) throws GYMException {
         Report report = reportService.getReportById(id);
         if (report == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -51,7 +52,7 @@ public class ReportController {
     }
 
     @GetMapping("/coach/{coachId}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Obtener reportes por ID del entrenador")
     public ResponseEntity<ApiResponse<List<Report>>> getReportsByCoach(
             @Parameter(description = "ID del entrenador", example = "coach123") @PathVariable String coachId) {
@@ -62,7 +63,7 @@ public class ReportController {
     }
 
     @GetMapping("/date")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Obtener reportes por fecha de generación")
     public ResponseEntity<ApiResponse<List<Report>>> getReportsByGeneratedAt(
             @Parameter(description = "Fecha en formato ISO (yyyy-MM-dd)", example = "2024-05-01")
@@ -73,7 +74,7 @@ public class ReportController {
     }
 
     @GetMapping("/type")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Obtener reportes por tipo")
     public ResponseEntity<ApiResponse<List<Report>>> getReportsByType(
             @Parameter(description = "Tipo de reporte", example = "WEEKLY") @RequestParam("type") ReportType type) {
@@ -82,7 +83,7 @@ public class ReportController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN', 'TEACHER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Crear un nuevo reporte")
     public ResponseEntity<ApiResponse<Report>> createReport(@RequestBody ReportDTO report) {
         Report createdReport = reportService.createReport(report);
@@ -95,7 +96,7 @@ public class ReportController {
     @Operation(summary = "Actualizar un reporte existente")
     public ResponseEntity<ApiResponse<Report>> updateReport(
             @Parameter(description = "ID del reporte a actualizar", example = "abc123") @PathVariable String id,
-            @RequestBody ReportDTO report) {
+            @RequestBody ReportDTO report) throws GYMException {
         Report updatedReport = reportService.updateReport(id, report);
         return ResponseEntity.ok(new ApiResponse<>(true, "Reporte actualizado exitosamente", updatedReport));
     }
@@ -104,7 +105,7 @@ public class ReportController {
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Eliminar un reporte existente")
     public ResponseEntity<ApiResponse<Void>> deleteReport(
-            @Parameter(description = "ID del reporte a eliminar", example = "abc123") @PathVariable String id) {
+            @Parameter(description = "ID del reporte a eliminar", example = "abc123") @PathVariable String id) throws GYMException {
         reportService.deleteReport(id);
         return ResponseEntity.ok(new ApiResponse<>(true, "Reporte eliminado exitosamente", null));
     }

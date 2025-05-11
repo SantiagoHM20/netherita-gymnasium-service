@@ -2,6 +2,7 @@ package edu.eci.cvds.ECIBienestarGym.service;
 
 import edu.eci.cvds.ECIBienestarGym.dto.UserDTO;
 import edu.eci.cvds.ECIBienestarGym.enums.Role;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.User;
 import edu.eci.cvds.ECIBienestarGym.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -71,7 +72,7 @@ public class UserServiceTest {
     }
 
     @Test
-        void createUser() {
+        void createUser() throws GYMException {
             UserDTO userDTO = new UserDTO();
             userDTO.setId("user123");
             userDTO.setName("John Doe");
@@ -97,7 +98,7 @@ public class UserServiceTest {
         }
 
     @Test
-    void updateUser() {
+    void updateUser() throws GYMException {
         String id = "user123";
         UserDTO userDTO = new UserDTO();
         User mockUser = new User();
@@ -112,7 +113,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void deleteUser() {
+    void deleteUser() throws GYMException {
         String id = "user123";
         User mockUser = new User();
         mockUser.setId(id);
@@ -127,7 +128,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void updateUser_shouldUpdateNameEmailAndPasswordSuccessfully() {
+    void updateUser_shouldUpdateNameEmailAndPasswordSuccessfully() throws GYMException {
     String id = "user123";
     User existingUser = new User();
     existingUser.setId(id);
@@ -155,7 +156,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void updateUser_shouldUpdateOnlyNameIfOtherFieldsAreNull() {
+    void updateUser_shouldUpdateOnlyNameIfOtherFieldsAreNull() throws GYMException {
     String id = "user123";
     User existingUser = new User();
     existingUser.setId(id);
@@ -223,7 +224,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void createUserWithValidDataShouldReturnSavedUser() {
+    void createUserWithValidDataShouldReturnSavedUser() throws GYMException {
         UserDTO dto = new UserDTO();
         dto.setId("user1");
         dto.setName("Ana");
@@ -248,7 +249,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void deleteUserWithValidIdShouldDeleteUser() {
+    void deleteUserWithValidIdShouldDeleteUser() throws GYMException {
         String id = "user123";
         User mockUser = new User();
         mockUser.setId(id);

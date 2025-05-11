@@ -26,7 +26,7 @@ public class ReportService {
     return reportRepository.findAll();
     }
 
-    public Report getReportById(String id){return reportRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.REPORT_NOT_FOUND));}
+    public Report getReportById(String id) throws GYMException{return reportRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.REPORT_NOT_FOUND));}
 
     public List<Report> getReportsByCoach(User coachId){
         return reportRepository.findByCoachId(coachId);

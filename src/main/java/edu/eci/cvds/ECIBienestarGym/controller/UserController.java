@@ -3,6 +3,7 @@ package edu.eci.cvds.ECIBienestarGym.controller;
 
 import edu.eci.cvds.ECIBienestarGym.dto.UserDTO;
 import edu.eci.cvds.ECIBienestarGym.enums.Role;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.ApiResponse;
 import edu.eci.cvds.ECIBienestarGym.model.User;
 import edu.eci.cvds.ECIBienestarGym.service.UserService;
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN', 'TEACHER')")
+    @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN', 'TRAINER')")
     @Operation(summary = "Obtener usuario por ID", description = "Busca un usuario en el sistema según su identificador único.")
     public ResponseEntity<ApiResponse<User>> getUserById(
             @Parameter(description = "ID del usuario a buscar", required = true) @PathVariable("id") String id)
@@ -45,7 +46,7 @@ public class UserController {
     }
 
     @GetMapping("/name/{name}")
-    @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN', 'TEACHER')")
+    @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN', 'TRAINER')")
     @Operation(summary = "Obtener usuarios por nombre", description = "Busca usuarios en el sistema según su nombre.")
     public ResponseEntity<ApiResponse<List<User>>> getUsersByName(
             @Parameter(description = "Nombre del usuario a buscar", required = true) @PathVariable String name) {
@@ -53,7 +54,7 @@ public class UserController {
     }
 
     @GetMapping("/email")
-    @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN', 'TEACHER')")
+    @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN', 'TRAINER')")
     @Operation(summary = "Buscar usuario por correo electrónico", description = "Busca un usuario en el sistema según su correo electrónico.")
     public ResponseEntity<ApiResponse<Optional<User>>> getUserByEmail(
             @Parameter(description = "Correo electrónico del usuario a buscar", required = true) @RequestParam String email) {
@@ -86,7 +87,7 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Crear nuevo usuario", description = "Crea un nuevo usuario en el sistema.")
     public ResponseEntity<ApiResponse<User>> createUser(
-            @Parameter(description = "Datos del usuario a crear", required = true) @RequestBody UserDTO userDTO) {
+            @Parameter(description = "Datos del usuario a crear", required = true) @RequestBody UserDTO userDTO) throws GYMException {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse<>(true, "Usuario creado", userService.createUser(userDTO)));
     }
@@ -96,17 +97,15 @@ public class UserController {
     @Operation(summary = "Actualizar usuario", description = "Actualiza un usuario existente en el sistema.")
     public ResponseEntity<ApiResponse<User>> updateUser(
             @Parameter(description = "ID del usuario a actualizar", required = true) @PathVariable("id") String id,
-            @Parameter(description = "Datos actualizados del usuario", required = true) @RequestBody UserDTO userDTO)
-    {
+            @Parameter(description = "Datos actualizados del usuario", required = true) @RequestBody UserDTO userDTO) throws GYMException {
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuario actualizado", userService.updateUser(id, userDTO)));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Eliminar usuario", description = "Elimina un usuario del sistema.")
     public ResponseEntity<ApiResponse<Void>> deleteUser(
-            @Parameter(description = "ID del usuario a eliminar", required = true) @PathVariable("id") String id)
-            {
+            @Parameter(description = "ID del usuario a eliminar", required = true) @PathVariable("id") String id) throws GYMException {
         userService.deleteUser(id);
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuario eliminado", null));
     }

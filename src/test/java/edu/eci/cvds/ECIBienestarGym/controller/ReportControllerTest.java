@@ -2,6 +2,7 @@ package edu.eci.cvds.ECIBienestarGym.controller;
 
 import edu.eci.cvds.ECIBienestarGym.dto.ReportDTO;
 import edu.eci.cvds.ECIBienestarGym.enums.ReportType;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.ApiResponse;
 import edu.eci.cvds.ECIBienestarGym.model.Report;
 import edu.eci.cvds.ECIBienestarGym.service.ReportService;
@@ -47,7 +48,7 @@ public class ReportControllerTest {
     }
 
     @Test
-    void getReportById() {
+    void getReportById() throws GYMException {
         String id = "report123";
         Report mockReport = new Report();
         when(reportService.getReportById(id)).thenReturn(mockReport);
@@ -73,7 +74,7 @@ public class ReportControllerTest {
     }
 
     @Test
-    void updateReport() {
+    void updateReport() throws GYMException {
         String id = "report123";
         ReportDTO reportDTO = new ReportDTO();
         Report mockReport = new Report();
@@ -87,7 +88,7 @@ public class ReportControllerTest {
     }
 
     @Test
-    void deleteReport() {
+    void deleteReport() throws GYMException {
         String id = "report123";
         doNothing().when(reportService).deleteReport(id);
 
@@ -137,7 +138,7 @@ public class ReportControllerTest {
     }
 
     @Test
-    void getReportById_NotFound() {
+    void getReportById_NotFound() throws GYMException {
         String id = "nonexistent123";
         when(reportService.getReportById(id)).thenReturn(null);
         ResponseEntity<ApiResponse<Report>> response = reportController.getReportById(id);
