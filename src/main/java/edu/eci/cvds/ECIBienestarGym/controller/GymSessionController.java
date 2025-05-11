@@ -32,7 +32,7 @@ public class GymSessionController {
         this.gymSessionService = gymSessionService;
     }
 
-    @GetMapping("/trainer/")
+    @GetMapping("/trainer")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Obtener todas las sesiones de gimnasio")
     public ResponseEntity<ApiResponse<List<GymSession>>> getAllGymSessions() {
