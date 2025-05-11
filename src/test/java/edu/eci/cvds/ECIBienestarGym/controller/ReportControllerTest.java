@@ -1,6 +1,7 @@
 package edu.eci.cvds.ECIBienestarGym.controller;
 
 import edu.eci.cvds.ECIBienestarGym.dto.ReportDTO;
+import edu.eci.cvds.ECIBienestarGym.enums.ReportType;
 import edu.eci.cvds.ECIBienestarGym.model.ApiResponse;
 import edu.eci.cvds.ECIBienestarGym.model.Report;
 import edu.eci.cvds.ECIBienestarGym.service.ReportService;
@@ -11,10 +12,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
 public class ReportControllerTest {
@@ -92,4 +96,56 @@ public class ReportControllerTest {
         assertEquals(200, response.getStatusCodeValue());
         verify(reportService, times(1)).deleteReport(id);
     }
+
+    @Test
+    void getReportsByCoach() {
+        String coachId = "coach123";
+        List<Report> mockReports = Arrays.asList(new Report(), new Report());
+        when(reportService.getReportsByCoach(any())).thenReturn(mockReports);
+
+        ResponseEntity<ApiResponse<List<Report>>> response = reportController.getReportsByCoach(coachId);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(2, response.getBody().getData().size());
+        verify(reportService, times(1)).getReportsByCoach(argThat(user -> user.getId().equals(coachId)));
+    }
+
+    @Test
+    void getReportsByGeneratedAt() {
+        String dateStr = "2024-05-01";
+        List<Report> mockReports = Arrays.asList(new Report(), new Report());
+        when(reportService.getReportsByGeneratedAt(LocalDate.parse(dateStr))).thenReturn(mockReports);
+
+        ResponseEntity<ApiResponse<List<Report>>> response = reportController.getReportsByGeneratedAt(dateStr);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(2, response.getBody().getData().size());
+        verify(reportService, times(1)).getReportsByGeneratedAt(LocalDate.parse(dateStr));
+    }
+
+    @Test
+    void getReportsByType() {
+        ReportType type = ReportType.ASSISTANCE;
+        List<Report> mockReports = Arrays.asList(new Report(), new Report());
+        when(reportService.getReportsByType(type)).thenReturn(mockReports);
+
+        ResponseEntity<ApiResponse<List<Report>>> response = reportController.getReportsByType(type);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(2, response.getBody().getData().size());
+        verify(reportService, times(1)).getReportsByType(type);
+    }
+
+    @Test
+    void getReportById_NotFound() {
+        String id = "nonexistent123";
+        when(reportService.getReportById(id)).thenReturn(null);
+        ResponseEntity<ApiResponse<Report>> response = reportController.getReportById(id);
+
+        assertEquals(404, response.getStatusCodeValue());
+        assertEquals(false, response.getBody().isSuccess());
+        assertEquals("Reporte no encontrado", response.getBody().getMessage());
+        verify(reportService, times(1)).getReportById(id);
+    }
+
 }

@@ -1,6 +1,8 @@
 package edu.eci.cvds.ECIBienestarGym.controller;
 
 import edu.eci.cvds.ECIBienestarGym.dto.RoutineDTO;
+import edu.eci.cvds.ECIBienestarGym.embeddables.Exercise;
+import edu.eci.cvds.ECIBienestarGym.enums.DifficultyLevel;
 import edu.eci.cvds.ECIBienestarGym.model.ApiResponse;
 import edu.eci.cvds.ECIBienestarGym.model.Routine;
 import edu.eci.cvds.ECIBienestarGym.service.RoutineService;
@@ -92,4 +94,105 @@ public class RoutineControllerTest {
         assertEquals(200, response.getStatusCodeValue());
         verify(routineService, times(1)).deleteRoutine(id);
     }
+
+    @Test
+    void getRoutineById_NotFound() {
+        String id = "nonexistent123";
+        when(routineService.getRoutineById(id)).thenReturn(null);
+
+        ResponseEntity<ApiResponse<Routine>> response = routineController.getRoutineById(id);
+
+        assertEquals(404, response.getStatusCodeValue());
+        assertEquals(false, response.getBody().isSuccess());
+        assertEquals("Rutina no encontrada", response.getBody().getMessage());
+        verify(routineService, times(1)).getRoutineById(id);
+    }
+
+    @Test
+    void createRoutine_InvalidData() {
+        RoutineDTO routineDTO = new RoutineDTO(); // Puede tener datos inválidos.
+        when(routineService.createRoutine(routineDTO)).thenThrow(new IllegalArgumentException("Datos inválidos"));
+
+        try {
+            routineController.createRoutine(routineDTO);
+        } catch (IllegalArgumentException e) {
+            assertEquals("Datos inválidos", e.getMessage());
+        }
+    }
+
+    @Test
+    void getRoutinesByName() {
+        String name = "Cardio Routine";
+        List<Routine> mockRoutines = Arrays.asList(new Routine(), new Routine());
+        when(routineService.getRoutinesByName(name)).thenReturn(mockRoutines);
+
+        ResponseEntity<ApiResponse<List<Routine>>> response = routineController.getRoutinesByName(name);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(2, response.getBody().getData().size());
+        verify(routineService, times(1)).getRoutinesByName(name);
+    }
+
+    @Test
+    void getRoutinesByName_NotFound() {
+        String name = "Nonexistent Routine";
+        when(routineService.getRoutinesByName(name)).thenReturn(Arrays.asList());
+
+        ResponseEntity<ApiResponse<List<Routine>>> response = routineController.getRoutinesByName(name);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(0, response.getBody().getData().size());
+        verify(routineService, times(1)).getRoutinesByName(name);
+    }
+
+    @Test
+    void getRoutinesByDifficulty() {
+        DifficultyLevel level = DifficultyLevel.HARD;
+        List<Routine> mockRoutines = Arrays.asList(new Routine(), new Routine());
+        when(routineService.getRoutinesByDifficulty(level)).thenReturn(mockRoutines);
+
+        ResponseEntity<ApiResponse<List<Routine>>> response = routineController.getRoutinesByDifficulty(level);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(2, response.getBody().getData().size());
+        verify(routineService, times(1)).getRoutinesByDifficulty(level);
+    }
+
+    @Test
+    void getRoutinesByDifficulty_NotFound() {
+        DifficultyLevel level = DifficultyLevel.EASY;
+        when(routineService.getRoutinesByDifficulty(level)).thenReturn(Arrays.asList());
+
+        ResponseEntity<ApiResponse<List<Routine>>> response = routineController.getRoutinesByDifficulty(level);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(0, response.getBody().getData().size());
+        verify(routineService, times(1)).getRoutinesByDifficulty(level);
+    }
+
+    @Test
+    void getRoutinesByExercises() {
+        List<Exercise> exercises = Arrays.asList(new Exercise(), new Exercise());
+        List<Routine> mockRoutines = Arrays.asList(new Routine(), new Routine());
+        when(routineService.getRoutinesByExercises(exercises)).thenReturn(mockRoutines);
+
+        ResponseEntity<ApiResponse<List<Routine>>> response = routineController.getRoutinesByExercises(exercises);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(2, response.getBody().getData().size());
+        verify(routineService, times(1)).getRoutinesByExercises(exercises);
+    }
+
+    @Test
+    void getRoutinesByExercises_NotFound() {
+        List<Exercise> exercises = Arrays.asList(new Exercise(), new Exercise());
+        when(routineService.getRoutinesByExercises(exercises)).thenReturn(Arrays.asList());
+
+        ResponseEntity<ApiResponse<List<Routine>>> response = routineController.getRoutinesByExercises(exercises);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(0, response.getBody().getData().size());
+        verify(routineService, times(1)).getRoutinesByExercises(exercises);
+    }
+
 }

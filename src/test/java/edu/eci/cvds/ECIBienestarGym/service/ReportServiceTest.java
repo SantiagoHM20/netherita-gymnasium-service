@@ -4,8 +4,10 @@ import edu.eci.cvds.ECIBienestarGym.dto.ReportDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.ReportEntryDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.UserDTO;
 import edu.eci.cvds.ECIBienestarGym.embeddables.ReportEntry;
+import edu.eci.cvds.ECIBienestarGym.enums.ReportType;
 import edu.eci.cvds.ECIBienestarGym.enums.Role;
 import edu.eci.cvds.ECIBienestarGym.model.Report;
+import edu.eci.cvds.ECIBienestarGym.model.User;
 import edu.eci.cvds.ECIBienestarGym.repository.ReportRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class ReportServiceTest {
@@ -139,4 +142,37 @@ public class ReportServiceTest {
         verify(reportRepository, times(1)).findById(id);
         verify(reportRepository, times(1)).deleteById(id);
     }
+
+    @Test
+    void getReportsByCoach() {
+        User coach = new User();
+        coach.setId("coach123");
+        coach.setName("Coach Name");
+        coach.setEmail("coach@example.com");
+
+        List<Report> mockReports = Arrays.asList(new Report(), new Report());
+
+        when(reportRepository.findByCoachId(coach)).thenReturn(mockReports);
+
+        List<Report> reports = reportService.getReportsByCoach(coach);
+
+        assertEquals(2, reports.size());
+        verify(reportRepository, times(1)).findByCoachId(coach);
+    }
+
+    @Test
+    void getReportsByAllTypes() {
+        for (ReportType type : ReportType.values()) {
+            List<Report> mockReports = Arrays.asList(new Report(), new Report());
+            when(reportRepository.findByType(type)).thenReturn(mockReports);
+
+            List<Report> reports = reportService.getReportsByType(type);
+
+            assertEquals(2, reports.size(), "Failed for type: " + type);
+            verify(reportRepository, times(1)).findByType(type);
+            // Reset mock between iterations
+            reset(reportRepository);
+        }
+    }
+
 }

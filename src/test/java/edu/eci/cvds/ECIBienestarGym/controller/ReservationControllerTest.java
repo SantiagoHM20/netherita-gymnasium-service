@@ -122,4 +122,17 @@ public class ReservationControllerTest {
         assertEquals(204, response.getStatusCodeValue());
         verify(reservationService, times(1)).deleteReservation(id);
     }
+
+    @Test
+    void getReservationByIdNotFound() {
+        String id = "nonExistentReservationId";
+        when(reservationService.getReservationById(id)).thenReturn(null); // Simula que no se encontró la reserva
+
+        ResponseEntity<ApiResponse<Reservation>> response = reservationController.getReservationById(id);
+
+        assertEquals(404, response.getStatusCodeValue());  // Verifica el código de estado 404 (No encontrado)
+        assertEquals("Reserva no encontrada", response.getBody().getMessage());
+        verify(reservationService, times(1)).getReservationById(id);
+    }
+
 }

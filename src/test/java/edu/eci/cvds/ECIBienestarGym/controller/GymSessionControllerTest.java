@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class GymSessionControllerTest {
@@ -45,18 +46,7 @@ public class GymSessionControllerTest {
         verify(gymSessionService, times(1)).getAllGymSessions();
     }
 
-    @Test
-    void getGymSessionById() {
-        String sessionId = "sess123";
-        GymSession mockSession = new GymSession();
-        when(gymSessionService.getGymSessionById(sessionId)).thenReturn(mockSession);
-
-        ResponseEntity<ApiResponse<GymSession>> response = gymSessionController.getGymSessionById(sessionId);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(mockSession, response.getBody().getData());
-        verify(gymSessionService, times(1)).getGymSessionById(sessionId);
-    }
+    
 
     @Test
     void getGymSessionsByCoachId() {
@@ -149,5 +139,63 @@ public class GymSessionControllerTest {
 
         assertEquals(200, response.getStatusCodeValue());
         verify(gymSessionService, times(1)).deleteGymSession(sessionId);
+    }
+
+    @Test
+    void getGymSessionsByStartTimeAndEndTime() {
+        LocalTime startTime = LocalTime.of(10, 0);  // 10:00 AM
+        LocalTime endTime = LocalTime.of(12, 0);   // 12:00 PM
+        List<GymSession> mockSessions = Arrays.asList(new GymSession(), new GymSession());
+        
+        when(gymSessionService.getGymSessionsByStartTimeAndEndTime(startTime, endTime))
+                .thenReturn(mockSessions);
+
+        ResponseEntity<ApiResponse<List<GymSession>>> response = 
+                gymSessionController.getGymSessionsByStartTimeAndEndTime(startTime.toString(), endTime.toString());
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(2, response.getBody().getData().size());  // Verificar que se obtuvieron 2 sesiones
+        verify(gymSessionService, times(1)).getGymSessionsByStartTimeAndEndTime(startTime, endTime);
+    }
+
+    @Test
+    void getGymSessionsByEndTime() {
+        String endTime = "12:00:00";  // Hora de fin en formato ISO
+        List<GymSession> mockSessions = Arrays.asList(new GymSession(), new GymSession());
+        
+        when(gymSessionService.getGymSessionsByEndTime(LocalTime.parse(endTime)))
+                .thenReturn(mockSessions);
+
+        ResponseEntity<ApiResponse<List<GymSession>>> response = 
+                gymSessionController.getGymSessionsByEndTime(endTime);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(2, response.getBody().getData().size());  // Verificar que se obtuvieron 2 sesiones
+        verify(gymSessionService, times(1)).getGymSessionsByEndTime(LocalTime.parse(endTime));
+    }
+
+    @Test
+    void getGymSessionById(){
+        String sessionId = "sess123";
+        GymSession mockSession = new GymSession();
+        when(gymSessionService.getGymSessionById(sessionId)).thenReturn(mockSession);
+
+        ResponseEntity<ApiResponse<GymSession>> response = gymSessionController.getGymSessionById(sessionId);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(mockSession, response.getBody().getData());  // Verificar que la sesión coincide con la mockeada
+        verify(gymSessionService, times(1)).getGymSessionById(sessionId);
+    }
+
+    @Test
+    void getGymSessionByIdNotFound() {
+        String sessionId = "sess123";
+        when(gymSessionService.getGymSessionById(sessionId)).thenReturn(null);
+
+        ResponseEntity<ApiResponse<GymSession>> response = gymSessionController.getGymSessionById(sessionId);
+
+        assertEquals(404, response.getStatusCodeValue());  // Verificar que se devuelve el código 404
+        assertEquals("Sesión de gimnasio no encontrada", response.getBody().getMessage());
+        verify(gymSessionService, times(1)).getGymSessionById(sessionId);
     }
 }

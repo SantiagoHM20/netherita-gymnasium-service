@@ -10,11 +10,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 public class UserServiceTest {
@@ -120,4 +125,262 @@ public class UserServiceTest {
         verify(userRepository, times(1)).findById(id);
         verify(userRepository, times(1)).deleteById(id);
     }
+
+    @Test
+    void updateUser_shouldThrowExceptionWhenUserNotFound() {
+        String id = "nonexistent";
+        UserDTO userDTO = new UserDTO();
+        when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+            userService.updateUser(id, userDTO)
+        );
+
+        assertEquals("No se encontró el usuario", exception.getMessage());
+        verify(userRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void updateUser_shouldThrowExceptionWhenEmailAlreadyExists() {
+        String id = "user123";
+        String newEmail = "existing@example.com";
+        User existingUser = new User();
+        existingUser.setId(id);
+        existingUser.setEmail("old@example.com");
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setEmail(newEmail);
+
+        when(userRepository.findById(id)).thenReturn(Optional.of(existingUser));
+        when(userRepository.findByEmail(newEmail)).thenReturn(Optional.of(new User())); // Simula que otro usuario ya tiene ese email
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+            userService.updateUser(id, userDTO)
+        );
+
+        assertEquals("El usuario ya tiene ese email", exception.getMessage());
+        verify(userRepository, times(1)).findById(id);
+        verify(userRepository, times(1)).findByEmail(newEmail);
+    }
+
+    @Test
+    void updateUser_shouldUpdateNameEmailAndPasswordSuccessfully() {
+    String id = "user123";
+    User existingUser = new User();
+    existingUser.setId(id);
+    existingUser.setEmail("old@example.com");
+    existingUser.setName("Old Name");
+    existingUser.setPassword("oldpass");
+    UserDTO userDTO = new UserDTO();
+    userDTO.setName("New Name");
+    userDTO.setEmail("new@example.com");
+    userDTO.setPassword("newpass");
+
+    when(userRepository.findById(id)).thenReturn(Optional.of(existingUser));
+    when(userRepository.findByEmail("new@example.com")).thenReturn(Optional.empty());
+    when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+    User updated = userService.updateUser(id, userDTO);
+
+    assertEquals("New Name", updated.getName());
+    assertEquals("new@example.com", updated.getEmail());
+    assertEquals("newpass", updated.getPassword());
+
+    verify(userRepository, times(1)).findById(id);
+    verify(userRepository, times(1)).findByEmail("new@example.com");
+    verify(userRepository, times(1)).save(existingUser);
+    }
+
+    @Test
+    void updateUser_shouldUpdateOnlyNameIfOtherFieldsAreNull() {
+    String id = "user123";
+    User existingUser = new User();
+    existingUser.setId(id);
+    existingUser.setName("Old Name");
+    existingUser.setEmail("same@example.com");
+    existingUser.setPassword("pass");
+    UserDTO userDTO = new UserDTO();
+    userDTO.setName("Updated Name");
+
+    when(userRepository.findById(id)).thenReturn(Optional.of(existingUser));
+    when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+    User updated = userService.updateUser(id, userDTO);
+
+    assertEquals("Updated Name", updated.getName());
+    assertEquals("same@example.com", updated.getEmail());
+    assertEquals("pass", updated.getPassword());
+
+    verify(userRepository, times(1)).findById(id);
+    verify(userRepository, never()).findByEmail(anyString());
+    verify(userRepository, times(1)).save(existingUser);
+    }
+
+    @Test
+    void getUsersByNameReturnsMatchingUsers() {
+        String name = "Carlos";
+        List<User> mockUsers = Arrays.asList(new User(), new User());
+        when(userRepository.findByName(name)).thenReturn(mockUsers);
+        List<User> users = userService.getUsersByName(name);
+
+        assertEquals(2, users.size());
+        verify(userRepository, times(1)).findByName(name);
+    }
+
+    @Test
+    void getUsersByEmailReturnsUserIfExists() {
+        String email = "test@example.com";
+        User mockUser = new User();
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(mockUser));
+        Optional<User> user = userService.getUsersByEmail(email);
+
+        assertEquals(Optional.of(mockUser), user);
+        verify(userRepository, times(1)).findByEmail(email);
+    }
+
+    @Test
+    void getUsersByEmailReturnsEmptyIfNotFound() {
+        String email = "notfound@example.com";
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+        Optional<User> user = userService.getUsersByEmail(email);
+
+        assertTrue(user.isEmpty());
+        verify(userRepository, times(1)).findByEmail(email);
+    }
+
+    @Test
+    void getUsersByRegistrationDateReturnsUsers() {
+        LocalDate date = LocalDate.of(2024, 3, 15);
+        List<User> mockUsers = Arrays.asList(new User(), new User());
+        when(userRepository.findByRegistrationDate(date)).thenReturn(mockUsers);
+        List<User> users = userService.getUsersByRegistrationDate(date);
+
+        assertEquals(2, users.size());
+        verify(userRepository, times(1)).findByRegistrationDate(date);
+    }
+
+    @Test
+    void createUserWithValidDataShouldReturnSavedUser() {
+        UserDTO dto = new UserDTO();
+        dto.setId("user1");
+        dto.setName("Ana");
+        dto.setEmail("ana@example.com");
+        dto.setRole(Role.STUDENT);
+
+        User expectedUser = new User();
+        expectedUser.setId(dto.getId());
+        expectedUser.setName(dto.getName());
+        expectedUser.setEmail(dto.getEmail());
+        expectedUser.setRole(dto.getRole());
+
+        when(userRepository.save(any(User.class))).thenReturn(expectedUser);
+
+        User result = userService.createUser(dto);
+
+        assertEquals(dto.getId(), result.getId());
+        assertEquals(dto.getName(), result.getName());
+        assertEquals(dto.getEmail(), result.getEmail());
+        assertEquals(dto.getRole(), result.getRole());
+        verify(userRepository, times(1)).save(any(User.class));
+    }
+
+    @Test
+    void createUserShouldThrowExceptionIfIdIsNull() {
+        UserDTO dto = new UserDTO();
+        dto.setId(null);
+        dto.setName("Ana");
+        dto.setEmail("ana@example.com");
+        dto.setRole(Role.STUDENT);
+
+        Exception e = assertThrows(IllegalArgumentException.class, () -> userService.createUser(dto));
+        assertEquals("User ID cannot be null or empty", e.getMessage());
+    }
+
+    @Test
+    void createUserShouldThrowExceptionIfNameIsEmpty() {
+        UserDTO dto = new UserDTO();
+        dto.setId("user2");
+        dto.setName("");
+        dto.setEmail("ana@example.com");
+        dto.setRole(Role.STUDENT);
+
+        Exception e = assertThrows(IllegalArgumentException.class, () -> userService.createUser(dto));
+        assertEquals("User name cannot be null or empty", e.getMessage());
+    }
+
+    @Test
+    void createUserShouldThrowExceptionIfEmailIsNull() {
+        UserDTO dto = new UserDTO();
+        dto.setId("user3");
+        dto.setName("Ana");
+        dto.setEmail(null);
+        dto.setRole(Role.STUDENT);
+
+        Exception e = assertThrows(IllegalArgumentException.class, () -> userService.createUser(dto));
+        assertEquals("User email cannot be null or empty", e.getMessage());
+    }
+
+    @Test
+    void createUserShouldThrowExceptionIfRoleIsNull() {
+        UserDTO dto = new UserDTO();
+        dto.setId("user4");
+        dto.setName("Ana");
+        dto.setEmail("ana@example.com");
+        dto.setRole(null);
+
+        Exception e = assertThrows(IllegalArgumentException.class, () -> userService.createUser(dto));
+        assertEquals("User role cannot be null", e.getMessage());
+    }
+
+    @Test
+    void deleteUserWithValidIdShouldDeleteUser() {
+        String id = "user123";
+        User mockUser = new User();
+        mockUser.setId(id);
+
+        when(userRepository.findById(id)).thenReturn(Optional.of(mockUser));
+        doNothing().when(userRepository).deleteById(id);
+
+        userService.deleteUser(id);
+
+        verify(userRepository, times(1)).findById(id);
+        verify(userRepository, times(1)).deleteById(id);
+    }
+
+    @Test
+    void deleteUserShouldThrowExceptionIfIdIsNull() {
+        Exception e = assertThrows(IllegalArgumentException.class, () -> {
+            userService.deleteUser(null);
+        });
+
+        assertEquals("El Id no puede ser nulo o vacío", e.getMessage());
+        verify(userRepository, never()).findById(anyString());
+        verify(userRepository, never()).deleteById(anyString());
+    }
+
+    @Test
+    void deleteUserShouldThrowExceptionIfIdIsEmpty() {
+        Exception e = assertThrows(IllegalArgumentException.class, () -> {
+            userService.deleteUser("");
+        });
+
+        assertEquals("El Id no puede ser nulo o vacío", e.getMessage());
+        verify(userRepository, never()).findById(anyString());
+        verify(userRepository, never()).deleteById(anyString());
+    }
+
+    @Test
+    void deleteUserShouldThrowExceptionIfUserNotFound() {
+        String id = "nonexistent";
+        when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+        Exception e = assertThrows(IllegalArgumentException.class, () -> {
+            userService.deleteUser(id);
+        });
+
+        assertEquals("Usuario no encontrado con el id: " + id, e.getMessage());
+        verify(userRepository, times(1)).findById(id);
+        verify(userRepository, never()).deleteById(id);
+    }
+
 }
