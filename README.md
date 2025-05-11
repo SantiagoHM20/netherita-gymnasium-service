@@ -96,26 +96,31 @@ mvn clean install
 Go to EciBienestarGymApplication
 
 type _mvn spring-boot:run_ in terminal
-
-
 ## Diagrams
 
-### Data:
+### Data
+
+This diagram shows the relationships between key entities: User, Routine, PhysicalProgress, GymSession, and Reservation. It includes example JSON structures to illustrate the stored data, such as user profiles, assigned routines, progress tracking, and session reservations.
 
 ![image](assets/Data.png)
-### Clases
+
+### Classes
+
+This diagram represents the class structure of the system, including main entities and their attributes. It highlights the logical design of objects like users, sessions, routines, and reservations, along with their interactions.
 
 ![image](assets/Clases.png)
 
 ### DTO
 
+This diagram displays the Data Transfer Objects (DTOs) used in the system for communication between services and API endpoints. It outlines the structure of the data being transferred, ensuring consistency and validation.
+
 ![image](assets/DTOS.png)
 
 ### Components
 
+This diagram illustrates the architectural model of the module, showing how different components interact. It includes services, controllers, repositories, and external dependencies, providing a clear view of the system’s modular design. It also depicts security using JWT, user roles (Administrative and Student), and tools for testing and code coverage (Mockito, JUnit 5, JaCoCo). The system is deployed to the cloud, and data is stored in MongoDB.
+
 ![image](assets/modelo%20arquitectura.drawio.png)
-
-
 ### Sequence
 
 Situation: A student records his current physical measurements.
