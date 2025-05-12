@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class RoutineServiceTest {
@@ -84,7 +85,7 @@ public class RoutineServiceTest {
 
     @Test
     void ShouldReturnRoutinesByDifficulty() {
-        DifficultyLevel difficulty = DifficultyLevel.MEDIUM;
+        DifficultyLevel difficulty = DifficultyLevel.MEDIO;
         List<Routine> mockRoutines = Arrays.asList(new Routine(), new Routine());
         when(routineRepository.findByDifficulty(difficulty)).thenReturn(mockRoutines);
 
@@ -99,7 +100,7 @@ public class RoutineServiceTest {
         RoutineDTO routineDTO = new RoutineDTO();
         routineDTO.setName("Strength");
         routineDTO.setDescription("Strength training routine");
-        routineDTO.setDifficulty(DifficultyLevel.HARD);
+        routineDTO.setDifficulty(DifficultyLevel.DIFICIL);
         routineDTO.setExercises(Arrays.asList(
             new ExerciseDTO("Push-ups", 10, 3, 0, ExerciseType.FUERZA, List.of(MuscleGroup.PECHO))
         ));
@@ -119,7 +120,7 @@ public class RoutineServiceTest {
         RoutineDTO routineDTO = new RoutineDTO();
         routineDTO.setName("Updated Routine");
         routineDTO.setDescription("Updated description");
-        routineDTO.setDifficulty(DifficultyLevel.EASY);
+        routineDTO.setDifficulty(DifficultyLevel.FACIL);
         routineDTO.setExercises(Arrays.asList(
             new ExerciseDTO("Squats", 15, 3, 0, ExerciseType.FUERZA, List.of(MuscleGroup.DORSALES))
         ));

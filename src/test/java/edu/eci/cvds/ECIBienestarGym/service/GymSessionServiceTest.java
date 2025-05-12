@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class GymSessionServiceTest {
@@ -143,10 +144,10 @@ public class GymSessionServiceTest {
         coachDTO.setId("coach123");
         coachDTO.setName("John Doe");
         coachDTO.setEmail("johndoe@example.com");
-        coachDTO.setRole(Role.TEACHER);
+        coachDTO.setRole(Role.PROFESOR);
 
         GymSessionDTO gymSessionDTO = new GymSessionDTO();
-        gymSessionDTO.setCoachId(coachDTO); // Asignar el UserDTO
+        gymSessionDTO.setCoachId(coachDTO); 
         gymSessionDTO.setDate(LocalDate.now());
         gymSessionDTO.setStartTime(LocalTime.of(10, 0));
         gymSessionDTO.setEndTime(LocalTime.of(12, 0));
@@ -169,7 +170,7 @@ public class GymSessionServiceTest {
         coachDTO.setId("coach123");
         coachDTO.setName("John Doe");
         coachDTO.setEmail("johndoe@example.com");
-        coachDTO.setRole(Role.TEACHER);
+        coachDTO.setRole(Role.PROFESOR);
 
         GymSessionDTO gymSessionDTO = new GymSessionDTO();
         gymSessionDTO.setCoachId(coachDTO);

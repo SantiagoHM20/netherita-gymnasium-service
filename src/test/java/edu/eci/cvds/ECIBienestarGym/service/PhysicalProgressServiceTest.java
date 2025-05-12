@@ -83,7 +83,7 @@ public class PhysicalProgressServiceTest {
         userDTO.setId("user123");
         userDTO.setName("John Doe");
         userDTO.setEmail("johndoe@example.com");
-        userDTO.setRole(Role.STUDENT);
+        userDTO.setRole(Role.ESTUDIANTE);
 
         RoutineDTO routineDTO = new RoutineDTO();
         routineDTO.setId("routine123");
@@ -133,7 +133,7 @@ public class PhysicalProgressServiceTest {
         userDTO.setId("user123");
         userDTO.setName("John Doe");
         userDTO.setEmail("johndoe@example.com");
-        userDTO.setRole(Role.STUDENT);
+        userDTO.setRole(Role.ESTUDIANTE);
 
         RoutineDTO routineDTO = new RoutineDTO();
         routineDTO.setId("routine123");
