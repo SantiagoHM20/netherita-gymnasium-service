@@ -79,6 +79,32 @@ MongoDB.
 
 ![image](assets/scafolding.png)
 
+
+##  Design Patterns Used
+
+This service follows well-established software architecture and design patterns to ensure scalability, maintainability, and clarity in its implementation:
+
+### 1. MVC (Model-View-Controller)
+- **Used for:** Organizing the codebase.
+- **How:** Controllers handle HTTP requests (`@RestController`), Services encapsulate business logic (`@Service`), and Models/DTOs represent the domain and transfer objects (`@Entity`, `@Document`, etc.).
+- **Benefit:** Separation of concerns, allowing easier maintenance and testability.
+
+### 2. Global Exception Handling – Interceptor Pattern
+- **Used for:** Centralized error management.
+- **How:** `@ControllerAdvice` classes intercept thrown exceptions globally and return structured `ResponseEntity` with error messages.
+- **Benefit:** Clean controller logic and consistent error responses across the service.
+
+### 3. Envelope Pattern (Response Wrapper)
+- **Used for:** Standardizing API responses.
+- **How:** All API endpoints return a uniform `ApiResponse<T>` object, typically including:
+  ```json
+  {
+    "success": true,
+    "data": {...},
+    "message": "Operation successful"
+  }
+
+  
 ## How to run
 
 1: Clone this repository
