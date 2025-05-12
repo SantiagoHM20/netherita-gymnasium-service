@@ -32,7 +32,7 @@ public class GymSessionController {
         this.gymSessionService = gymSessionService;
     }
 
-    @GetMapping("/trainer")
+    @GetMapping("/trainer/trainer-session")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Obtener todas las sesiones de gimnasio")
     public ResponseEntity<ApiResponse<List<GymSession>>> getAllGymSessions() {
@@ -40,7 +40,7 @@ public class GymSessionController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Sesiones de gimnasio obtenidas", sessions));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/trainer/trainer-session/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Obtener una sesión de gimnasio por su ID")
     public ResponseEntity<ApiResponse<GymSession>> getGymSessionById(
@@ -53,7 +53,7 @@ public class GymSessionController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Sesión de gimnasio encontrada", session));
     }
 
-    @GetMapping("/coach/{coachId}")
+    @GetMapping("trainer/trainer-session/{coachId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Obtener sesiones de gimnasio por ID de entrenador")
     public ResponseEntity<ApiResponse<List<GymSession>>> getGymSessionsByCoachId(
@@ -64,7 +64,7 @@ public class GymSessionController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Sesiones de gimnasio del entrenador obtenidas", sessions));
     }
 
-    @GetMapping("/capacity/{capacity}")
+    @GetMapping("trainer/trainer-session/capacity/{capacity}")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Obtener sesiones de gimnasio por capacidad")
     public ResponseEntity<ApiResponse<List<GymSession>>> getGymSessionsByCapacity(
@@ -73,7 +73,7 @@ public class GymSessionController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Sesiones de gimnasio con capacidad " + capacity + " obtenidas", sessions));
     }
 
-    @GetMapping("/date/{date}")
+    @GetMapping("user/date/{date}")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER', 'STUDENT')")
     @Operation(summary = "Obtener sesiones de gimnasio por fecha")
     public ResponseEntity<ApiResponse<List<GymSession>>> getGymSessionsByDate(
@@ -82,7 +82,7 @@ public class GymSessionController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Sesiones de gimnasio en la fecha " + date + " obtenidas", sessions));
     }
 
-    @GetMapping("/date/{date}/time-range")
+    @GetMapping("/user/date/{date}/time-range")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER', 'STUDENT')")
     @Operation(summary = "Obtener sesiones de gimnasio por fecha y rango de tiempo")
     public ResponseEntity<ApiResponse<List<GymSession>>> getGymSessionsByDateAndTime(
@@ -95,7 +95,7 @@ public class GymSessionController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Sesiones de gimnasio obtenidas por fecha y rango de tiempo", sessions));
     }
 
-    @GetMapping("/time-range")
+    @GetMapping("/user/time-range")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER', 'STUDENT')")
     @Operation(summary = "Obtener sesiones de gimnasio por rango de tiempo")
     public ResponseEntity<ApiResponse<List<GymSession>>> getGymSessionsByStartTimeAndEndTime(
@@ -106,7 +106,7 @@ public class GymSessionController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Sesiones de gimnasio obtenidas por rango de tiempo", sessions));
     }
 
-    @GetMapping("/end-time/{endTime}")
+    @GetMapping("/user/end-time/{endTime}")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER', 'STUDENT')")
     @Operation(summary = "Obtener sesiones de gimnasio por hora de fin")
     public ResponseEntity<ApiResponse<List<GymSession>>> getGymSessionsByEndTime(
@@ -115,7 +115,7 @@ public class GymSessionController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Sesiones de gimnasio obtenidas por hora de fin", sessions));
     }
 
-    @PostMapping("/")
+    @PostMapping("trainer/trainer-session")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Crear una nueva sesión de gimnasio")
     public ResponseEntity<ApiResponse<GymSession>> createGymSession(
@@ -125,7 +125,7 @@ public class GymSessionController {
                 .body(new ApiResponse<>(true, "Sesión de gimnasio creada", createdSession));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("trainer/trainer-session/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Actualizar una sesión de gimnasio")
     public ResponseEntity<ApiResponse<GymSession>> updateGymSession(
@@ -135,7 +135,7 @@ public class GymSessionController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Sesión de gimnasio actualizada", updatedSession));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("trainer/trainer-session/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Eliminar una sesión de gimnasio")
     public ResponseEntity<ApiResponse<Void>> deleteGymSession(

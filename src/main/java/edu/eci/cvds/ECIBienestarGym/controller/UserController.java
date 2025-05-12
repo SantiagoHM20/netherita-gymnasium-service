@@ -29,14 +29,14 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/trainer")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Obtener todos los usuarios", description = "Devuelve una lista de todos los usuarios del sistema.")
     public ResponseEntity<ApiResponse<List<User>>> getAllUsers() {
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuarios obtenidos exitosamente", userService.getAllUsers()));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/user/{id}")
     @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN', 'TRAINER')")
     @Operation(summary = "Obtener usuario por ID", description = "Busca un usuario en el sistema según su identificador único.")
     public ResponseEntity<ApiResponse<User>> getUserById(
@@ -45,7 +45,7 @@ public class UserController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuario con id: " + id, userService.getUsersById(id)));
     }
 
-    @GetMapping("/name/{name}")
+    @GetMapping("/user/name/{name}")
     @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN', 'TRAINER')")
     @Operation(summary = "Obtener usuarios por nombre", description = "Busca usuarios en el sistema según su nombre.")
     public ResponseEntity<ApiResponse<List<User>>> getUsersByName(
@@ -53,7 +53,7 @@ public class UserController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuarios con nombre: " + name, userService.getUsersByName(name)));
     }
 
-    @GetMapping("/email")
+    @GetMapping("/user/email")
     @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN', 'TRAINER')")
     @Operation(summary = "Buscar usuario por correo electrónico", description = "Busca un usuario en el sistema según su correo electrónico.")
     public ResponseEntity<ApiResponse<Optional<User>>> getUserByEmail(
@@ -75,7 +75,7 @@ public class UserController {
     }
 
     @GetMapping("/registration-date/{registrationDate}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','TRAINER')")
     @Operation(summary = "Obtener usuarios por fecha de registro", description = "Retorna una lista de usuarios registrados en la fecha especificada (formato: yyyy-MM-dd).")
     public ResponseEntity<ApiResponse<List<User>>> getUsersByRegistrationDate(
             @Parameter(description = "Fecha de registro en formato yyyy-MM-dd", required = true) @PathVariable String registrationDate) {

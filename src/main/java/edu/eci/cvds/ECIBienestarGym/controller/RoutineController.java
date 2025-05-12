@@ -31,14 +31,14 @@ public class RoutineController {
 
     @Operation(summary = "Obtener todas las rutinas", description = "Devuelve una lista con todas las rutinas registradas.")
 
-    @GetMapping("/trainer/trainer-routine")
+    @GetMapping("/trainer/trainer-routines")
     @PreAuthorize("hasAnyRole('STUDENT', 'TRAINER', 'ADMIN')")
     public ResponseEntity<ApiResponse<List<Routine>>> getAllRoutines() {
         return ResponseEntity.ok(new ApiResponse<>(true, "Rutinas obtenidas exitosamente", routineService.getAllRoutines()));
     }
 
     @Operation(summary = "Obtener rutina por ID", description = "Devuelve la rutina correspondiente al ID proporcionado.")
-    @GetMapping("/{id}")
+    @GetMapping("/trainer-routines/{id}")
     @PreAuthorize("hasAnyRole('STUDENT', 'TRAINER', 'ADMIN')")
     public ResponseEntity<ApiResponse<Routine>> getRoutineById(
             @Parameter(description = "ID de la rutina a consultar", required = true) @PathVariable String id) throws GYMException {
@@ -51,7 +51,7 @@ public class RoutineController {
     }
 
     @Operation(summary = "Obtener rutinas por nombre", description = "Devuelve las rutinas que coinciden con el nombre proporcionado.")
-    @GetMapping("/name/{name}")
+    @GetMapping("/trainer/trainer-routines/{name}")
     @PreAuthorize("hasAnyRole('TRAINER', 'ADMIN')")
     public ResponseEntity<ApiResponse<List<Routine>>> getRoutinesByName(
             @Parameter(description = "Nombre de la rutina") @PathVariable String name) {
@@ -59,7 +59,7 @@ public class RoutineController {
     }
 
     @Operation(summary = "Obtener rutinas por dificultad", description = "Devuelve las rutinas que tienen el nivel de dificultad especificado.")
-    @GetMapping("/difficulty/{level}")
+    @GetMapping("/trainer/trainer-routines/difficulty/{level}")
     @PreAuthorize("hasAnyRole('TRAINER', 'ADMIN')")
     public ResponseEntity<ApiResponse<List<Routine>>> getRoutinesByDifficulty(
             @Parameter(description = "Nivel de dificultad de la rutina") @PathVariable DifficultyLevel level) {
@@ -75,7 +75,7 @@ public class RoutineController {
     }
 
     @Operation(summary = "Crear rutina", description = "Crea una nueva rutina de entrenamiento.")
-    @PostMapping
+    @PostMapping("/trainer/trainer-routines")
     @PreAuthorize("hasAnyRole('TRAINER', 'ADMIN')")
     public ResponseEntity<ApiResponse<Routine>> createRoutine(@RequestBody RoutineDTO routine) {
         Routine createdRoutine = routineService.createRoutine(routine);
@@ -84,7 +84,7 @@ public class RoutineController {
     }
 
     @Operation(summary = "Actualizar rutina", description = "Actualiza una rutina existente.")
-    @PutMapping("/{id}")
+    @PutMapping("/trainer/trainer-routines/{id}")
     @PreAuthorize("hasAnyRole('TRAINER', 'ADMIN')")
     public ResponseEntity<ApiResponse<Routine>> updateRoutine(
             @Parameter(description = "ID de la rutina a actualizar", required = true) @PathVariable String id,
@@ -94,7 +94,7 @@ public class RoutineController {
     }
 
     @Operation(summary = "Eliminar rutina", description = "Elimina una rutina existente.")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/trainer/trainer-routines/{id}")
     @PreAuthorize("hasAnyRole('TRAINER', 'ADMIN')")
     public ResponseEntity<ApiResponse<Void>> deleteRoutine(
             @Parameter(description = "ID de la rutina a eliminar", required = true) @PathVariable String id) throws GYMException {

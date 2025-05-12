@@ -32,14 +32,14 @@ public class ReservationController {
     }
 
     @Operation(summary = "Obtener todas las reservas", description = "Devuelve una lista con todas las reservas registradas.")
-    @GetMapping
+    @GetMapping("/trainer/trainer-reservations")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     public ResponseEntity<ApiResponse<List<Reservation>>> getAllReservations() {
         return ResponseEntity.ok(new ApiResponse<>(true, "Reservas obtenidas exitosamente", reservationService.getAllReservations()));
     }
 
     @Operation(summary = "Obtener reserva por ID", description = "Devuelve una reserva específica por su ID.")
-    @GetMapping("/{id}")
+    @GetMapping("/user/sessions/{id}")
     @PreAuthorize("hasAnyRole('STUDENT', 'TRAINER', 'ADMIN')")
     public ResponseEntity<ApiResponse<Reservation>> getReservationById(
             @Parameter(description = "ID de la reserva") @PathVariable String id) throws GYMException {
@@ -62,7 +62,7 @@ public class ReservationController {
     }
 
     @Operation(summary = "Obtener reservas por sesión de gimnasio", description = "Devuelve las reservas asociadas a una sesión específica del gimnasio.")
-    @GetMapping("/session/{sessionId}")
+    @GetMapping("/trainer/trainer-reservations/{sessionId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     public ResponseEntity<ApiResponse<List<Reservation>>> getReservationsByGymSession(
             @Parameter(description = "ID de la sesión del gimnasio") @PathVariable String sessionId) {
@@ -72,7 +72,7 @@ public class ReservationController {
     }
 
     @Operation(summary = "Obtener reservas por fecha de reserva", description = "Devuelve las reservas que coinciden con una fecha determinada.")
-    @GetMapping("/date")
+    @GetMapping("/trainer/trainer-reservations/date")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     public ResponseEntity<ApiResponse<List<Reservation>>> getReservationsByReservationDate(
             @Parameter(description = "Fecha de la reserva en formato ISO") @RequestParam("datetime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime reservationDate) {
@@ -80,7 +80,7 @@ public class ReservationController {
     }
 
     @Operation(summary = "Obtener reservas por estado", description = "Devuelve las reservas con un estado específico (por ejemplo: CONFIRMADA, CANCELADA).")
-    @GetMapping("/status/{status}")
+    @GetMapping("/trainer/trainer-reservations/status/{status}")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     public ResponseEntity<ApiResponse<List<Reservation>>> getReservationsByState(
             @Parameter(description = "Estado de la reserva") @PathVariable Status status) {
@@ -88,7 +88,7 @@ public class ReservationController {
     }
 
     @Operation(summary = "Crear una nueva reserva", description = "Crea una nueva reserva en el sistema.")
-    @PostMapping
+    @PostMapping("/student/reservess")
     @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
     public ResponseEntity<ApiResponse<Reservation>> createReservation(
             @Parameter(description = "Detalles de la reserva") @RequestBody ReservationDTO reservation) {
@@ -98,7 +98,7 @@ public class ReservationController {
     }
 
     @Operation(summary = "Actualizar una reserva existente", description = "Actualiza los detalles de una reserva existente.")
-    @PutMapping("/{id}")
+    @PutMapping("/student/reserves/{id}")
     @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
     public ResponseEntity<ApiResponse<Reservation>> updateReservation(
             @Parameter(description = "ID de la reserva a actualizar") @PathVariable String id,
@@ -108,7 +108,7 @@ public class ReservationController {
     }
 
     @Operation(summary = "Eliminar una reserva", description = "Elimina una reserva del sistema.")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/student/reserves/{id}")
     @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
     public ResponseEntity<ApiResponse<Void>> deleteReservation(
             @Parameter(description = "ID de la reserva a eliminar") @PathVariable String id) throws GYMException {

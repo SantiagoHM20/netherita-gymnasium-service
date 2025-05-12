@@ -30,7 +30,7 @@ public class PhysicalProgressController {
         this.physicalProgressService = physicalProgressService;
     }
 
-    @GetMapping
+    @GetMapping("/trainer/progress")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Obtener todos los registros de progreso físico")
     public ResponseEntity<ApiResponse<List<PhysicalProgress>>> getAllPhysicalProgress() {
@@ -38,7 +38,7 @@ public class PhysicalProgressController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Registros de progreso físico obtenidos", progressList));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/trainer/progress/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Obtener un registro de progreso físico por su ID")
     public ResponseEntity<ApiResponse<PhysicalProgress>> getPhysicalProgressById(
@@ -51,7 +51,7 @@ public class PhysicalProgressController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Registro de progreso físico encontrado", progress));
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/trainer/progress/{userId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Obtener registros de progreso físico por ID de usuario")
     public ResponseEntity<ApiResponse<List<PhysicalProgress>>> getPhysicalProgressByUserId(
@@ -62,7 +62,7 @@ public class PhysicalProgressController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Registros de progreso físico del usuario obtenidos", progressList));
     }
 
-    @GetMapping("/date")
+    @GetMapping("/trainer/progress/date")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Obtener registros de progreso físico por fecha de registro")
     public ResponseEntity<ApiResponse<List<PhysicalProgress>>> getPhysicalProgressByRegistrationDate(
@@ -103,7 +103,7 @@ public class PhysicalProgressController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Registros de progreso físico encontrados por usuario y rango de fechas", progressList));
     }
     
-    @PostMapping
+    @PostMapping("/user/progress")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER', 'STUDENT')")
     @Operation(summary = "Registrar nuevo progreso físico")
     public ResponseEntity<ApiResponse<PhysicalProgress>> createPhysicalProgress(
@@ -113,7 +113,7 @@ public class PhysicalProgressController {
                 .body(new ApiResponse<>(true, "Registro de progreso físico creado", createdProgress));
     }
     
-    @PutMapping("/{id}")
+    @PutMapping("/user/progress/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER', 'STUDENT')")
     @Operation(summary = "Actualizar un registro de progreso físico")
     public ResponseEntity<ApiResponse<PhysicalProgress>> updatePhysicalProgress(
@@ -123,7 +123,7 @@ public class PhysicalProgressController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Registro de progreso físico actualizado", updatedProgress));
     }
     
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/trainer/progress/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     @Operation(summary = "Eliminar un registro de progreso físico")
     public ResponseEntity<ApiResponse<Void>> deletePhysicalProgress(

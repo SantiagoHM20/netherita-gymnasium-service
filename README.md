@@ -13,6 +13,8 @@ Despliegue: AzureDevops.
 
 Base de Datos: MongoDB.
 
+Seguridad: JWT
+
 ### Módulo de Gestión de Gimnasio
 
 Este módulo permite a los estudiantes reservar sesiones de entrenamiento, diseñar sus rutinas personalizadas y realizar un seguimiento detallado de su progreso físico.

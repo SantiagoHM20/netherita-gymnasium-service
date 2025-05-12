@@ -23,4 +23,5 @@ public class Reservation {
     private GymSession gymSessionId;
     private LocalDateTime reservationDate;
     private Status state;
+    private Boolean attended;
 }
