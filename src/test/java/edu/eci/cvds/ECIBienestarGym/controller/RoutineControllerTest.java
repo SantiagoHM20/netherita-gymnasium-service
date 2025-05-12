@@ -34,7 +34,7 @@ public class RoutineControllerTest {
     }
 
     @Test
-    void getAllRoutines() {
+    void shouldReturnAllRoutinesWhenGetAllRoutines() {
         List<Routine> mockRoutines = Arrays.asList(new Routine(), new Routine());
         when(routineService.getAllRoutines()).thenReturn(mockRoutines);
 
@@ -46,7 +46,7 @@ public class RoutineControllerTest {
     }
 
     @Test
-    void getRoutineById() throws GYMException {
+    void shouldReturnRoutineWhenGetRoutineById() throws GYMException {
         String id = "routine123";
         Routine mockRoutine = new Routine();
         when(routineService.getRoutineById(id)).thenReturn(mockRoutine);
@@ -59,7 +59,7 @@ public class RoutineControllerTest {
     }
 
     @Test
-    void createRoutine() {
+    void shouldCreateRoutineWhenCreateRoutine() {
         RoutineDTO routineDTO = new RoutineDTO();
         Routine mockRoutine = new Routine();
         when(routineService.createRoutine(routineDTO)).thenReturn(mockRoutine);
@@ -72,7 +72,7 @@ public class RoutineControllerTest {
     }
 
     @Test
-    void updateRoutine() throws GYMException {
+    void shouldUpdateRoutineWhenUpdateRoutine() throws GYMException {
         String id = "routine123";
         RoutineDTO routineDTO = new RoutineDTO();
         Routine mockRoutine = new Routine();
@@ -86,7 +86,7 @@ public class RoutineControllerTest {
     }
 
     @Test
-    void deleteRoutine() throws GYMException {
+    void shouldDeleteRoutineWhenDeleteRoutine() throws GYMException {
         String id = "routine123";
         doNothing().when(routineService).deleteRoutine(id);
 
@@ -97,7 +97,7 @@ public class RoutineControllerTest {
     }
 
     @Test
-    void getRoutineById_NotFound() throws GYMException {
+    void shouldReturnNotFoundWhenGetRoutineByIdNotFound() throws GYMException {
         String id = "nonexistent123";
         when(routineService.getRoutineById(id)).thenReturn(null);
 
@@ -110,7 +110,7 @@ public class RoutineControllerTest {
     }
 
     @Test
-    void createRoutine_InvalidData() {
+    void shouldThrowInvalidDataExceptionWhenCreateRoutineWithInvalidData() {
         RoutineDTO routineDTO = new RoutineDTO(); // Puede tener datos inválidos.
         when(routineService.createRoutine(routineDTO)).thenThrow(new IllegalArgumentException("Datos inválidos"));
 
@@ -122,7 +122,7 @@ public class RoutineControllerTest {
     }
 
     @Test
-    void getRoutinesByName() {
+    void shouldReturnRoutinesByNameWhenGetRoutinesByName() {
         String name = "Cardio Routine";
         List<Routine> mockRoutines = Arrays.asList(new Routine(), new Routine());
         when(routineService.getRoutinesByName(name)).thenReturn(mockRoutines);
@@ -135,7 +135,7 @@ public class RoutineControllerTest {
     }
 
     @Test
-    void getRoutinesByName_NotFound() {
+    void shouldReturnEmptyListWhenGetRoutinesByNameNotFound() {
         String name = "Nonexistent Routine";
         when(routineService.getRoutinesByName(name)).thenReturn(Arrays.asList());
 
@@ -147,7 +147,7 @@ public class RoutineControllerTest {
     }
 
     @Test
-    void getRoutinesByDifficulty() {
+    void shouldReturnRoutinesByDifficultyWhenGetRoutinesByDifficulty() {
         DifficultyLevel level = DifficultyLevel.HARD;
         List<Routine> mockRoutines = Arrays.asList(new Routine(), new Routine());
         when(routineService.getRoutinesByDifficulty(level)).thenReturn(mockRoutines);
@@ -160,7 +160,7 @@ public class RoutineControllerTest {
     }
 
     @Test
-    void getRoutinesByDifficulty_NotFound() {
+    void shouldReturnEmptyListWhenGetRoutinesByDifficultyNotFound() {
         DifficultyLevel level = DifficultyLevel.EASY;
         when(routineService.getRoutinesByDifficulty(level)).thenReturn(Arrays.asList());
 
@@ -172,7 +172,7 @@ public class RoutineControllerTest {
     }
 
     @Test
-    void getRoutinesByExercises() {
+    void shouldReturnRoutinesByExercisesWhenGetRoutinesByExercises() {
         List<Exercise> exercises = Arrays.asList(new Exercise(), new Exercise());
         List<Routine> mockRoutines = Arrays.asList(new Routine(), new Routine());
         when(routineService.getRoutinesByExercises(exercises)).thenReturn(mockRoutines);
@@ -185,7 +185,7 @@ public class RoutineControllerTest {
     }
 
     @Test
-    void getRoutinesByExercises_NotFound() {
+    void shouldReturnEmptyListWhenGetRoutinesByExercisesNotFound() {
         List<Exercise> exercises = Arrays.asList(new Exercise(), new Exercise());
         when(routineService.getRoutinesByExercises(exercises)).thenReturn(Arrays.asList());
 
@@ -195,5 +195,4 @@ public class RoutineControllerTest {
         assertEquals(0, response.getBody().getData().size());
         verify(routineService, times(1)).getRoutinesByExercises(exercises);
     }
-
 }

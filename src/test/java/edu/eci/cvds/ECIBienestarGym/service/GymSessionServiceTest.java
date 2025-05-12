@@ -37,7 +37,7 @@ public class GymSessionServiceTest {
     }
 
     @Test
-    void getAllGymSessions() {
+    void ShouldGetAllGymSessions() {
         List<GymSession> mockSessions = Arrays.asList(new GymSession(), new GymSession());
         when(gymSessionRepository.findAll()).thenReturn(mockSessions);
 
@@ -48,7 +48,7 @@ public class GymSessionServiceTest {
     }
 
     @Test
-    void getGymSessionById() throws GYMException {
+    void ShouldGetGymSessionById() throws GYMException {
         String id = "sess123";
         GymSession mockSession = new GymSession();
         when(gymSessionRepository.findById(id)).thenReturn(Optional.of(mockSession));
@@ -60,7 +60,7 @@ public class GymSessionServiceTest {
     }
 
     @Test
-    void getGymSessionsByCoachId() {
+    void ShouldGetGymSessionsByCoachId() {
         User coach = new User();
         coach.setId("coach456");
         List<GymSession> mockSessions = Arrays.asList(new GymSession(), new GymSession());
@@ -73,7 +73,7 @@ public class GymSessionServiceTest {
     }
 
     @Test
-    void getGymSessionsByCapacity() {
+    void ShouldGetGymSessionsByCapacity() {
         int capacity = 30;
         List<GymSession> mockSessions = Arrays.asList(new GymSession(), new GymSession());
         when(gymSessionRepository.findByCapacity(capacity)).thenReturn(mockSessions);
@@ -84,21 +84,21 @@ public class GymSessionServiceTest {
         verify(gymSessionRepository, times(1)).findByCapacity(capacity);
     }
 
-   @Test
-   void getGymSessionsByDate() {
-       LocalDate date = LocalDate.now();
-       LocalDateTime startOfDay = date.atStartOfDay();
-       List<GymSession> mockSessions = Arrays.asList(new GymSession(), new GymSession());
-       when(gymSessionRepository.findByDate(date)).thenReturn(mockSessions);
+    @Test
+    void ShouldGetGymSessionsByDate() {
+        LocalDate date = LocalDate.now();
+        LocalDateTime startOfDay = date.atStartOfDay();
+        List<GymSession> mockSessions = Arrays.asList(new GymSession(), new GymSession());
+        when(gymSessionRepository.findByDate(date)).thenReturn(mockSessions);
 
-       List<GymSession> sessions = gymSessionService.getGymSessionsByDate(startOfDay);
+        List<GymSession> sessions = gymSessionService.getGymSessionsByDate(startOfDay);
 
-       assertEquals(2, sessions.size());
-       verify(gymSessionRepository, times(1)).findByDate(date);
-   }
+        assertEquals(2, sessions.size());
+        verify(gymSessionRepository, times(1)).findByDate(date);
+    }
 
     @Test
-    void getGymSessionsByDateAndTime() {
+    void ShouldGetGymSessionsByDateAndTime() {
         LocalDate date = LocalDate.now();
         LocalTime startTime = LocalTime.of(10, 0);
         LocalTime endTime = LocalTime.of(12, 0);
@@ -113,7 +113,7 @@ public class GymSessionServiceTest {
     }
 
     @Test
-    void getGymSessionsByStartTimeAndEndTime() {
+    void ShouldGetGymSessionsByStartTimeAndEndTime() {
         LocalTime startTime = LocalTime.of(10, 0);
         LocalTime endTime = LocalTime.of(12, 0);
         List<GymSession> mockSessions = Arrays.asList(new GymSession(), new GymSession());
@@ -126,7 +126,7 @@ public class GymSessionServiceTest {
     }
 
     @Test
-    void getGymSessionsByEndTime() {
+    void ShouldGetGymSessionsByEndTime() {
         LocalTime endTime = LocalTime.of(12, 0);
         List<GymSession> mockSessions = Arrays.asList(new GymSession(), new GymSession());
         when(gymSessionRepository.findByEndTime(endTime)).thenReturn(mockSessions);
@@ -138,7 +138,7 @@ public class GymSessionServiceTest {
     }
 
     @Test
-    void createGymSession() {
+    void ShouldCreateGymSession() {
         UserDTO coachDTO = new UserDTO();
         coachDTO.setId("coach123");
         coachDTO.setName("John Doe");
@@ -162,7 +162,7 @@ public class GymSessionServiceTest {
     }
 
     @Test
-    void updateGymSession() throws GYMException {
+    void ShouldUpdateGymSession() throws GYMException {
         String id = "sess123";
 
         UserDTO coachDTO = new UserDTO();
@@ -190,7 +190,7 @@ public class GymSessionServiceTest {
     }
 
     @Test
-    void deleteGymSession() throws GYMException {
+    void ShouldDeleteGymSession() throws GYMException {
         String id = "sess123";
         GymSession mockSession = new GymSession();
         mockSession.setId(id);

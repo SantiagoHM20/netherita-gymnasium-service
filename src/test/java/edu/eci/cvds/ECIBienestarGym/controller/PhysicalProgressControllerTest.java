@@ -18,6 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 public class PhysicalProgressControllerTest {
@@ -32,9 +34,9 @@ public class PhysicalProgressControllerTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
-
+    
     @Test
-    void getAllPhysicalProgress() {
+    void shouldReturnAllPhysicalProgressWhenGetAllIsCalled() {
         List<PhysicalProgress> mockProgress = Arrays.asList(new PhysicalProgress(), new PhysicalProgress());
         when(physicalProgressService.getAllPhysicalProgress()).thenReturn(mockProgress);
 
@@ -46,7 +48,7 @@ public class PhysicalProgressControllerTest {
     }
 
     @Test
-    void getPhysicalProgressById() throws GYMException {
+    void shouldReturnPhysicalProgressByIdWhenExists() throws GYMException {
         String id = "progress123";
         PhysicalProgress mockProgress = new PhysicalProgress();
         when(physicalProgressService.getPhysicalProgressById(id)).thenReturn(mockProgress);
@@ -59,7 +61,18 @@ public class PhysicalProgressControllerTest {
     }
 
     @Test
-    void getPhysicalProgressByUserId() {
+    void shouldReturn404WhenPhysicalProgressByIdDoesNotExist() throws GYMException {
+        String id = "progress123";
+        when(physicalProgressService.getPhysicalProgressById(id)).thenReturn(null);
+        ResponseEntity<ApiResponse<PhysicalProgress>> response = physicalProgressController.getPhysicalProgressById(id);
+        assertEquals(404, response.getStatusCodeValue());
+        assertEquals("Registro de progreso físico no encontrado", response.getBody().getMessage());
+        assertEquals(null, response.getBody().getData());
+        verify(physicalProgressService, times(1)).getPhysicalProgressById(id);
+    }
+
+    @Test
+    void shouldReturnPhysicalProgressByUserIdWhenValidUserIdIsGiven() {
         String userId = "user123";
         List<PhysicalProgress> mockProgress = Arrays.asList(new PhysicalProgress(), new PhysicalProgress());
         when(physicalProgressService.getPhysicalProgressByUserId(any(User.class))).thenReturn(mockProgress);
@@ -72,7 +85,7 @@ public class PhysicalProgressControllerTest {
     }
 
     @Test
-    void getPhysicalProgressByRegistrationDate() {
+    void shouldReturnPhysicalProgressByRegistrationDateWhenValidDateIsGiven() {
         String registrationDate = "2024-05-01";
         LocalDate date = LocalDate.parse(registrationDate);
         List<PhysicalProgress> mockProgress = Arrays.asList(new PhysicalProgress(), new PhysicalProgress());
@@ -86,7 +99,7 @@ public class PhysicalProgressControllerTest {
     }
 
     @Test
-    void getPhysicalProgressByUserIdAndDate() {
+    void shouldReturnPhysicalProgressByUserIdAndDateWhenValidInputIsGiven() {
         String userId = "user123";
         String registrationDate = "2024-05-01";
         LocalDate date = LocalDate.parse(registrationDate);
@@ -101,7 +114,7 @@ public class PhysicalProgressControllerTest {
     }
 
     @Test
-    void getPhysicalProgressByUserIdAndDateRange() {
+    void shouldReturnPhysicalProgressByUserIdAndDateRangeWhenValidRangeIsGiven() {
         String userId = "user123";
         String startDate = "2024-05-01";
         String endDate = "2024-05-31";
@@ -118,7 +131,7 @@ public class PhysicalProgressControllerTest {
     }
 
     @Test
-    void createPhysicalProgress() {
+    void shouldCreatePhysicalProgressWhenValidDTOIsProvided() {
         PhysicalProgressDTO progressDTO = new PhysicalProgressDTO();
         PhysicalProgress mockProgress = new PhysicalProgress();
         when(physicalProgressService.createPhysicalProgress(progressDTO)).thenReturn(mockProgress);
@@ -131,7 +144,7 @@ public class PhysicalProgressControllerTest {
     }
 
     @Test
-    void updatePhysicalProgress() throws GYMException {
+    void shouldUpdatePhysicalProgressWhenValidIdAndDTOAreProvided() throws GYMException {
         String id = "progress123";
         PhysicalProgressDTO progressDTO = new PhysicalProgressDTO();
         PhysicalProgress mockProgress = new PhysicalProgress();
@@ -145,7 +158,7 @@ public class PhysicalProgressControllerTest {
     }
 
     @Test
-    void deletePhysicalProgress() throws GYMException {
+    void shouldDeletePhysicalProgressWhenValidIdIsGiven() throws GYMException {
         String id = "progress123";
         doNothing().when(physicalProgressService).deletePhysicalProgress(id);
 

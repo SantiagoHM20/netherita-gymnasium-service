@@ -42,7 +42,7 @@ public class RoutineService {
 
     private List<Exercise> mapToExercises(List<ExerciseDTO> exerciseDTOs) {
         return exerciseDTOs.stream()
-                .map(dto -> new Exercise(dto.getName(), dto.getRepetitions(), dto.getSets(), dto.getDuration(), dto.getType()))
+                .map(dto -> new Exercise(dto.getName(), dto.getRepetitions(), dto.getSets(), dto.getDuration(), dto.getType(), dto.getMuscleGroup()))
                 .toList();
     }
 

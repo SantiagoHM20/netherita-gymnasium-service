@@ -37,9 +37,9 @@ public class ReservationServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
-
+        
     @Test
-    void getAllReservations() {
+    void shouldReturnAllReservations() {
         List<Reservation> mockReservations = Arrays.asList(new Reservation(), new Reservation());
         when(reservationRepository.findAll()).thenReturn(mockReservations);
 
@@ -50,7 +50,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void getReservationById() throws GYMException {
+    void shouldReturnReservationById() throws GYMException {
         String id = "res123";
         Reservation mockReservation = new Reservation();
         when(reservationRepository.findById(id)).thenReturn(Optional.of(mockReservation));
@@ -62,7 +62,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void getReservationsByUserId() {
+    void shouldReturnReservationsByUserId() {
         User user = new User();
         List<Reservation> mockReservations = Arrays.asList(new Reservation(), new Reservation());
         when(reservationRepository.findByUserId(user)).thenReturn(mockReservations);
@@ -74,7 +74,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void getReservationsByGymSession() {
+    void shouldReturnReservationsByGymSession() {
         GymSession gymSession = new GymSession();
         List<Reservation> mockReservations = Arrays.asList(new Reservation(), new Reservation());
         when(reservationRepository.findByGymSessionId(gymSession)).thenReturn(mockReservations);
@@ -86,7 +86,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void getReservationsByReservationDate() {
+    void shouldReturnReservationsByReservationDate() {
         LocalDateTime reservationDate = LocalDateTime.now();
         List<Reservation> mockReservations = Arrays.asList(new Reservation(), new Reservation());
         when(reservationRepository.findByReservationDate(reservationDate)).thenReturn(mockReservations);
@@ -98,7 +98,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void getReservationsByState() {
+    void shouldReturnReservationsByState() {
         Status status = Status.APPROVED;
         List<Reservation> mockReservations = Arrays.asList(new Reservation(), new Reservation());
         when(reservationRepository.findReservationByState(status)).thenReturn(mockReservations);
@@ -110,7 +110,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void createReservation() {
+    void shouldCreateReservationSuccessfully() {
         ReservationDTO reservationDTO = new ReservationDTO();
         reservationDTO.setId("res123");
         reservationDTO.setUserId(new UserDTO("user123", "John Doe", "johndoe@example.com"));
@@ -132,11 +132,12 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void updateReservation() throws GYMException {
+    void shouldUpdateReservationSuccessfully() throws GYMException {
         String id = "res123";
         ReservationDTO reservationDTO = new ReservationDTO();
         reservationDTO.setUserId(new UserDTO("user123", "John Doe", "johndoe@example.com"));
-        reservationDTO.setGymSessionId(new GymSessionDTO("session123", new UserDTO("coach123", "Jane Doe", "janedoe@example.com"), LocalDate.now(), LocalTime.of(9, 0), LocalTime.of(10, 0), 20, 5));reservationDTO.setReservationDate(LocalDateTime.now());
+        reservationDTO.setGymSessionId(new GymSessionDTO("session123", new UserDTO("coach123", "Jane Doe", "janedoe@example.com"), LocalDate.now(), LocalTime.of(9, 0), LocalTime.of(10, 0), 20, 5));
+        reservationDTO.setReservationDate(LocalDateTime.now());
         reservationDTO.setState(Status.APPROVED);
 
         Reservation mockReservation = new Reservation();
@@ -153,7 +154,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void deleteReservation() throws GYMException {
+    void shouldDeleteReservationSuccessfully() throws GYMException {
         String id = "res123";
         Reservation mockReservation = new Reservation();
         mockReservation.setId(id);

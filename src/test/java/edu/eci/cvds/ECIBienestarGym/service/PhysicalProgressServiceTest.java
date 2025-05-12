@@ -5,11 +5,12 @@ import edu.eci.cvds.ECIBienestarGym.dto.PhysicalProgressDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.RoutineDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.UserDTO;
 import edu.eci.cvds.ECIBienestarGym.enums.ExerciseType;
+import edu.eci.cvds.ECIBienestarGym.enums.MuscleGroup;
 import edu.eci.cvds.ECIBienestarGym.enums.Role;
 import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.PhysicalProgress;
-import edu.eci.cvds.ECIBienestarGym.repository.PhysicalProgressRepository;
 import edu.eci.cvds.ECIBienestarGym.model.User;
+import edu.eci.cvds.ECIBienestarGym.repository.PhysicalProgressRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -40,7 +41,7 @@ public class PhysicalProgressServiceTest {
     }
 
     @Test
-    void getAllPhysicalProgress() {
+    void ShouldGetAllPhysicalProgress() {
         List<PhysicalProgress> mockProgress = Arrays.asList(new PhysicalProgress(), new PhysicalProgress());
         when(physicalProgressRepository.findAll()).thenReturn(mockProgress);
 
@@ -51,7 +52,7 @@ public class PhysicalProgressServiceTest {
     }
 
     @Test
-    void getPhysicalProgressById() throws GYMException {
+    void ShouldGetPhysicalProgressById() throws GYMException {
         String id = "progress123";
         PhysicalProgress mockProgress = new PhysicalProgress();
         when(physicalProgressRepository.findById(id)).thenReturn(Optional.of(mockProgress));
@@ -63,7 +64,7 @@ public class PhysicalProgressServiceTest {
     }
 
     @Test
-    void getPhysicalProgressByDate() {
+    void ShouldGetPhysicalProgressByDate() {
         LocalDate date = LocalDate.now();
         List<PhysicalProgress> mockProgress = Arrays.asList(new PhysicalProgress(), new PhysicalProgress());
         when(physicalProgressRepository.findByRegistrationDate(date)).thenReturn(mockProgress);
@@ -75,7 +76,7 @@ public class PhysicalProgressServiceTest {
     }
 
     @Test
-    void updatePhysicalProgress() throws GYMException {
+    void ShouldUpdatePhysicalProgress() throws GYMException {
         String id = "progress123";
 
         UserDTO userDTO = new UserDTO();
@@ -89,8 +90,8 @@ public class PhysicalProgressServiceTest {
         routineDTO.setName("Routine A");
         routineDTO.setDescription("Description of Routine A");
         routineDTO.setExercises(Arrays.asList(
-            new ExerciseDTO("Exercise 1", 10, 3, 60, ExerciseType.FUERZA),
-            new ExerciseDTO("Exercise 2", 15, 4, 45, ExerciseType.CARDIO)
+            new ExerciseDTO("Exercise 1", 10, 3, 60, ExerciseType.FUERZA, List.of(MuscleGroup.PECHO)),
+            new ExerciseDTO("Exercise 2", 15, 4, 45, ExerciseType.CARDIO, List.of(MuscleGroup.ESPALDA))
         ));
 
         PhysicalProgressDTO progressDTO = new PhysicalProgressDTO();
@@ -104,44 +105,30 @@ public class PhysicalProgressServiceTest {
         when(physicalProgressRepository.findById(id)).thenReturn(Optional.of(mockProgress));
         when(physicalProgressRepository.save(any(PhysicalProgress.class))).thenReturn(mockProgress);
 
-
-        if (physicalProgressService == null) {
-            throw new IllegalStateException("physicalProgressService no está inicializado");
-        }
-        if (id == null) {
-            throw new IllegalArgumentException("El id no puede ser null");
-        }
-        if (progressDTO == null) {
-            throw new IllegalArgumentException("El progressDTO no puede ser null");
-        }
-
         PhysicalProgress updatedProgress = physicalProgressService.updatePhysicalProgress(id, progressDTO);
-            assertEquals(mockProgress, updatedProgress);
-            verify(physicalProgressRepository, times(1)).findById(id);
-            verify(physicalProgressRepository, times(1)).save(any(PhysicalProgress.class));
-        }
+
+        assertEquals(mockProgress, updatedProgress);
+        verify(physicalProgressRepository, times(1)).findById(id);
+        verify(physicalProgressRepository, times(1)).save(any(PhysicalProgress.class));
+    }
 
     @Test
-    void deletePhysicalProgress() throws GYMException {
+    void ShouldDeletePhysicalProgress() throws GYMException {
         String id = "progress123";
 
-        // Mock del repositorio
         PhysicalProgress mockProgress = new PhysicalProgress();
         mockProgress.setId(id);
         when(physicalProgressRepository.findById(id)).thenReturn(Optional.of(mockProgress));
         doNothing().when(physicalProgressRepository).deleteById(id);
 
-        // Llamar al método del servicio
         physicalProgressService.deletePhysicalProgress(id);
 
-        // Verificar las interacciones
         verify(physicalProgressRepository, times(1)).findById(id);
         verify(physicalProgressRepository, times(1)).deleteById(id);
     }
 
     @Test
-    void createPhysicalProgress() {
-        // Crear el DTO de progreso físico
+    void ShouldCreatePhysicalProgress() {
         UserDTO userDTO = new UserDTO();
         userDTO.setId("user123");
         userDTO.setName("John Doe");
@@ -153,8 +140,8 @@ public class PhysicalProgressServiceTest {
         routineDTO.setName("Routine A");
         routineDTO.setDescription("Routine A description");
         routineDTO.setExercises(Arrays.asList(
-            new ExerciseDTO("Exercise 1", 10, 3, 60, ExerciseType.FUERZA),
-            new ExerciseDTO("Exercise 2", 15, 4, 45, ExerciseType.CARDIO)
+            new ExerciseDTO("Exercise 1", 10, 3, 60, ExerciseType.FUERZA, List.of(MuscleGroup.PECHO)),
+            new ExerciseDTO("Exercise 2", 15, 4, 45, ExerciseType.CARDIO, List.of(MuscleGroup.ESPALDA))
         ));
 
         PhysicalProgressDTO progressDTO = new PhysicalProgressDTO();
@@ -167,7 +154,6 @@ public class PhysicalProgressServiceTest {
         PhysicalProgress mockProgress = new PhysicalProgress();
         when(physicalProgressRepository.save(any(PhysicalProgress.class))).thenReturn(mockProgress);
 
-        // Llamar al método createPhysicalProgress
         PhysicalProgress createdProgress = physicalProgressService.createPhysicalProgress(progressDTO);
 
         assertEquals(mockProgress, createdProgress);
@@ -175,7 +161,7 @@ public class PhysicalProgressServiceTest {
     }
 
     @Test
-    void getPhysicalProgressByUserId() {
+    void ShouldGetPhysicalProgressByUserId() {
         User mockUser = new User();
         mockUser.setId("user123");
 
@@ -190,7 +176,7 @@ public class PhysicalProgressServiceTest {
     }
 
     @Test
-    void getPhysicalProgressByUserIdAndDate() {
+    void ShouldGetPhysicalProgressByUserIdAndDate() {
         User mockUser = new User();
         mockUser.setId("user123");
         LocalDate date = LocalDate.now();
@@ -206,7 +192,7 @@ public class PhysicalProgressServiceTest {
     }
 
     @Test
-    void getPhysicalProgressByUserIdAndDateBetween() {
+    void ShouldGetPhysicalProgressByUserIdAndDateBetween() {
         User mockUser = new User();
         mockUser.setId("user123");
         LocalDate startDate = LocalDate.of(2024, 1, 1);
@@ -221,6 +207,4 @@ public class PhysicalProgressServiceTest {
         assertEquals(3, result.size());
         verify(physicalProgressRepository, times(1)).findByUserIdAndRegistrationDateBetween(mockUser, startDate, endDate);
     }
-
-
 }

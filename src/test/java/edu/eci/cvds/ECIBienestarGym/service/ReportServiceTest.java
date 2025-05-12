@@ -40,7 +40,7 @@ public class ReportServiceTest {
     }
 
     @Test
-    void getAllReports() {
+    void shouldReturnAllReports() {
         List<Report> mockReports = Arrays.asList(new Report(), new Report());
         when(reportRepository.findAll()).thenReturn(mockReports);
 
@@ -51,7 +51,7 @@ public class ReportServiceTest {
     }
 
     @Test
-    void getReportById() throws GYMException {
+    void shouldReturnReportById() throws GYMException {
         String id = "report123";
         Report mockReport = new Report();
         when(reportRepository.findById(id)).thenReturn(Optional.of(mockReport));
@@ -63,7 +63,7 @@ public class ReportServiceTest {
     }
 
     @Test
-    void getReportsByDate() {
+    void shouldReturnReportsByGeneratedDate() {
         LocalDate date = LocalDate.now();
         List<Report> mockReports = Arrays.asList(new Report(), new Report());
         when(reportRepository.findByGeneratedAt(date)).thenReturn(mockReports);
@@ -75,7 +75,7 @@ public class ReportServiceTest {
     }
 
     @Test
-    void createReport() {
+    void shouldCreateAReport() {
         ReportDTO reportDTO = new ReportDTO();
         reportDTO.setId("report123");
         reportDTO.setDescription("This is a test report");
@@ -84,7 +84,7 @@ public class ReportServiceTest {
         reportDTO.setEntries(Arrays.asList(
                 new ReportEntryDTO("Session 1", Map.of("asistencias", 5, "objetivosCumplidos", true)),
                 new ReportEntryDTO("Session 2", Map.of("asistencias", 3, "objetivosCumplidos", false))
-            ));
+        ));
 
         Report mockReport = new Report();
         mockReport.setId("report123");
@@ -100,7 +100,7 @@ public class ReportServiceTest {
     }
 
     @Test
-    void updateReport() throws GYMException {
+    void shouldUpdateAReport() throws GYMException {
         String id = "report123";
 
         ReportDTO reportDTO = new ReportDTO();
@@ -109,8 +109,8 @@ public class ReportServiceTest {
         reportDTO.setGeneratedAt(LocalDate.now());
         reportDTO.setCoachId(new UserDTO("user123", "John Doe", "johndoe@example.com", Role.STUDENT));
         reportDTO.setEntries(Arrays.asList(
-            new ReportEntryDTO("Session 1", Map.of("asistencias", 5, "objetivosCumplidos", true)),
-            new ReportEntryDTO("Session 2", Map.of("asistencias", 3, "objetivosCumplidos", false))
+                new ReportEntryDTO("Session 1", Map.of("asistencias", 5, "objetivosCumplidos", true)),
+                new ReportEntryDTO("Session 2", Map.of("asistencias", 3, "objetivosCumplidos", false))
         ));
 
         Report mockReport = new Report();
@@ -129,7 +129,7 @@ public class ReportServiceTest {
     }
 
     @Test
-    void deleteReport() throws GYMException {
+    void shouldDeleteAReport() throws GYMException {
         String id = "report123";
 
         Report mockReport = new Report();
@@ -145,7 +145,7 @@ public class ReportServiceTest {
     }
 
     @Test
-    void getReportsByCoach() {
+    void shouldReturnReportsByCoach() {
         User coach = new User();
         coach.setId("coach123");
         coach.setName("Coach Name");
@@ -162,7 +162,7 @@ public class ReportServiceTest {
     }
 
     @Test
-    void getReportsByAllTypes() {
+    void shouldReturnReportsByAllTypes() {
         for (ReportType type : ReportType.values()) {
             List<Report> mockReports = Arrays.asList(new Report(), new Report());
             when(reportRepository.findByType(type)).thenReturn(mockReports);
@@ -171,9 +171,7 @@ public class ReportServiceTest {
 
             assertEquals(2, reports.size(), "Failed for type: " + type);
             verify(reportRepository, times(1)).findByType(type);
-            // Reset mock between iterations
-            reset(reportRepository);
+            reset(reportRepository); // Reset the mock to avoid interaction count issues
         }
     }
-
 }

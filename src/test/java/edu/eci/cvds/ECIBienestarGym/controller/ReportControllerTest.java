@@ -36,7 +36,7 @@ public class ReportControllerTest {
     }
 
     @Test
-    void getAllReports() {
+    void shouldReturnAllReportsWhenGetAllIsCalled() {
         List<Report> mockReports = Arrays.asList(new Report(), new Report());
         when(reportService.getAllReports()).thenReturn(mockReports);
 
@@ -48,7 +48,7 @@ public class ReportControllerTest {
     }
 
     @Test
-    void getReportById() throws GYMException {
+    void shouldReturnReportByIdWhenExists() throws GYMException {
         String id = "report123";
         Report mockReport = new Report();
         when(reportService.getReportById(id)).thenReturn(mockReport);
@@ -61,7 +61,59 @@ public class ReportControllerTest {
     }
 
     @Test
-    void createReport() {
+    void shouldReturn404WhenReportByIdDoesNotExist() throws GYMException {
+        String id = "nonexistent123";
+        when(reportService.getReportById(id)).thenReturn(null);
+
+        ResponseEntity<ApiResponse<Report>> response = reportController.getReportById(id);
+
+        assertEquals(404, response.getStatusCodeValue());
+        assertEquals(false, response.getBody().isSuccess());
+        assertEquals("Reporte no encontrado", response.getBody().getMessage());
+        verify(reportService, times(1)).getReportById(id);
+    }
+
+    @Test
+    void shouldReturnReportsByCoachWhenValidCoachIdIsGiven() {
+        String coachId = "coach123";
+        List<Report> mockReports = Arrays.asList(new Report(), new Report());
+        when(reportService.getReportsByCoach(any())).thenReturn(mockReports);
+
+        ResponseEntity<ApiResponse<List<Report>>> response = reportController.getReportsByCoach(coachId);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(2, response.getBody().getData().size());
+        verify(reportService, times(1)).getReportsByCoach(argThat(user -> user.getId().equals(coachId)));
+    }
+
+    @Test
+    void shouldReturnReportsByGeneratedAtWhenValidDateIsGiven() {
+        String dateStr = "2024-05-01";
+        List<Report> mockReports = Arrays.asList(new Report(), new Report());
+        when(reportService.getReportsByGeneratedAt(LocalDate.parse(dateStr))).thenReturn(mockReports);
+
+        ResponseEntity<ApiResponse<List<Report>>> response = reportController.getReportsByGeneratedAt(dateStr);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(2, response.getBody().getData().size());
+        verify(reportService, times(1)).getReportsByGeneratedAt(LocalDate.parse(dateStr));
+    }
+
+    @Test
+    void shouldReturnReportsByTypeWhenValidTypeIsGiven() {
+        ReportType type = ReportType.ASSISTANCE;
+        List<Report> mockReports = Arrays.asList(new Report(), new Report());
+        when(reportService.getReportsByType(type)).thenReturn(mockReports);
+
+        ResponseEntity<ApiResponse<List<Report>>> response = reportController.getReportsByType(type);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(2, response.getBody().getData().size());
+        verify(reportService, times(1)).getReportsByType(type);
+    }
+
+    @Test
+    void shouldCreateReportWhenValidDTOIsProvided() {
         ReportDTO reportDTO = new ReportDTO();
         Report mockReport = new Report();
         when(reportService.createReport(reportDTO)).thenReturn(mockReport);
@@ -74,7 +126,7 @@ public class ReportControllerTest {
     }
 
     @Test
-    void updateReport() throws GYMException {
+    void shouldUpdateReportWhenValidIdAndDTOAreProvided() throws GYMException {
         String id = "report123";
         ReportDTO reportDTO = new ReportDTO();
         Report mockReport = new Report();
@@ -88,7 +140,7 @@ public class ReportControllerTest {
     }
 
     @Test
-    void deleteReport() throws GYMException {
+    void shouldDeleteReportWhenValidIdIsGiven() throws GYMException {
         String id = "report123";
         doNothing().when(reportService).deleteReport(id);
 
@@ -97,56 +149,4 @@ public class ReportControllerTest {
         assertEquals(200, response.getStatusCodeValue());
         verify(reportService, times(1)).deleteReport(id);
     }
-
-    @Test
-    void getReportsByCoach() {
-        String coachId = "coach123";
-        List<Report> mockReports = Arrays.asList(new Report(), new Report());
-        when(reportService.getReportsByCoach(any())).thenReturn(mockReports);
-
-        ResponseEntity<ApiResponse<List<Report>>> response = reportController.getReportsByCoach(coachId);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(2, response.getBody().getData().size());
-        verify(reportService, times(1)).getReportsByCoach(argThat(user -> user.getId().equals(coachId)));
-    }
-
-    @Test
-    void getReportsByGeneratedAt() {
-        String dateStr = "2024-05-01";
-        List<Report> mockReports = Arrays.asList(new Report(), new Report());
-        when(reportService.getReportsByGeneratedAt(LocalDate.parse(dateStr))).thenReturn(mockReports);
-
-        ResponseEntity<ApiResponse<List<Report>>> response = reportController.getReportsByGeneratedAt(dateStr);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(2, response.getBody().getData().size());
-        verify(reportService, times(1)).getReportsByGeneratedAt(LocalDate.parse(dateStr));
-    }
-
-    @Test
-    void getReportsByType() {
-        ReportType type = ReportType.ASSISTANCE;
-        List<Report> mockReports = Arrays.asList(new Report(), new Report());
-        when(reportService.getReportsByType(type)).thenReturn(mockReports);
-
-        ResponseEntity<ApiResponse<List<Report>>> response = reportController.getReportsByType(type);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(2, response.getBody().getData().size());
-        verify(reportService, times(1)).getReportsByType(type);
-    }
-
-    @Test
-    void getReportById_NotFound() throws GYMException {
-        String id = "nonexistent123";
-        when(reportService.getReportById(id)).thenReturn(null);
-        ResponseEntity<ApiResponse<Report>> response = reportController.getReportById(id);
-
-        assertEquals(404, response.getStatusCodeValue());
-        assertEquals(false, response.getBody().isSuccess());
-        assertEquals("Reporte no encontrado", response.getBody().getMessage());
-        verify(reportService, times(1)).getReportById(id);
-    }
-
 }
