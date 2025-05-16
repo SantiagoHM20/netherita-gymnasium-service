@@ -80,7 +80,7 @@ public class ReportServiceTest {
         reportDTO.setId("report123");
         reportDTO.setDescription("This is a test report");
         reportDTO.setGeneratedAt(LocalDate.now());
-        reportDTO.setCoachId(new UserDTO("user123", "John Doe", "johndoe@example.com", Role.STUDENT));
+        reportDTO.setCoachId(new UserDTO("user123", "John Doe", "johndoe@example.com", Role.ESTUDIANTE));
         reportDTO.setEntries(Arrays.asList(
                 new ReportEntryDTO("Session 1", Map.of("asistencias", 5, "objetivosCumplidos", true)),
                 new ReportEntryDTO("Session 2", Map.of("asistencias", 3, "objetivosCumplidos", false))
@@ -107,7 +107,7 @@ public class ReportServiceTest {
         reportDTO.setId("report123");
         reportDTO.setDescription("This is an updated report");
         reportDTO.setGeneratedAt(LocalDate.now());
-        reportDTO.setCoachId(new UserDTO("user123", "John Doe", "johndoe@example.com", Role.STUDENT));
+        reportDTO.setCoachId(new UserDTO("user123", "John Doe", "johndoe@example.com", Role.ESTUDIANTE));
         reportDTO.setEntries(Arrays.asList(
                 new ReportEntryDTO("Session 1", Map.of("asistencias", 5, "objetivosCumplidos", true)),
                 new ReportEntryDTO("Session 2", Map.of("asistencias", 3, "objetivosCumplidos", false))
@@ -171,7 +171,7 @@ public class ReportServiceTest {
 
             assertEquals(2, reports.size(), "Failed for type: " + type);
             verify(reportRepository, times(1)).findByType(type);
-            reset(reportRepository); // Reset the mock to avoid interaction count issues
+            reset(reportRepository); 
         }
     }
 }

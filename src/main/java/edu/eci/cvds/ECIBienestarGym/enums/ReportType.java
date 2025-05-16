@@ -1,7 +1,7 @@
 package edu.eci.cvds.ECIBienestarGym.enums;
 
 public enum ReportType {
-    USE,
+    USO,
     ASSISTANCE,
     PHYSICAL_PROGRESS,
     ACHIEVEMENT_OF_OBJECTIVES

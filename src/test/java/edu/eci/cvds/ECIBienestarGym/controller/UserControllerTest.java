@@ -78,7 +78,7 @@ public class UserControllerTest {
     @Test
     void shouldReturnUsersByRegistrationDateWhenValidDateIsGiven() {
         LocalDate date = LocalDate.now();
-        String formattedDate = date.toString(); // Convierte LocalDate a String
+        String formattedDate = date.toString(); 
         List<User> mockUsers = Arrays.asList(new User(), new User());
 
         when(userService.getUsersByRegistrationDate(date)).thenReturn(mockUsers);
@@ -92,7 +92,7 @@ public class UserControllerTest {
 
     @Test
     void shouldReturnUsersByRoleWhenValidRoleIsProvided() {
-        Role role = Role.STUDENT;
+        Role role = Role.ESTUDIANTE;
         List<User> mockUsers = Arrays.asList(new User(), new User());
 
         when(userService.getUsersByRole(role)).thenReturn(mockUsers);

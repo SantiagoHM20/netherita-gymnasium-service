@@ -111,7 +111,7 @@ public class RoutineControllerTest {
 
     @Test
     void shouldThrowInvalidDataExceptionWhenCreateRoutineWithInvalidData() {
-        RoutineDTO routineDTO = new RoutineDTO(); // Puede tener datos inválidos.
+        RoutineDTO routineDTO = new RoutineDTO(); 
         when(routineService.createRoutine(routineDTO)).thenThrow(new IllegalArgumentException("Datos inválidos"));
 
         try {
@@ -148,7 +148,7 @@ public class RoutineControllerTest {
 
     @Test
     void shouldReturnRoutinesByDifficultyWhenGetRoutinesByDifficulty() {
-        DifficultyLevel level = DifficultyLevel.HARD;
+        DifficultyLevel level = DifficultyLevel.DIFICIL;
         List<Routine> mockRoutines = Arrays.asList(new Routine(), new Routine());
         when(routineService.getRoutinesByDifficulty(level)).thenReturn(mockRoutines);
 
@@ -161,7 +161,7 @@ public class RoutineControllerTest {
 
     @Test
     void shouldReturnEmptyListWhenGetRoutinesByDifficultyNotFound() {
-        DifficultyLevel level = DifficultyLevel.EASY;
+        DifficultyLevel level = DifficultyLevel.FACIL;
         when(routineService.getRoutinesByDifficulty(level)).thenReturn(Arrays.asList());
 
         ResponseEntity<ApiResponse<List<Routine>>> response = routineController.getRoutinesByDifficulty(level);

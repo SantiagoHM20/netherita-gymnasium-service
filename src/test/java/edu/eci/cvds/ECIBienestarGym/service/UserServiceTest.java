@@ -34,15 +34,13 @@ public class UserServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    // ✅ **Creación de usuarios**
-
     @Test
     void shouldReturnSavedUserWhenDataIsValid() throws GYMException {
         UserDTO dto = new UserDTO();
         dto.setId("user1");
         dto.setName("Ana");
         dto.setEmail("ana@example.com");
-        dto.setRole(Role.STUDENT);
+        dto.setRole(Role.ESTUDIANTE);
 
         User expectedUser = new User();
         expectedUser.setId(dto.getId());
@@ -64,10 +62,10 @@ public class UserServiceTest {
     @Test
     void shouldThrowExceptionWhenIdIsNullOrEmpty() {
         UserDTO dto = new UserDTO();
-        dto.setId(null); // también puedes probar con ""
+        dto.setId(null); 
         dto.setName("Test");
         dto.setEmail("test@example.com");
-        dto.setRole(Role.STUDENT);
+        dto.setRole(Role.ESTUDIANTE);
         GYMException exception = assertThrows(GYMException.class, () -> userService.createUser(dto));
         assertEquals(GYMException.USERT_NOT_NULL, exception.getMessage());
     }
@@ -76,9 +74,9 @@ public class UserServiceTest {
     void shouldThrowExceptionWhenNameIsNullOrEmpty() {
         UserDTO dto = new UserDTO();
         dto.setId("user1");
-        dto.setName(""); // también puedes probar con null
+        dto.setName(""); 
         dto.setEmail("test@example.com");
-        dto.setRole(Role.STUDENT);
+        dto.setRole(Role.ESTUDIANTE);
         GYMException exception = assertThrows(GYMException.class, () -> userService.createUser(dto));
         assertEquals(GYMException.USERT_NOT_NULL, exception.getMessage());
     }
@@ -88,8 +86,8 @@ public class UserServiceTest {
         UserDTO dto = new UserDTO();
         dto.setId("user1");
         dto.setName("Test");
-        dto.setEmail(null); // también puedes probar con ""
-        dto.setRole(Role.STUDENT);
+        dto.setEmail(null); 
+        dto.setRole(Role.ESTUDIANTE);
         GYMException exception = assertThrows(GYMException.class, () -> userService.createUser(dto));
         assertEquals(GYMException.USERT_NOT_NULL, exception.getMessage());
     }
@@ -111,13 +109,13 @@ public class UserServiceTest {
         userDTO.setId("user123");
         userDTO.setName("John Doe");
         userDTO.setEmail("johndoe@example.com");
-        userDTO.setRole(Role.STUDENT);
+        userDTO.setRole(Role.ESTUDIANTE);
 
         User mockUser = new User();
         mockUser.setId("user123");
         mockUser.setName("John Doe");
         mockUser.setEmail("johndoe@example.com");
-        mockUser.setRole(Role.STUDENT);
+        mockUser.setRole(Role.ESTUDIANTE);
 
         when(userRepository.save(any(User.class))).thenReturn(mockUser);
 
@@ -130,8 +128,6 @@ public class UserServiceTest {
 
         verify(userRepository, times(1)).save(any(User.class));
     }
-
-    // ✅ **Consulta de usuarios**
 
     @Test
     void shouldReturnAllUsers() {
@@ -158,7 +154,7 @@ public class UserServiceTest {
 
     @Test
     void shouldReturnUsersWithGivenRole() {
-        Role role = Role.TEACHER;
+        Role role = Role.PROFESOR;
         List<User> mockUsers = Arrays.asList(new User(), new User());
         when(userRepository.findByRole(role)).thenReturn(mockUsers);
 
@@ -210,8 +206,6 @@ public class UserServiceTest {
         assertEquals(2, users.size());
         verify(userRepository, times(1)).findByRegistrationDate(date);
     }
-
-    // ✅ **Actualización de usuarios**
 
     @Test
     void shouldUpdateUserWhenExists() throws GYMException {
@@ -290,14 +284,13 @@ public class UserServiceTest {
         existingUser.setEmail("old@example.com");
 
         UserDTO dto = new UserDTO();
-        dto.setEmail(newEmail); // intento de cambiar a un correo que ya existe
+        dto.setEmail(newEmail); 
 
-        User anotherUserWithSameEmail = new User(); // simula el usuario que ya usa ese correo
+        User anotherUserWithSameEmail = new User(); 
 
         when(userRepository.findById(id)).thenReturn(Optional.of(existingUser));
         when(userRepository.findByEmail(newEmail)).thenReturn(Optional.of(anotherUserWithSameEmail));
 
-        // Act & Assert
         GYMException exception = assertThrows(GYMException.class, () -> {
             userService.updateUser(id, dto);
         });
@@ -308,8 +301,6 @@ public class UserServiceTest {
         verify(userRepository, times(1)).findByEmail(newEmail);
         verify(userRepository, never()).save(any(User.class));
     }
-
-    // ✅ **Eliminación de usuarios**
 
     @Test
     void shouldDeleteUserWhenIdIsValid() throws GYMException {

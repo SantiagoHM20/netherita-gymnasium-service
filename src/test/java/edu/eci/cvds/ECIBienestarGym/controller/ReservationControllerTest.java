@@ -157,7 +157,7 @@ public class ReservationControllerTest {
 
     @Test
     void shouldReturnReservationsByStateWhenGetReservationsByState() {
-        Status status = Status.APPROVED;
+        Status status = Status.APROBADO;
         List<Reservation> mockReservations = Arrays.asList(new Reservation());
         when(reservationService.getReservationsByState(status)).thenReturn(mockReservations);
 

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class ReservationServiceTest {
@@ -99,7 +100,7 @@ public class ReservationServiceTest {
 
     @Test
     void shouldReturnReservationsByState() {
-        Status status = Status.APPROVED;
+        Status status = Status.APROBADO;
         List<Reservation> mockReservations = Arrays.asList(new Reservation(), new Reservation());
         when(reservationRepository.findReservationByState(status)).thenReturn(mockReservations);
 
@@ -118,7 +119,7 @@ public class ReservationServiceTest {
             "session123",
             new UserDTO("coach123", "Jane Doe", "janedoe@example.com"), LocalDate.now(), LocalTime.of(9, 0), LocalTime.of(10, 0), 20, 5));
         reservationDTO.setReservationDate(LocalDateTime.now());
-        reservationDTO.setState(Status.APPROVED);
+        reservationDTO.setState(Status.APROBADO);
 
         Reservation mockReservation = new Reservation();
         mockReservation.setId("res123");
@@ -138,7 +139,7 @@ public class ReservationServiceTest {
         reservationDTO.setUserId(new UserDTO("user123", "John Doe", "johndoe@example.com"));
         reservationDTO.setGymSessionId(new GymSessionDTO("session123", new UserDTO("coach123", "Jane Doe", "janedoe@example.com"), LocalDate.now(), LocalTime.of(9, 0), LocalTime.of(10, 0), 20, 5));
         reservationDTO.setReservationDate(LocalDateTime.now());
-        reservationDTO.setState(Status.APPROVED);
+        reservationDTO.setState(Status.APROBADO);
 
         Reservation mockReservation = new Reservation();
         mockReservation.setId(id);
