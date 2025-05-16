@@ -101,7 +101,7 @@ public class ReportControllerTest {
 
     @Test
     void shouldReturnReportsByTypeWhenValidTypeIsGiven() {
-        ReportType type = ReportType.ASISTENCIA;
+        ReportType type = ReportType.ASSISTANCE;
         List<Report> mockReports = Arrays.asList(new Report(), new Report());
         when(reportService.getReportsByType(type)).thenReturn(mockReports);
 

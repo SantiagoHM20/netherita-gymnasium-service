@@ -83,15 +83,15 @@ public class PhysicalProgressServiceTest {
         userDTO.setId("user123");
         userDTO.setName("John Doe");
         userDTO.setEmail("johndoe@example.com");
-        userDTO.setRole(Role.ESTUDIANTE);
+        userDTO.setRole(Role.STUDENT);
 
         RoutineDTO routineDTO = new RoutineDTO();
         routineDTO.setId("routine123");
         routineDTO.setName("Routine A");
         routineDTO.setDescription("Description of Routine A");
         routineDTO.setExercises(Arrays.asList(
-            new ExerciseDTO("Exercise 1", 10, 3, 60, ExerciseType.STRENGTH, List.of(MuscleGroup.PECHO)),
-            new ExerciseDTO("Exercise 2", 15, 4, 45, ExerciseType.CARDIO, List.of(MuscleGroup.ESPALDA))
+            new ExerciseDTO("Exercise 1", 10, 3, 60, ExerciseType.STRENGTH, List.of(MuscleGroup.CHEST)),
+            new ExerciseDTO("Exercise 2", 15, 4, 45, ExerciseType.CARDIO, List.of(MuscleGroup.BACK))
         ));
 
         PhysicalProgressDTO progressDTO = new PhysicalProgressDTO();
@@ -133,15 +133,15 @@ public class PhysicalProgressServiceTest {
         userDTO.setId("user123");
         userDTO.setName("John Doe");
         userDTO.setEmail("johndoe@example.com");
-        userDTO.setRole(Role.ESTUDIANTE);
+        userDTO.setRole(Role.STUDENT);
 
         RoutineDTO routineDTO = new RoutineDTO();
         routineDTO.setId("routine123");
         routineDTO.setName("Routine A");
         routineDTO.setDescription("Routine A description");
         routineDTO.setExercises(Arrays.asList(
-            new ExerciseDTO("Exercise 1", 10, 3, 60, ExerciseType.STRENGTH, List.of(MuscleGroup.PECHO)),
-            new ExerciseDTO("Exercise 2", 15, 4, 45, ExerciseType.CARDIO, List.of(MuscleGroup.ESPALDA))
+            new ExerciseDTO("Exercise 1", 10, 3, 60, ExerciseType.STRENGTH, List.of(MuscleGroup.CHEST)),
+            new ExerciseDTO("Exercise 2", 15, 4, 45, ExerciseType.CARDIO, List.of(MuscleGroup.BACK))
         ));
 
         PhysicalProgressDTO progressDTO = new PhysicalProgressDTO();

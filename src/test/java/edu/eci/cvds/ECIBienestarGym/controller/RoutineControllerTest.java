@@ -148,7 +148,7 @@ public class RoutineControllerTest {
 
     @Test
     void shouldReturnRoutinesByDifficultyWhenGetRoutinesByDifficulty() {
-        DifficultyLevel level = DifficultyLevel.DIFICIL;
+        DifficultyLevel level = DifficultyLevel.HARD;
         List<Routine> mockRoutines = Arrays.asList(new Routine(), new Routine());
         when(routineService.getRoutinesByDifficulty(level)).thenReturn(mockRoutines);
 
@@ -161,7 +161,7 @@ public class RoutineControllerTest {
 
     @Test
     void shouldReturnEmptyListWhenGetRoutinesByDifficultyNotFound() {
-        DifficultyLevel level = DifficultyLevel.FACIL;
+        DifficultyLevel level = DifficultyLevel.EASY;
         when(routineService.getRoutinesByDifficulty(level)).thenReturn(Arrays.asList());
 
         ResponseEntity<ApiResponse<List<Routine>>> response = routineController.getRoutinesByDifficulty(level);

@@ -40,7 +40,7 @@ public class UserServiceTest {
         dto.setId("user1");
         dto.setName("Ana");
         dto.setEmail("ana@example.com");
-        dto.setRole(Role.ESTUDIANTE);
+        dto.setRole(Role.STUDENT);
 
         User expectedUser = new User();
         expectedUser.setId(dto.getId());
@@ -65,7 +65,7 @@ public class UserServiceTest {
         dto.setId(null); 
         dto.setName("Test");
         dto.setEmail("test@example.com");
-        dto.setRole(Role.ESTUDIANTE);
+        dto.setRole(Role.STUDENT);
         GYMException exception = assertThrows(GYMException.class, () -> userService.createUser(dto));
         assertEquals(GYMException.USERT_NOT_NULL, exception.getMessage());
     }
@@ -76,7 +76,7 @@ public class UserServiceTest {
         dto.setId("user1");
         dto.setName(""); 
         dto.setEmail("test@example.com");
-        dto.setRole(Role.ESTUDIANTE);
+        dto.setRole(Role.STUDENT);
         GYMException exception = assertThrows(GYMException.class, () -> userService.createUser(dto));
         assertEquals(GYMException.USERT_NOT_NULL, exception.getMessage());
     }
@@ -87,7 +87,7 @@ public class UserServiceTest {
         dto.setId("user1");
         dto.setName("Test");
         dto.setEmail(null); 
-        dto.setRole(Role.ESTUDIANTE);
+        dto.setRole(Role.STUDENT);
         GYMException exception = assertThrows(GYMException.class, () -> userService.createUser(dto));
         assertEquals(GYMException.USERT_NOT_NULL, exception.getMessage());
     }
@@ -109,13 +109,13 @@ public class UserServiceTest {
         userDTO.setId("user123");
         userDTO.setName("John Doe");
         userDTO.setEmail("johndoe@example.com");
-        userDTO.setRole(Role.ESTUDIANTE);
+        userDTO.setRole(Role.STUDENT);
 
         User mockUser = new User();
         mockUser.setId("user123");
         mockUser.setName("John Doe");
         mockUser.setEmail("johndoe@example.com");
-        mockUser.setRole(Role.ESTUDIANTE);
+        mockUser.setRole(Role.STUDENT);
 
         when(userRepository.save(any(User.class))).thenReturn(mockUser);
 
@@ -154,7 +154,7 @@ public class UserServiceTest {
 
     @Test
     void shouldReturnUsersWithGivenRole() {
-        Role role = Role.PROFESOR;
+        Role role = Role.TEACHER;
         List<User> mockUsers = Arrays.asList(new User(), new User());
         when(userRepository.findByRole(role)).thenReturn(mockUsers);
 
