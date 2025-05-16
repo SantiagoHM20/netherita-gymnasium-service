@@ -90,7 +90,7 @@ public class PhysicalProgressServiceTest {
         routineDTO.setName("Routine A");
         routineDTO.setDescription("Description of Routine A");
         routineDTO.setExercises(Arrays.asList(
-            new ExerciseDTO("Exercise 1", 10, 3, 60, ExerciseType.FUERZA, List.of(MuscleGroup.PECHO)),
+            new ExerciseDTO("Exercise 1", 10, 3, 60, ExerciseType.STRENGTH, List.of(MuscleGroup.PECHO)),
             new ExerciseDTO("Exercise 2", 15, 4, 45, ExerciseType.CARDIO, List.of(MuscleGroup.ESPALDA))
         ));
 
@@ -140,7 +140,7 @@ public class PhysicalProgressServiceTest {
         routineDTO.setName("Routine A");
         routineDTO.setDescription("Routine A description");
         routineDTO.setExercises(Arrays.asList(
-            new ExerciseDTO("Exercise 1", 10, 3, 60, ExerciseType.FUERZA, List.of(MuscleGroup.PECHO)),
+            new ExerciseDTO("Exercise 1", 10, 3, 60, ExerciseType.STRENGTH, List.of(MuscleGroup.PECHO)),
             new ExerciseDTO("Exercise 2", 15, 4, 45, ExerciseType.CARDIO, List.of(MuscleGroup.ESPALDA))
         ));
 

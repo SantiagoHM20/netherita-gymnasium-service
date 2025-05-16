@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
+@EnableFeignClients
 @EnableMongoRepositories
 @EnableScheduling
 @Generated
@@ -14,4 +15,5 @@ public class EciBienestarGymApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(EciBienestarGymApplication.class, args);
 	}
+
 }

@@ -101,7 +101,7 @@ public class RoutineServiceTest {
         routineDTO.setDescription("Strength training routine");
         routineDTO.setDifficulty(DifficultyLevel.HARD);
         routineDTO.setExercises(Arrays.asList(
-            new ExerciseDTO("Push-ups", 10, 3, 0, ExerciseType.FUERZA, List.of(MuscleGroup.PECHO))
+            new ExerciseDTO("Push-ups", 10, 3, 0, ExerciseType.STRENGTH, List.of(MuscleGroup.PECHO))
         ));
 
         Routine mockRoutine = new Routine();
@@ -121,7 +121,7 @@ public class RoutineServiceTest {
         routineDTO.setDescription("Updated description");
         routineDTO.setDifficulty(DifficultyLevel.EASY);
         routineDTO.setExercises(Arrays.asList(
-            new ExerciseDTO("Squats", 15, 3, 0, ExerciseType.FUERZA, List.of(MuscleGroup.DORSALES))
+            new ExerciseDTO("Squats", 15, 3, 0, ExerciseType.STRENGTH, List.of(MuscleGroup.DORSALES))
         ));
 
         Routine mockRoutine = new Routine();
