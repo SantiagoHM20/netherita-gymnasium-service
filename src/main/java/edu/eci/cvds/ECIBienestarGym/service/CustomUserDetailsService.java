@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import edu.eci.cvds.ECIBienestarGym.model.User;
 import edu.eci.cvds.ECIBienestarGym.repository.UserRepository;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {

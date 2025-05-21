@@ -19,7 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api")
 @Tag(name = "Usuarios", description = "Operaciones para gestionar usuarios del sistema")
 public class UserController {
 
@@ -29,15 +29,15 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/trainer")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
+    @GetMapping("/trainer/users")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR')")
     @Operation(summary = "Obtener todos los usuarios", description = "Devuelve una lista de todos los usuarios del sistema.")
     public ResponseEntity<ApiResponse<List<User>>> getAllUsers() {
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuarios obtenidos exitosamente", userService.getAllUsers()));
     }
 
-    @GetMapping("/user/{id}")
-    @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN', 'TRAINER')")
+    @GetMapping("/user/users/{id}")
+    @PreAuthorize("hasAnyRole('ESTUDIANTE', 'ADMINISTRADOR', 'ENTRENADOR')")
     @Operation(summary = "Obtener usuario por ID", description = "Busca un usuario en el sistema según su identificador único.")
     public ResponseEntity<ApiResponse<User>> getUserById(
             @Parameter(description = "ID del usuario a buscar", required = true) @PathVariable("id") String id)
@@ -45,16 +45,16 @@ public class UserController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuario con id: " + id, userService.getUsersById(id)));
     }
 
-    @GetMapping("/user/name/{name}")
-    @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN', 'TRAINER')")
+    @GetMapping("/trainer/users/name/{name}")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR')")
     @Operation(summary = "Obtener usuarios por nombre", description = "Busca usuarios en el sistema según su nombre.")
     public ResponseEntity<ApiResponse<List<User>>> getUsersByName(
             @Parameter(description = "Nombre del usuario a buscar", required = true) @PathVariable String name) {
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuarios con nombre: " + name, userService.getUsersByName(name)));
     }
 
-    @GetMapping("/user/email")
-    @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN', 'TRAINER')")
+    @GetMapping("/traienr/users/email")
+    @PreAuthorize("hasAnyRole('ESTUDIANTE', 'ADMINISTRADOR', 'ENTRENADOR')")
     @Operation(summary = "Buscar usuario por correo electrónico", description = "Busca un usuario en el sistema según su correo electrónico.")
     public ResponseEntity<ApiResponse<Optional<User>>> getUserByEmail(
             @Parameter(description = "Correo electrónico del usuario a buscar", required = true) @RequestParam String email) {
@@ -66,16 +66,16 @@ public class UserController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuario encontrado", user));
     }
 
-    @GetMapping("/role/{role}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("trainer/users/role/{role}")
+    @PreAuthorize("hasRole('ADMINISTRADOR', 'ENTRENADOR')")
     @Operation(summary = "Obtener usuarios por rol", description = "Retorna una lista de usuarios con el rol especificado.")
     public ResponseEntity<ApiResponse<List<User>>> getUsersByRole(
             @Parameter(description = "Rol del usuario a buscar", required = true) @PathVariable Role role) {
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuarios con rol: " + role, userService.getUsersByRole(role)));
     }
 
-    @GetMapping("/registration-date/{registrationDate}")
-    @PreAuthorize("hasAnyRole('ADMIN','TRAINER')")
+    @GetMapping("trainer/users/registration-date/{registrationDate}")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR')")
     @Operation(summary = "Obtener usuarios por fecha de registro", description = "Retorna una lista de usuarios registrados en la fecha especificada (formato: yyyy-MM-dd).")
     public ResponseEntity<ApiResponse<List<User>>> getUsersByRegistrationDate(
             @Parameter(description = "Fecha de registro en formato yyyy-MM-dd", required = true) @PathVariable String registrationDate) {
@@ -83,8 +83,8 @@ public class UserController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuarios registrados en " + registrationDate, userService.getUsersByRegistrationDate(date)));
     }
 
-    @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/users")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @Operation(summary = "Crear nuevo usuario", description = "Crea un nuevo usuario en el sistema.")
     public ResponseEntity<ApiResponse<User>> createUser(
             @Parameter(description = "Datos del usuario a crear", required = true) @RequestBody UserDTO userDTO) throws GYMException {
@@ -92,8 +92,8 @@ public class UserController {
                 .body(new ApiResponse<>(true, "Usuario creado", userService.createUser(userDTO)));
     }
 
-    @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("users/{id}")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @Operation(summary = "Actualizar usuario", description = "Actualiza un usuario existente en el sistema.")
     public ResponseEntity<ApiResponse<User>> updateUser(
             @Parameter(description = "ID del usuario a actualizar", required = true) @PathVariable("id") String id,
@@ -101,8 +101,8 @@ public class UserController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuario actualizado", userService.updateUser(id, userDTO)));
     }
 
-    @DeleteMapping("/admin/users/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/users/{id}")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @Operation(summary = "Eliminar usuario", description = "Elimina un usuario del sistema.")
     public ResponseEntity<ApiResponse<Void>> deleteUser(
             @Parameter(description = "ID del usuario a eliminar", required = true) @PathVariable("id") String id) throws GYMException {

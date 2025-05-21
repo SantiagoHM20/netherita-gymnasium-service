@@ -41,17 +41,6 @@ public class ReportService {
         return reportRepository.save(mapToReport(reportDTO, report));
     }
 
-    public Report updateReport(String id, ReportDTO reportDTO) throws GYMException {
-        Report report = reportRepository.findById(id).orElseThrow(() -> new  GYMException(GYMException.REPORT_NOT_FOUND));
-        return reportRepository.save(mapToReport(reportDTO, report));
-    }
-
-    public void deleteReport(String id) throws GYMException {
-        reportRepository.findById(id)
-            .orElseThrow(() -> new  GYMException(GYMException.REPORT_NOT_FOUND));
-        reportRepository.deleteById(id);
-    }
-
     private Report mapToReport(ReportDTO reportDTO, Report report) {
         report.setCoachId(mapToUser(reportDTO.getCoachId()));
         report.setGeneratedAt(reportDTO.getGeneratedAt());
@@ -68,7 +57,5 @@ public class ReportService {
         user.setRole(userDTO.getRole());
         return user;
     }
-
-
-
+    
 }

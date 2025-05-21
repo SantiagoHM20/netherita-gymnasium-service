@@ -1,13 +1,16 @@
 package edu.eci.cvds.ECIBienestarGym.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import lombok.Setter;
 
-@Data
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class GymSessionDTO {
@@ -18,5 +21,6 @@ public class GymSessionDTO {
     private LocalTime endTime;
     private int capacity;
     private int currentReservations;
-
+    private List<Boolean> attendance;
+    private List<UserDTO> users;
 }

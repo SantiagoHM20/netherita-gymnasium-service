@@ -2,8 +2,10 @@ package edu.eci.cvds.ECIBienestarGym.model;
 
 import edu.eci.cvds.ECIBienestarGym.embeddables.PhysicalProgressComments;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,7 +15,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Document(collection = "physicalProgress")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class PhysicalProgress {
@@ -31,8 +34,8 @@ public class PhysicalProgress {
     private float chest;
     private float rightarm;
     private float leftarm;
-    private float legs;
-    private float shoulders;
+    private float rightleg;
+    private float leftleg;
     @Field("comments")
     private List<PhysicalProgressComments> comments;
 }

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/stats")
-@PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
+@PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR')")
 public class StatisticsController {
     private final GymSessionService gymSessionService;
     private final stats estadisticasClient;
@@ -86,8 +86,8 @@ public class StatisticsController {
                     dto.setChest(progress.getChest());
                     dto.setRightarm(progress.getRightarm());
                     dto.setLeftarm(progress.getLeftarm());
-                    dto.setLegs(progress.getLegs());
-                    dto.setShoulders(progress.getShoulders());
+                    dto.setRightleg(progress.getRightleg());
+                    dto.setLeftleg(progress.getLeftleg());
                     return dto;
                 }).toList();
 

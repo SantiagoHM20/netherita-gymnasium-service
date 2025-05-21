@@ -42,17 +42,11 @@ public class ReservationService {
         reservation.setGymSessionId(mapToGymSession(reservationDTO.getGymSessionId()));
         reservation.setReservationDate(reservationDTO.getReservationDate());
         reservation.setState(reservationDTO.getState());
-        Reservation saved = reservationRepository.save(reservation);
 
-        for (int i = 1; i <= 5; i++) {
-            Reservation next = new Reservation();
-            next.setUserId(reservation.getUserId());
-            next.setGymSessionId(reservation.getGymSessionId());
-            next.setReservationDate(reservation.getReservationDate().plusWeeks(i));
-            next.setState(reservation.getState());
-            reservationRepository.save(next);
-        }
-        return saved;
+        GymSession gymSession = reservation.getGymSessionId();
+        gymSession.getUsers().add(reservation.getUserId());
+        gymSession.setCurrentReservations(gymSession.getCurrentReservations() + 1);
+        return reservationRepository.save(reservation);
     }
 
     public Reservation updateReservation(String id, ReservationDTO reservationDTO) throws GYMException {

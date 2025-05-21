@@ -5,10 +5,12 @@ import java.util.List;
 import edu.eci.cvds.ECIBienestarGym.enums.ExerciseType;
 import edu.eci.cvds.ECIBienestarGym.enums.MuscleGroup;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExerciseDTO {

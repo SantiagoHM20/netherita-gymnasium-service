@@ -1,14 +1,14 @@
 package edu.eci.cvds.ECIBienestarGym.exceptions;
 
 public class GYMException extends Exception {
-    public static final String USERT_NOT_FOUND = "User Not Found";
-    public static  final String ROUTINE_NOT_FOUND = "Routine Not Found";
-    public static final String RESERVE_NOT_FOUND = "Reserve Not Found";
-    public static final String REPORT_NOT_FOUND = "Report Not Found";
-    public static final String PHYSICAL_PROGRESS_NOT_FOUND = "Physical progress Not Found";
-    public static final String GYM_SESION_NOT_FOUND = "Gym Session Not Found";
-    public static final String NO_GMAIL_CHANGED = "No GMail Changed";
-    public static final String USERT_NOT_NULL = "User Not Null";
+    public static final String USER_NOT_FOUND = "Usuario No Encontrado";
+    public static  final String ROUTINE_NOT_FOUND = "Rutina No Encontrada";
+    public static final String RESERVE_NOT_FOUND = "Reserva No Encontrada";
+    public static final String REPORT_NOT_FOUND = "Reporte No Encontrado";
+    public static final String PHYSICAL_PROGRESS_NOT_FOUND = "Progreso Fisico No Encontrado";
+    public static final String GYM_SESION_NOT_FOUND = "Sesion No Encontrada";
+    public static final String NO_MAIL_CHANGED = "No se ha cambiado el correo";
+    public static final String USER_NOT_NULL = "Usuario No Puede Ser Nulo";
 
     public GYMException(String message) {
         super(message);

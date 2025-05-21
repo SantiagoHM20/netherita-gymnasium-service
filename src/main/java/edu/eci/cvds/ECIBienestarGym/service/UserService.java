@@ -41,16 +41,16 @@ public class UserService {
 
     public User createUser(UserDTO userDTO) throws GYMException {
         if (userDTO.getId() == null || userDTO.getId().isEmpty()) {
-            throw new GYMException(GYMException.USERT_NOT_NULL);
+            throw new GYMException(GYMException.USER_NOT_NULL);
         }
         if (userDTO.getName() == null || userDTO.getName().isEmpty()) {
-            throw new GYMException(GYMException.USERT_NOT_NULL);
+            throw new GYMException(GYMException.USER_NOT_NULL);
         }
         if (userDTO.getEmail() == null || userDTO.getEmail().isEmpty()) {
-            throw new GYMException(GYMException.USERT_NOT_NULL);
+            throw new GYMException(GYMException.USER_NOT_NULL);
         }
         if (userDTO.getRole() == null) {
-            throw new GYMException(GYMException.USERT_NOT_NULL);
+            throw new GYMException(GYMException.USER_NOT_NULL);
         }
 
         User user = new User();
@@ -63,11 +63,11 @@ public class UserService {
     }
 
     public User updateUser(String id, UserDTO userDTO) throws GYMException {
-        User user = userRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.USERT_NOT_FOUND));
+        User user = userRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.USER_NOT_FOUND));
         if(userDTO.getName() != null) user.setName(userDTO.getName());
         if(userDTO.getEmail() != null && !user.getEmail().equals(userDTO.getEmail())) {
             if(userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
-                throw new GYMException(GYMException.NO_GMAIL_CHANGED);
+                throw new GYMException(GYMException.NO_MAIL_CHANGED);
             }
             user.setEmail(userDTO.getEmail());
         }
@@ -79,11 +79,11 @@ public class UserService {
 
     public void deleteUser(String id) throws GYMException {
         if (id == null || id.isEmpty()) {
-            throw new GYMException(GYMException.USERT_NOT_NULL);
+            throw new GYMException(GYMException.USER_NOT_NULL);
         }
 
-        User user = userRepository.findById(id)
-            .orElseThrow(() -> new GYMException(GYMException.USERT_NOT_FOUND));
+        userRepository.findById(id)
+            .orElseThrow(() -> new GYMException(GYMException.USER_NOT_FOUND));
 
         userRepository.deleteById(id);
     }

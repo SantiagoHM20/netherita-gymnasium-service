@@ -53,6 +53,12 @@ public class GymSessionService {
         return gymSessionRepository.save(updatedSession);
     }
 
+    public GymSession updatedAttendance(String id, List<Boolean> attendance) throws GYMException {
+        GymSession gymSession = gymSessionRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.GYM_SESION_NOT_FOUND));
+        gymSession.setAttendance(attendance);
+        return gymSessionRepository.save(gymSession);
+    }
+
     public void deleteGymSession(String id) throws GYMException {
         GymSession gymSession = gymSessionRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.GYM_SESION_NOT_FOUND));
         gymSessionRepository.delete(gymSession);

@@ -50,20 +50,6 @@ public class PhysicalProgressService {
         return physicalProgressRepository.save(progress);
     }
 
-    public PhysicalProgress updatePhysicalProgress(String id, PhysicalProgressDTO physicalProgressDTO) throws GYMException {
-        PhysicalProgress progress = physicalProgressRepository.findById(id)
-            .orElseThrow(() -> new  GYMException(GYMException.REPORT_NOT_FOUND));
-        PhysicalProgress updatedProgress = mapToPhysicalProgress(physicalProgressDTO);
-        updatedProgress.setId(progress.getId());
-        return physicalProgressRepository.save(updatedProgress);
-    }
-
-    public void deletePhysicalProgress(String id) throws GYMException{
-        PhysicalProgress progress = physicalProgressRepository.findById(id)
-                .orElseThrow(() -> new  GYMException(GYMException.REPORT_NOT_FOUND));
-        physicalProgressRepository.deleteById(id);
-    }
-
     private PhysicalProgress mapToPhysicalProgress(PhysicalProgressDTO physicalProgressDTO) {
         PhysicalProgress physicalProgress = new PhysicalProgress();
         physicalProgress.setUserId(mapToUser(physicalProgressDTO.getUserId()));
@@ -76,9 +62,8 @@ public class PhysicalProgressService {
         physicalProgress.setChest(physicalProgressDTO.getChest());
         physicalProgress.setRightarm(physicalProgressDTO.getRightarm());
         physicalProgress.setLeftarm(physicalProgressDTO.getLeftarm());
-        physicalProgress.setLegs(physicalProgressDTO.getLegs());
-        physicalProgress.setShoulders(physicalProgressDTO.getShoulders());
-
+        physicalProgress.setRightleg(physicalProgressDTO.getRightleg());
+        physicalProgress.setLeftleg(physicalProgressDTO.getLeftleg());
         return physicalProgress;
     }
 
