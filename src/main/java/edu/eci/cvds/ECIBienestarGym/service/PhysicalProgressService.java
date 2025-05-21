@@ -74,7 +74,8 @@ public class PhysicalProgressService {
         physicalProgress.setHeight(physicalProgressDTO.getHeight());
         physicalProgress.setWaists(physicalProgressDTO.getWaists());
         physicalProgress.setChest(physicalProgressDTO.getChest());
-        physicalProgress.setArms(physicalProgressDTO.getArms());
+        physicalProgress.setRightarm(physicalProgressDTO.getRightarm());
+        physicalProgress.setLeftarm(physicalProgressDTO.getLeftarm());
         physicalProgress.setLegs(physicalProgressDTO.getLegs());
         physicalProgress.setShoulders(physicalProgressDTO.getShoulders());
 

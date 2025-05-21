@@ -20,7 +20,8 @@ public class PhysicalProgressDTO {
     private float height;
     private float waists;
     private float chest;
-    private float arms;
+    private float rightarm;
+    private float leftarm;
     private float legs;
     private float shoulders;
     private List<PhysicalProgressCommentsDTO> comments;

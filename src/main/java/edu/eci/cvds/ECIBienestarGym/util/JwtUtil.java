@@ -12,8 +12,20 @@ import java.util.Map;
 import java.util.function.Function;
 @Service
 public class JwtUtil {
-    private String SECRET_KEY = "secret";
+    private String SECRET_KEY = "EPRiC0Bt0/2KcBRRWqVKhEWzModEtI6Q4K05RWuLgVQV4Xw92Ulk9kHPmQVjiRW5c9XtLNm4lgNoridiLgvZpg==";
+    private String SECRET_KEY_INTERNAL = "secretKey";
 
+    // ======= VALIDAR TOKEN EXTERNO =======
+    public Claims validateExternalToken(String token) {
+        try {
+            return Jwts.parser()
+                    .setSigningKey(SECRET_KEY)
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
+            throw new RuntimeException("Token externo inválido", e);
+        }
+    }
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -28,7 +40,8 @@ public class JwtUtil {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(SECRET_KEY_INTERNAL).parseClaimsJws(token).getBody();
+
     }
 
     private Boolean isTokenExpired(String token) {
@@ -43,7 +56,7 @@ public class JwtUtil {
     private String createToken(Map<String, Object> claims, String subject) {
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY_INTERNAL).compact();
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {

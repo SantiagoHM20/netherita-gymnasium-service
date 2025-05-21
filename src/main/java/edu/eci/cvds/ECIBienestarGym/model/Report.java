@@ -1,6 +1,5 @@
 package edu.eci.cvds.ECIBienestarGym.model;
 
-import edu.eci.cvds.ECIBienestarGym.embeddables.ReportEntry;
 import edu.eci.cvds.ECIBienestarGym.enums.ReportType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,7 +24,6 @@ public class Report {
     @DBRef
     private User coachId;
     @Field("entries")
-    private List<ReportEntry> entries = new ArrayList<>();
     private LocalDate generatedAt;
     private ReportType type;
     private String description;

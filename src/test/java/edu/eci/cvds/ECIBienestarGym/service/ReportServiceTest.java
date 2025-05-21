@@ -3,7 +3,6 @@ package edu.eci.cvds.ECIBienestarGym.service;
 import edu.eci.cvds.ECIBienestarGym.dto.ReportDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.ReportEntryDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.UserDTO;
-import edu.eci.cvds.ECIBienestarGym.embeddables.ReportEntry;
 import edu.eci.cvds.ECIBienestarGym.enums.ReportType;
 import edu.eci.cvds.ECIBienestarGym.enums.Role;
 import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;

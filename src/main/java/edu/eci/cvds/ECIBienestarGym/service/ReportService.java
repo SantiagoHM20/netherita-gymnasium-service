@@ -1,9 +1,7 @@
 package edu.eci.cvds.ECIBienestarGym.service;
 
 import edu.eci.cvds.ECIBienestarGym.dto.ReportDTO;
-import edu.eci.cvds.ECIBienestarGym.dto.ReportEntryDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.UserDTO;
-import edu.eci.cvds.ECIBienestarGym.embeddables.ReportEntry;
 import edu.eci.cvds.ECIBienestarGym.enums.ReportType;
 import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.Report;
@@ -56,7 +54,6 @@ public class ReportService {
 
     private Report mapToReport(ReportDTO reportDTO, Report report) {
         report.setCoachId(mapToUser(reportDTO.getCoachId()));
-        report.setEntries(reportDTO.getEntries().stream().map(this::mapToReportEntry).toList());
         report.setGeneratedAt(reportDTO.getGeneratedAt());
         report.setType(reportDTO.getType());
         report.setDescription(reportDTO.getDescription());
@@ -72,12 +69,6 @@ public class ReportService {
         return user;
     }
 
-    private ReportEntry mapToReportEntry(ReportEntryDTO reportEntryDTO) {
-        ReportEntry reportEntry = new ReportEntry();
-        reportEntry.setLabel(reportEntryDTO.getLabel());
-        reportEntry.setData(reportEntryDTO.getData());
-        return reportEntry;
-    }
 
 
 }

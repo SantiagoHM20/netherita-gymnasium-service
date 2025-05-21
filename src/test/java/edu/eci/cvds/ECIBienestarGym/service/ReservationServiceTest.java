@@ -11,6 +11,7 @@ import edu.eci.cvds.ECIBienestarGym.model.User;
 import edu.eci.cvds.ECIBienestarGym.repository.ReservationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -111,14 +112,13 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void shouldCreateReservationSuccessfully() {
+    void shouldCreateMainReservationSuccessfully() {
+        // Arrange
         ReservationDTO reservationDTO = new ReservationDTO();
-        reservationDTO.setId("res123");
         reservationDTO.setUserId(new UserDTO("user123", "John Doe", "johndoe@example.com"));
-        reservationDTO.setGymSessionId(new GymSessionDTO(
-            "session123",
-            new UserDTO("coach123", "Jane Doe", "janedoe@example.com"), LocalDate.now(), LocalTime.of(9, 0), LocalTime.of(10, 0), 20, 5));
-        reservationDTO.setReservationDate(LocalDateTime.now());
+        reservationDTO.setGymSessionId(new GymSessionDTO("session123", new UserDTO("coach123", "Jane Doe", "janedoe@example.com"), LocalDate.now(), LocalTime.of(9, 0), LocalTime.of(10, 0), 20, 5));
+        LocalDateTime now = LocalDateTime.now();
+        reservationDTO.setReservationDate(now);
         reservationDTO.setState(Status.APROBED);
 
         Reservation mockReservation = new Reservation();
@@ -129,7 +129,34 @@ public class ReservationServiceTest {
         Reservation createdReservation = reservationService.createReservation(reservationDTO);
 
         assertEquals(mockReservation, createdReservation);
-        verify(reservationRepository, times(1)).save(any(Reservation.class));
+    }
+
+    @Test
+    void shouldCreateRecurringReservationsAfterMainReservation() {
+        ReservationDTO reservationDTO = new ReservationDTO();
+        reservationDTO.setUserId(new UserDTO("user123", "John Doe", "johndoe@example.com"));
+        reservationDTO.setGymSessionId(new GymSessionDTO(
+                "session123",
+                new UserDTO("coach123", "Jane Doe", "janedoe@example.com"),
+                LocalDate.now(), LocalTime.of(9, 0), LocalTime.of(10, 0), 20, 5));
+        LocalDateTime now = LocalDateTime.now();
+        reservationDTO.setReservationDate(now);
+        reservationDTO.setState(Status.APROBED);
+
+        when(reservationRepository.save(any(Reservation.class))).thenReturn(new Reservation());
+
+        // Act
+        reservationService.createReservation(reservationDTO);
+
+        // Assert
+        ArgumentCaptor<Reservation> captor = ArgumentCaptor.forClass(Reservation.class);
+        verify(reservationRepository, times(6)).save(captor.capture());
+
+        List<Reservation> savedReservations = captor.getAllValues();
+
+        for (int i = 0; i < 6; i++) {
+            assertEquals(now.plusWeeks(i), savedReservations.get(i).getReservationDate());
+        }
     }
 
     @Test
