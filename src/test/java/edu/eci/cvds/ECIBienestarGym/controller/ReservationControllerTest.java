@@ -60,19 +60,18 @@ public class ReservationControllerTest {
         verify(reservationService, times(1)).getReservationById(id);
     }
 
-    @Test
-    void shouldReturnReservationsByUserIdWhenGetReservationsByUserId() {
-        User user = new User(); 
-        user.setId("user123"); 
-        List<Reservation> mockReservations = Arrays.asList(new Reservation(), new Reservation());
-        when(reservationService.getReservationsByUserId(user)).thenReturn(mockReservations);
+   @Test
+   void shouldReturnReservationsByUserIdWhenGetReservationsByUserId() {
+       String userId = "user123";
+       List<Reservation> mockReservations = Arrays.asList(new Reservation(), new Reservation());
+       when(reservationService.getReservationsByUserId(any(User.class))).thenReturn(mockReservations);
 
-        ResponseEntity<ApiResponse<List<Reservation>>> response = reservationController.getReservationsByUserId("user123");
+       ResponseEntity<ApiResponse<List<Reservation>>> response = reservationController.getReservationsByUserId(userId);
 
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(2, response.getBody().getData().size());
-        verify(reservationService, times(1)).getReservationsByUserId(user);
-    }
+       assertEquals(200, response.getStatusCodeValue());
+       assertEquals(2, response.getBody().getData().size());
+       verify(reservationService, times(1)).getReservationsByUserId(any(User.class));
+   }
 
     @Test
     void shouldReturnReservationsByDateWhenGetReservationsByDate() {
@@ -141,23 +140,21 @@ public class ReservationControllerTest {
     @Test
     void shouldReturnReservationsByGymSessionWhenGetReservationsByGymSession() {
         String sessionId = "session123";
-        GymSession gymSession = new GymSession();
-        gymSession.setId(sessionId);
-        
+
         List<Reservation> mockReservations = Arrays.asList(new Reservation(), new Reservation());
-        when(reservationService.getReservationsByGymSession(gymSession)).thenReturn(mockReservations);
+        when(reservationService.getReservationsByGymSession(any(GymSession.class))).thenReturn(mockReservations);
 
         ResponseEntity<ApiResponse<List<Reservation>>> response = reservationController.getReservationsByGymSession(sessionId);
 
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(2, response.getBody().getData().size());
         assertEquals("Reservas de la sesión encontradas", response.getBody().getMessage());
-        verify(reservationService, times(1)).getReservationsByGymSession(gymSession);
+        verify(reservationService, times(1)).getReservationsByGymSession(any(GymSession.class));
     }
 
     @Test
     void shouldReturnReservationsByStateWhenGetReservationsByState() {
-        Status status = Status.APROBED;
+        Status status = Status.APROBADO;
         List<Reservation> mockReservations = Arrays.asList(new Reservation());
         when(reservationService.getReservationsByState(status)).thenReturn(mockReservations);
 

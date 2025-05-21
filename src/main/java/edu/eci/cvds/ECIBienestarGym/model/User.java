@@ -30,4 +30,12 @@ public class User {
     private boolean registered;
     private LocalDate registrationDate;
 
+    public User(String id) {
+        this.id = id;
+    }
+    public User(String id, String name, String email) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+    }
 }

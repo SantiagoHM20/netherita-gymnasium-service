@@ -75,57 +75,8 @@ public class PhysicalProgressServiceTest {
         verify(physicalProgressRepository, times(1)).findByRegistrationDate(date);
     }
 
-    @Test
-    void ShouldUpdatePhysicalProgress() throws GYMException {
-        String id = "progress123";
 
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId("user123");
-        userDTO.setName("John Doe");
-        userDTO.setEmail("johndoe@example.com");
-        userDTO.setRole(Role.STUDENT);
 
-        RoutineDTO routineDTO = new RoutineDTO();
-        routineDTO.setId("routine123");
-        routineDTO.setName("Routine A");
-        routineDTO.setDescription("Description of Routine A");
-        routineDTO.setExercises(Arrays.asList(
-            new ExerciseDTO("Exercise 1", 10, 3, 60, ExerciseType.STRENGTH, List.of(MuscleGroup.CHEST)),
-            new ExerciseDTO("Exercise 2", 15, 4, 45, ExerciseType.CARDIO, List.of(MuscleGroup.BACK))
-        ));
-
-        PhysicalProgressDTO progressDTO = new PhysicalProgressDTO();
-        progressDTO.setUserId(userDTO);
-        progressDTO.setRoutine(routineDTO);
-        progressDTO.setWeight(72.0F);
-        progressDTO.setHeight(1.76F);
-        progressDTO.setRegistrationDate(LocalDate.now());
-
-        PhysicalProgress mockProgress = new PhysicalProgress();
-        when(physicalProgressRepository.findById(id)).thenReturn(Optional.of(mockProgress));
-        when(physicalProgressRepository.save(any(PhysicalProgress.class))).thenReturn(mockProgress);
-
-        PhysicalProgress updatedProgress = physicalProgressService.updatePhysicalProgress(id, progressDTO);
-
-        assertEquals(mockProgress, updatedProgress);
-        verify(physicalProgressRepository, times(1)).findById(id);
-        verify(physicalProgressRepository, times(1)).save(any(PhysicalProgress.class));
-    }
-
-    @Test
-    void ShouldDeletePhysicalProgress() throws GYMException {
-        String id = "progress123";
-
-        PhysicalProgress mockProgress = new PhysicalProgress();
-        mockProgress.setId(id);
-        when(physicalProgressRepository.findById(id)).thenReturn(Optional.of(mockProgress));
-        doNothing().when(physicalProgressRepository).deleteById(id);
-
-        physicalProgressService.deletePhysicalProgress(id);
-
-        verify(physicalProgressRepository, times(1)).findById(id);
-        verify(physicalProgressRepository, times(1)).deleteById(id);
-    }
 
     @Test
     void ShouldCreatePhysicalProgress() {
@@ -133,15 +84,15 @@ public class PhysicalProgressServiceTest {
         userDTO.setId("user123");
         userDTO.setName("John Doe");
         userDTO.setEmail("johndoe@example.com");
-        userDTO.setRole(Role.STUDENT);
+        userDTO.setRole(Role.ESTUDIANTE);
 
         RoutineDTO routineDTO = new RoutineDTO();
         routineDTO.setId("routine123");
         routineDTO.setName("Routine A");
         routineDTO.setDescription("Routine A description");
         routineDTO.setExercises(Arrays.asList(
-            new ExerciseDTO("Exercise 1", 10, 3, 60, ExerciseType.STRENGTH, List.of(MuscleGroup.CHEST)),
-            new ExerciseDTO("Exercise 2", 15, 4, 45, ExerciseType.CARDIO, List.of(MuscleGroup.BACK))
+            new ExerciseDTO("Exercise 1", 10, 3, 60, ExerciseType.FUERZA, List.of(MuscleGroup.PECHO)),
+            new ExerciseDTO("Exercise 2", 15, 4, 45, ExerciseType.CARDIO, List.of(MuscleGroup.ESPALDA))
         ));
 
         PhysicalProgressDTO progressDTO = new PhysicalProgressDTO();

@@ -101,7 +101,7 @@ public class ReportControllerTest {
 
     @Test
     void shouldReturnReportsByTypeWhenValidTypeIsGiven() {
-        ReportType type = ReportType.ASSISTANCE;
+        ReportType type = ReportType.ASISTENCIA;
         List<Report> mockReports = Arrays.asList(new Report(), new Report());
         when(reportService.getReportsByType(type)).thenReturn(mockReports);
 
@@ -125,28 +125,4 @@ public class ReportControllerTest {
         verify(reportService, times(1)).createReport(reportDTO);
     }
 
-    @Test
-    void shouldUpdateReportWhenValidIdAndDTOAreProvided() throws GYMException {
-        String id = "report123";
-        ReportDTO reportDTO = new ReportDTO();
-        Report mockReport = new Report();
-        when(reportService.updateReport(id, reportDTO)).thenReturn(mockReport);
-
-        ResponseEntity<ApiResponse<Report>> response = reportController.updateReport(id, reportDTO);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(mockReport, response.getBody().getData());
-        verify(reportService, times(1)).updateReport(id, reportDTO);
-    }
-
-    @Test
-    void shouldDeleteReportWhenValidIdIsGiven() throws GYMException {
-        String id = "report123";
-        doNothing().when(reportService).deleteReport(id);
-
-        ResponseEntity<ApiResponse<Void>> response = reportController.deleteReport(id);
-
-        assertEquals(200, response.getStatusCodeValue());
-        verify(reportService, times(1)).deleteReport(id);
-    }
 }

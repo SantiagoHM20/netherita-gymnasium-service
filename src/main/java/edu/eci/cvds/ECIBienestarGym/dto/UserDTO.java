@@ -33,4 +33,9 @@ public class UserDTO {
         this.email = email;
 
     }
+
+    public UserDTO(String id) {
+        this.id = id;
+
+    }
 }

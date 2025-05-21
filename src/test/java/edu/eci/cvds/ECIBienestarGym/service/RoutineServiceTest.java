@@ -85,7 +85,7 @@ public class RoutineServiceTest {
 
     @Test
     void ShouldReturnRoutinesByDifficulty() {
-        DifficultyLevel difficulty = DifficultyLevel.MEDUM;
+        DifficultyLevel difficulty = DifficultyLevel.MEDIANO;
         List<Routine> mockRoutines = Arrays.asList(new Routine(), new Routine());
         when(routineRepository.findByDifficulty(difficulty)).thenReturn(mockRoutines);
 
@@ -100,9 +100,9 @@ public class RoutineServiceTest {
         RoutineDTO routineDTO = new RoutineDTO();
         routineDTO.setName("Strength");
         routineDTO.setDescription("Strength training routine");
-        routineDTO.setDifficulty(DifficultyLevel.HARD);
+        routineDTO.setDifficulty(DifficultyLevel.DIFICIL);
         routineDTO.setExercises(Arrays.asList(
-            new ExerciseDTO("Push-ups", 10, 3, 0, ExerciseType.STRENGTH, List.of(MuscleGroup.CHEST))
+            new ExerciseDTO("Push-ups", 10, 3, 0, ExerciseType.FUERZA, List.of(MuscleGroup.PIERNALES))
         ));
 
         Routine mockRoutine = new Routine();
@@ -120,9 +120,9 @@ public class RoutineServiceTest {
         RoutineDTO routineDTO = new RoutineDTO();
         routineDTO.setName("Updated Routine");
         routineDTO.setDescription("Updated description");
-        routineDTO.setDifficulty(DifficultyLevel.EASY);
+        routineDTO.setDifficulty(DifficultyLevel.FACIL);
         routineDTO.setExercises(Arrays.asList(
-            new ExerciseDTO("Squats", 15, 3, 0, ExerciseType.STRENGTH, List.of(MuscleGroup.DORSAL))
+            new ExerciseDTO("Squats", 15, 3, 0, ExerciseType.FUERZA, List.of(MuscleGroup.PIERNALES))
         ));
 
         Routine mockRoutine = new Routine();

@@ -144,7 +144,7 @@ public class GymSessionServiceTest {
         coachDTO.setId("coach123");
         coachDTO.setName("John Doe");
         coachDTO.setEmail("johndoe@example.com");
-        coachDTO.setRole(Role.TEACHER);
+        coachDTO.setRole(Role.ENTRENADOR);
 
         GymSessionDTO gymSessionDTO = new GymSessionDTO();
         gymSessionDTO.setCoachId(coachDTO); 
@@ -170,7 +170,7 @@ public class GymSessionServiceTest {
         coachDTO.setId("coach123");
         coachDTO.setName("John Doe");
         coachDTO.setEmail("johndoe@example.com");
-        coachDTO.setRole(Role.TEACHER);
+        coachDTO.setRole(Role.ENTRENADOR);
 
         GymSessionDTO gymSessionDTO = new GymSessionDTO();
         gymSessionDTO.setCoachId(coachDTO);

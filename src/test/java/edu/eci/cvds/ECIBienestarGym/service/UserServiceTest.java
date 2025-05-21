@@ -40,7 +40,7 @@ public class UserServiceTest {
         dto.setId("user1");
         dto.setName("Ana");
         dto.setEmail("ana@example.com");
-        dto.setRole(Role.STUDENT);
+        dto.setRole(Role.ESTUDIANTE);
 
         User expectedUser = new User();
         expectedUser.setId(dto.getId());
@@ -65,9 +65,9 @@ public class UserServiceTest {
         dto.setId(null); 
         dto.setName("Test");
         dto.setEmail("test@example.com");
-        dto.setRole(Role.STUDENT);
+        dto.setRole(Role.ESTUDIANTE);
         GYMException exception = assertThrows(GYMException.class, () -> userService.createUser(dto));
-        assertEquals(GYMException.USERT_NOT_NULL, exception.getMessage());
+        assertEquals(GYMException.USER_NOT_NULL, exception.getMessage());
     }
 
     @Test
@@ -76,9 +76,9 @@ public class UserServiceTest {
         dto.setId("user1");
         dto.setName(""); 
         dto.setEmail("test@example.com");
-        dto.setRole(Role.STUDENT);
+        dto.setRole(Role.ESTUDIANTE);
         GYMException exception = assertThrows(GYMException.class, () -> userService.createUser(dto));
-        assertEquals(GYMException.USERT_NOT_NULL, exception.getMessage());
+        assertEquals(GYMException.USER_NOT_NULL, exception.getMessage());
     }
 
     @Test
@@ -87,9 +87,9 @@ public class UserServiceTest {
         dto.setId("user1");
         dto.setName("Test");
         dto.setEmail(null); 
-        dto.setRole(Role.STUDENT);
+        dto.setRole(Role.ESTUDIANTE);
         GYMException exception = assertThrows(GYMException.class, () -> userService.createUser(dto));
-        assertEquals(GYMException.USERT_NOT_NULL, exception.getMessage());
+        assertEquals(GYMException.USER_NOT_NULL, exception.getMessage());
     }
 
     @Test
@@ -100,7 +100,7 @@ public class UserServiceTest {
         dto.setEmail("test@example.com");
         dto.setRole(null);
         GYMException exception = assertThrows(GYMException.class, () -> userService.createUser(dto));
-        assertEquals(GYMException.USERT_NOT_NULL, exception.getMessage());
+        assertEquals(GYMException.USER_NOT_NULL, exception.getMessage());
     }
 
     @Test
@@ -109,13 +109,13 @@ public class UserServiceTest {
         userDTO.setId("user123");
         userDTO.setName("John Doe");
         userDTO.setEmail("johndoe@example.com");
-        userDTO.setRole(Role.STUDENT);
+        userDTO.setRole(Role.ESTUDIANTE);
 
         User mockUser = new User();
         mockUser.setId("user123");
         mockUser.setName("John Doe");
         mockUser.setEmail("johndoe@example.com");
-        mockUser.setRole(Role.STUDENT);
+        mockUser.setRole(Role.ESTUDIANTE);
 
         when(userRepository.save(any(User.class))).thenReturn(mockUser);
 
@@ -154,7 +154,7 @@ public class UserServiceTest {
 
     @Test
     void shouldReturnUsersWithGivenRole() {
-        Role role = Role.TEACHER;
+        Role role = Role.ENTRENADOR;
         List<User> mockUsers = Arrays.asList(new User(), new User());
         when(userRepository.findByRole(role)).thenReturn(mockUsers);
 
@@ -295,7 +295,7 @@ public class UserServiceTest {
             userService.updateUser(id, dto);
         });
 
-        assertEquals(GYMException.NO_GMAIL_CHANGED, exception.getMessage());
+        assertEquals(GYMException.NO_MAIL_CHANGED, exception.getMessage());
 
         verify(userRepository, times(1)).findById(id);
         verify(userRepository, times(1)).findByEmail(newEmail);
@@ -335,12 +335,12 @@ public class UserServiceTest {
     @Test
     void shouldThrowExceptionWhenIdIsNullForDeletion() {
         GYMException exception = assertThrows(GYMException.class, () -> userService.deleteUser(null));
-        assertEquals(GYMException.USERT_NOT_NULL, exception.getMessage());
+        assertEquals(GYMException.USER_NOT_NULL, exception.getMessage());
     }
 
     @Test
     void shouldThrowExceptionWhenIdIsEmptyForDeletion() {
         GYMException exception = assertThrows(GYMException.class, () -> userService.deleteUser(""));
-        assertEquals(GYMException.USERT_NOT_NULL, exception.getMessage());
+        assertEquals(GYMException.USER_NOT_NULL, exception.getMessage());
     }
 }

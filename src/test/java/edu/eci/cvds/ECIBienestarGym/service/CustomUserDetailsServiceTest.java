@@ -33,7 +33,7 @@ public class CustomUserDetailsServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = new User("1", "John Doe", "john.doe@example.com", "password123", Role.ADMIN, LocalDate.now());
+        user = new User("1", "John Doe", "john.doe@example.com", "password123", Role.ADMINISTRADOR, true, LocalDate.now());
     }
 
     @Test
@@ -45,7 +45,7 @@ public class CustomUserDetailsServiceTest {
         assertNotNull(userDetails);
         assertEquals("john.doe@example.com", userDetails.getUsername());
         assertEquals("password123", userDetails.getPassword());
-        assertEquals(Collections.singletonList("ROLE_ADMIN"), userDetails.getAuthorities().stream().map(a -> a.getAuthority()).toList());
+        assertEquals(Collections.singletonList("ROLE_ADMINISTRADOR"), userDetails.getAuthorities().stream().map(a -> a.getAuthority()).toList());
     }
 
     @Test

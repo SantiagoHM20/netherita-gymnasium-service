@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Document(collection = "gymSessions")
@@ -20,6 +21,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GymSession {
+
+
     @Id
     private String id;
     @DBRef
@@ -29,6 +32,6 @@ public class GymSession {
     private LocalTime endTime;
     private int capacity;
     private int currentReservations;
-    private List<Boolean> attendance;
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
+    private List<Boolean> attendance = new ArrayList<>();
 }

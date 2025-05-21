@@ -92,7 +92,7 @@ public class UserControllerTest {
 
     @Test
     void shouldReturnUsersByRoleWhenValidRoleIsProvided() {
-        Role role = Role.STUDENT;
+        Role role = Role.ESTUDIANTE;
         List<User> mockUsers = Arrays.asList(new User(), new User());
 
         when(userService.getUsersByRole(role)).thenReturn(mockUsers);

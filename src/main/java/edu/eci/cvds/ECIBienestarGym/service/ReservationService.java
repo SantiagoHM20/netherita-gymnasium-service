@@ -37,6 +37,7 @@ public class ReservationService {
     public List<Reservation> getReservationsByState(Status status){return reservationRepository.findReservationByState(status);}
 
     public Reservation createReservation(ReservationDTO reservationDTO) {
+        // Crear la reserva principal
         Reservation reservation = new Reservation();
         reservation.setUserId(mapToUser(reservationDTO.getUserId()));
         reservation.setGymSessionId(mapToGymSession(reservationDTO.getGymSessionId()));
@@ -46,7 +47,22 @@ public class ReservationService {
         GymSession gymSession = reservation.getGymSessionId();
         gymSession.getUsers().add(reservation.getUserId());
         gymSession.setCurrentReservations(gymSession.getCurrentReservations() + 1);
-        return reservationRepository.save(reservation);
+
+        // Guardar la reserva principal
+        Reservation savedReservation = reservationRepository.save(reservation);
+
+        // Crear y guardar las reservas recurrentes (5 semanas adicionales)
+        for (int i = 1; i <= 5; i++) {
+            Reservation recurringReservation = new Reservation();
+            recurringReservation.setUserId(reservation.getUserId());
+            recurringReservation.setGymSessionId(reservation.getGymSessionId());
+            recurringReservation.setReservationDate(reservation.getReservationDate().plusWeeks(i));
+            recurringReservation.setState(reservation.getState());
+            reservationRepository.save(recurringReservation);
+        }
+
+        // Retornar la reserva principal guardada
+        return savedReservation;
     }
 
     public Reservation updateReservation(String id, ReservationDTO reservationDTO) throws GYMException {
