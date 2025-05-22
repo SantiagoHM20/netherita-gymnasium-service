@@ -38,7 +38,6 @@ public class StatisticsController {
 
     @GetMapping("/trainer/session-statistics")
     @Operation(summary = "Obtener estadísticas de sesiones por entrenador")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR')")
     public ResponseEntity<ApiResponse<Map<String, Object>>> getSessionStatisticsByTrainer() {
         List<GymSession> sessions = gymSessionService.getAllGymSessions();
 
@@ -57,8 +56,6 @@ public class StatisticsController {
 
     @GetMapping("/trainer/students-by-session")
     @Operation(summary = "Cantidad de estudiantes por sesión")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR')")
-
     public ResponseEntity<ApiResponse<Map<String, Integer>>> getStudentsBySession() {
         List<Reservation> reservations = reservationService.getAllReservations();
 
@@ -70,9 +67,8 @@ public class StatisticsController {
 
         return ResponseEntity.ok(new ApiResponse<>(true, "Conteo por sesión generado", studentCountBySession));
     }
-    @GetMapping("/user/physical-progress/user/{userId}")
+    @GetMapping("/user/physical-progress/{userId}")
     @Operation(summary = "Obtener estadísticas de progreso físico por usuario")
-    @PreAuthorize("hasAnyRole('ESTUDIANTE', 'ADMINISTRADOR', 'ENTRENADOR')")
     public ResponseEntity<ApiResponse<List<PhysicalProgressDTO>>> getPhysicalProgressByUser(@PathVariable String userId) {
         User user = new User();
         user.setId(userId);
