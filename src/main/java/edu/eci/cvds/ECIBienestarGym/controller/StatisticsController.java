@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/stats")
+@RequestMapping("/api")
 @Tag(name = "Statistics", description = "Controladores relacionados para las estadisticas")
 public class StatisticsController {
     private final GymSessionService gymSessionService;
