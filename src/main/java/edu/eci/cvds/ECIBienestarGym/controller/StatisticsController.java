@@ -7,6 +7,7 @@ import edu.eci.cvds.ECIBienestarGym.service.PhysicalProgressService;
 import edu.eci.cvds.ECIBienestarGym.service.ReservationService;
 import edu.eci.cvds.ECIBienestarGym.statistic.stats;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/stats")
-@PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR')")
+@Tag(name = "Statistics", description = "Controladores relacionados para las estadisticas")
 public class StatisticsController {
     private final GymSessionService gymSessionService;
     private final stats estadisticasClient;
