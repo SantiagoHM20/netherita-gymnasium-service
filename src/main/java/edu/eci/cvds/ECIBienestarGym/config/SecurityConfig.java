@@ -51,9 +51,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
+        http
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                    .requestMatchers("/api/register", "/api/login", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                    .requestMatchers(  "/api/register",
+                            "/api/login",
+                            "/v3/api-docs/**",
+                            "/swagger-ui/**",
+                            "/swagger-ui.html",
+                            "/swagger-ui/index.html" ).permitAll()
                     .requestMatchers("/api/trainer/**").hasAnyRole("ADMINISTRADOR", "ENTRENADOR")
                     .requestMatchers("/api/user/**").hasAnyRole("ESTUDIANTE", "ADMINISTRADOR", "ENTRENADOR")
                     .anyRequest().authenticated()
@@ -96,15 +102,4 @@ public class SecurityConfig {
         return source;
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring()
-                .requestMatchers(
-                        "/swagger-ui/**",
-                        "/swagger-ui.html",
-                        "/v3/api-docs/**",
-                        "/v3/api-docs.yaml",
-                        "/v3/api-docs/swagger-config"
-                );
-    }
 }
