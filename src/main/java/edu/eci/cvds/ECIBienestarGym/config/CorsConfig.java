@@ -14,7 +14,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(@SuppressWarnings("null") CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins("http://localhost:3000", "netherita-gymnasium-service-d8hvgjameybudsh3.canadacentral-01.azurewebsites.net")
+                        .allowedOrigins("http://localhost:3000", "https://ecibienestar-age6hsb9g4dmegea.canadacentral-01.azurewebsites.net")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowCredentials(true);
             }
