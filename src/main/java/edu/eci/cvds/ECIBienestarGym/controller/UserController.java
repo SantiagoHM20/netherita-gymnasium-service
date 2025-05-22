@@ -67,7 +67,7 @@ public class UserController {
     }
 
     @GetMapping("trainer/users/role/{role}")
-    @PreAuthorize("hasRole('ADMINISTRADOR', 'ENTRENADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR')")
     @Operation(summary = "Obtener usuarios por rol", description = "Retorna una lista de usuarios con el rol especificado.")
     public ResponseEntity<ApiResponse<List<User>>> getUsersByRole(
             @Parameter(description = "Rol del usuario a buscar", required = true) @PathVariable Role role) {
