@@ -38,6 +38,7 @@ public class StatisticsController {
 
     @GetMapping("/session-statistics")
     @Operation(summary = "Obtener estadísticas de sesiones por entrenador")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR')")
     public ResponseEntity<ApiResponse<Map<String, Object>>> getSessionStatisticsByTrainer() {
         List<GymSession> sessions = gymSessionService.getAllGymSessions();
 
@@ -56,6 +57,7 @@ public class StatisticsController {
 
     @GetMapping("/students-by-session")
     @Operation(summary = "Cantidad de estudiantes por sesión")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR')")
     public ResponseEntity<ApiResponse<Map<String, Integer>>> getStudentsBySession() {
         List<Reservation> reservations = reservationService.getAllReservations();
 
@@ -69,9 +71,10 @@ public class StatisticsController {
     }
     @GetMapping("/physical-progress/user/{userId}")
     @Operation(summary = "Obtener estadísticas de progreso físico por usuario")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR','ESTUDIANTE')")
     public ResponseEntity<ApiResponse<List<PhysicalProgressDTO>>> getPhysicalProgressByUser(@PathVariable String userId) {
         User user = new User();
-        user.setId(userId); // solo necesitas el ID para la búsqueda
+        user.setId(userId);
 
         List<PhysicalProgress> progressList = physicalProgressService.getPhysicalProgressByUserId(user);
 
