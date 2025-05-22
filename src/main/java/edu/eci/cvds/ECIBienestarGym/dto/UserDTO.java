@@ -1,5 +1,6 @@
 package edu.eci.cvds.ECIBienestarGym.dto;
 
+import edu.eci.cvds.ECIBienestarGym.enums.Gender;
 import edu.eci.cvds.ECIBienestarGym.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +19,8 @@ public class UserDTO {
     private String email;
     private String password;
     private Role role;
+    private Gender gender;
+    private boolean registered;
     private LocalDate registrationDate;
 
     public UserDTO(String id, String name, String email, Role role) {

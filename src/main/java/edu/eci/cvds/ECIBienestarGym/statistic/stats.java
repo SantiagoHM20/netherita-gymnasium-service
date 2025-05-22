@@ -1,9 +1,7 @@
 package edu.eci.cvds.ECIBienestarGym.statistic;
 
-import edu.eci.cvds.ECIBienestarGym.dto.GymSessionDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.PhysicalProgressDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.ReservationDTO;
-import edu.eci.cvds.ECIBienestarGym.model.GymSession;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

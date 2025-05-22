@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import edu.eci.cvds.ECIBienestarGym.enums.Gender;
 import edu.eci.cvds.ECIBienestarGym.enums.Role;
 import edu.eci.cvds.ECIBienestarGym.model.User;
 import edu.eci.cvds.ECIBienestarGym.repository.UserRepository;
@@ -33,7 +34,7 @@ public class CustomUserDetailsServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = new User("1", "John Doe", "john.doe@example.com", "password123", Role.ADMINISTRADOR, true, LocalDate.now());
+        user = new User("1", "John Doe", "john.doe@example.com", "password123", Role.ADMINISTRADOR, Gender.HOMBRE, true, LocalDate.now());
     }
 
     @Test

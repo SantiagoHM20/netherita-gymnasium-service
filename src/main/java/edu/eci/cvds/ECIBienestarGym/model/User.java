@@ -1,6 +1,7 @@
 package edu.eci.cvds.ECIBienestarGym.model;
 
 
+import edu.eci.cvds.ECIBienestarGym.enums.Gender;
 import edu.eci.cvds.ECIBienestarGym.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,6 +28,7 @@ public class User {
     private String email;
     private String password;
     private Role role;
+    private Gender gender;
     private boolean registered;
     private LocalDate registrationDate;
 
