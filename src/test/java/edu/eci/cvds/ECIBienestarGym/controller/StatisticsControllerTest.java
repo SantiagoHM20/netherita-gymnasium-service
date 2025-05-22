@@ -22,7 +22,6 @@ import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.when;
 
 public class StatisticsControllerTest {
-
     @InjectMocks
     private StatisticsController controller;
 

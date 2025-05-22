@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 import java.util.Map;
 
-@FeignClient(name = "estadisticas-service", url = "") /*http://localhost:8081/api/stats*/
+@FeignClient(name = "estadisticas-service", url = "https://netherita-gymnasium-service-d8hvgjameybudsh3.canadacentral-01.azurewebsites.net")
 public interface stats {
     @PostMapping("/sessions/by-coach")
     Map<String, Object> getStatsByCoach(@RequestBody Map<String, Integer> sessionsByCoach);
@@ -19,7 +19,7 @@ public interface stats {
     @PostMapping("/students/by-session")
     Map<String, Integer> getStudentsBySession(@RequestBody List<ReservationDTO> reservations);
 
-    @GetMapping("/trainer/physical-progress/user/{userId}")
+    @GetMapping("/trainer/physical-progress/{userId}")
     List<PhysicalProgressDTO> getPhysicalProgressByUser(@PathVariable("userId") String userId);
 
 }
