@@ -22,6 +22,7 @@ import java.time.LocalTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -234,5 +235,50 @@ public class ReservationServiceTest {
 
         verify(reservationRepository, times(1)).findById(id);
         verify(reservationRepository, times(1)).delete(mockReservation);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenReservationNotFoundById() {
+        String id = "non-existent-id";
+        when(reservationRepository.findById(id)).thenReturn(Optional.empty());
+
+        GYMException exception = assertThrows(
+                GYMException.class,
+                () -> reservationService.getReservationById(id)
+        );
+
+        assertEquals(GYMException.RESERVE_NOT_FOUND, exception.getMessage());
+        verify(reservationRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUpdatingNonExistentReservation() {
+        String id = "non-existent-id";
+        ReservationDTO reservationDTO = new ReservationDTO(); // no importa el contenido para este test
+
+        when(reservationRepository.findById(id)).thenReturn(Optional.empty());
+
+        GYMException exception = assertThrows(
+                GYMException.class,
+                () -> reservationService.updateReservation(id, reservationDTO)
+        );
+
+        assertEquals(GYMException.RESERVE_NOT_FOUND, exception.getMessage());
+        verify(reservationRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenDeletingNonExistentReservation() {
+        String id = "non-existent-id";
+
+        when(reservationRepository.findById(id)).thenReturn(Optional.empty());
+
+        GYMException exception = assertThrows(
+                GYMException.class,
+                () -> reservationService.deleteReservation(id)
+        );
+
+        assertEquals(GYMException.RESERVE_NOT_FOUND, exception.getMessage());
+        verify(reservationRepository, times(1)).findById(id);
     }
 }

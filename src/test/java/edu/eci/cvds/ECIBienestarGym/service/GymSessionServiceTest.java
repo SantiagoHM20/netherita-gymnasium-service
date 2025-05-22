@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -38,6 +39,49 @@ public class GymSessionServiceTest {
     }
 
     @Test
+    void shouldThrowExceptionWhenGymSessionNotFoundById() {
+        String id = "nonexistent";
+
+        when(gymSessionRepository.findById(id)).thenReturn(Optional.empty());
+
+        GYMException exception = assertThrows(GYMException.class, () -> {
+            gymSessionService.getGymSessionById(id);
+        });
+
+        assertEquals(GYMException.GYM_SESION_NOT_FOUND, exception.getMessage());
+        verify(gymSessionRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenGymSessionNotFoundOnUpdate() {
+        String id = "nonexistent";
+        GymSessionDTO dto = new GymSessionDTO();
+
+        when(gymSessionRepository.findById(id)).thenReturn(Optional.empty());
+
+        GYMException exception = assertThrows(GYMException.class, () -> {
+            gymSessionService.updateGymSession(id, dto);
+        });
+
+        assertEquals(GYMException.GYM_SESION_NOT_FOUND, exception.getMessage());
+        verify(gymSessionRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenGymSessionNotFoundOnDelete() {
+        String id = "nonexistent";
+
+        when(gymSessionRepository.findById(id)).thenReturn(Optional.empty());
+
+        GYMException exception = assertThrows(GYMException.class, () -> {
+            gymSessionService.deleteGymSession(id);
+        });
+
+        assertEquals(GYMException.GYM_SESION_NOT_FOUND, exception.getMessage());
+        verify(gymSessionRepository, times(1)).findById(id);
+    }
+
+    @Test
     void ShouldGetAllGymSessions() {
         List<GymSession> mockSessions = Arrays.asList(new GymSession(), new GymSession());
         when(gymSessionRepository.findAll()).thenReturn(mockSessions);
@@ -46,6 +90,24 @@ public class GymSessionServiceTest {
 
         assertEquals(2, sessions.size());
         verify(gymSessionRepository, times(1)).findAll();
+    }
+
+    @Test
+    void ShouldUpdateAttendance() throws GYMException {
+        String sessionId = "sess123";
+        GymSession existingSession = new GymSession();
+        existingSession.setId(sessionId);
+
+        List<Boolean> attendanceList = Arrays.asList(true, false, true);
+
+        when(gymSessionRepository.findById(sessionId)).thenReturn(Optional.of(existingSession));
+        when(gymSessionRepository.save(any(GymSession.class))).thenReturn(existingSession);
+
+        GymSession updatedSession = gymSessionService.updatedAttendance(sessionId, attendanceList);
+
+        assertEquals(attendanceList, updatedSession.getAttendance());
+        verify(gymSessionRepository, times(1)).findById(sessionId);
+        verify(gymSessionRepository, times(1)).save(existingSession);
     }
 
     @Test
@@ -203,5 +265,20 @@ public class GymSessionServiceTest {
 
         verify(gymSessionRepository, times(1)).findById(id);
         verify(gymSessionRepository, times(1)).delete(mockSession);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUpdatingAttendanceForNonexistentSession() {
+        String id = "nonexistent";
+        List<Boolean> attendance = Arrays.asList(true, false);
+
+        when(gymSessionRepository.findById(id)).thenReturn(Optional.empty());
+
+        GYMException exception = assertThrows(GYMException.class, () -> {
+            gymSessionService.updatedAttendance(id, attendance);
+        });
+
+        assertEquals(GYMException.GYM_SESION_NOT_FOUND, exception.getMessage());
+        verify(gymSessionRepository, times(1)).findById(id);
     }
 }

@@ -3,6 +3,7 @@ package edu.eci.cvds.ECIBienestarGym.service;
 import edu.eci.cvds.ECIBienestarGym.dto.ReportDTO;
 
 import edu.eci.cvds.ECIBienestarGym.dto.UserDTO;
+import edu.eci.cvds.ECIBienestarGym.enums.ReportType;
 import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.Report;
 
@@ -35,6 +36,80 @@ public class ReportServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void shouldReturnAllReports() {
+        List<Report> reports = Arrays.asList(new Report(), new Report());
+        when(reportRepository.findAll()).thenReturn(reports);
+
+        List<Report> result = reportService.getAllReports();
+
+        assertEquals(2, result.size());
+        verify(reportRepository, times(1)).findAll();
+    }
+
+    @Test
+    void shouldReturnReportById() throws GYMException {
+        Report report = new Report();
+        report.setId("r123");
+
+        when(reportRepository.findById("r123")).thenReturn(Optional.of(report));
+
+        Report result = reportService.getReportById("r123");
+
+        assertEquals("r123", result.getId());
+        verify(reportRepository, times(1)).findById("r123");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenReportNotFound() {
+        when(reportRepository.findById("invalid")).thenReturn(Optional.empty());
+
+        GYMException exception = org.junit.jupiter.api.Assertions.assertThrows(GYMException.class, () -> {
+            reportService.getReportById("invalid");
+        });
+
+        assertEquals(GYMException.REPORT_NOT_FOUND, exception.getMessage());
+    }
+
+    @Test
+    void shouldReturnReportsByCoach() {
+        User coach = new User();
+        coach.setId("coach123");
+
+        List<Report> reports = Arrays.asList(new Report(), new Report());
+        when(reportRepository.findByCoachId(coach)).thenReturn(reports);
+
+        List<Report> result = reportService.getReportsByCoach(coach);
+
+        assertEquals(2, result.size());
+        verify(reportRepository, times(1)).findByCoachId(coach);
+    }
+
+    @Test
+    void shouldReturnReportsByGeneratedAt() {
+        LocalDate date = LocalDate.now();
+        List<Report> reports = Arrays.asList(new Report(), new Report());
+        when(reportRepository.findByGeneratedAt(date)).thenReturn(reports);
+
+        List<Report> result = reportService.getReportsByGeneratedAt(date);
+
+        assertEquals(2, result.size());
+        verify(reportRepository, times(1)).findByGeneratedAt(date);
+    }
+
+    @Test
+    void shouldReturnReportsByType() {
+        ReportType type = ReportType.USO;
+        List<Report> reports = Arrays.asList(new Report(), new Report());
+
+        when(reportRepository.findByType(type)).thenReturn(reports);
+
+        List<Report> result = reportService.getReportsByType(type);
+
+        assertEquals(2, result.size());
+        verify(reportRepository, times(1)).findByType(type);
     }
 
     @Test

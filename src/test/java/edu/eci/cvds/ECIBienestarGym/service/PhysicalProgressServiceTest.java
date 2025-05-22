@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -60,6 +61,20 @@ public class PhysicalProgressServiceTest {
         PhysicalProgress progress = physicalProgressService.getPhysicalProgressById(id);
 
         assertEquals(mockProgress, progress);
+        verify(physicalProgressRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void ShouldThrowExceptionWhenPhysicalProgressNotFoundById() {
+        String id = "nonexistent-id";
+        when(physicalProgressRepository.findById(id)).thenReturn(Optional.empty());
+
+        GYMException thrown = assertThrows(
+                GYMException.class,
+                () -> physicalProgressService.getPhysicalProgressById(id)
+        );
+
+        assertEquals(GYMException.PHYSICAL_PROGRESS_NOT_FOUND, thrown.getMessage());
         verify(physicalProgressRepository, times(1)).findById(id);
     }
 

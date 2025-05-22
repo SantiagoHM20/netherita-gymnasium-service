@@ -1,13 +1,14 @@
 package edu.eci.cvds.ECIBienestarGym.util;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.User;
@@ -54,5 +55,28 @@ public class JwUtilTest {
         String token = jwtUtil.generateToken(userDetails);
         UserDetails differentUser = new User("otheruser", "password", userDetails.getAuthorities());
         assertFalse(jwtUtil.validateToken(token, differentUser));
+    }
+
+
+    @Test
+    void testValidateExternalTokenValid() {
+        String externalSecretKey = "EPRiC0Bt0/2KcBRRWqVKhEWzModEtI6Q4K05RWuLgVQV4Xw92Ulk9kHPmQVjiRW5c9XtLNm4lgNoridiLgvZpg==";
+
+        String token = Jwts.builder()
+                .setSubject("externalUser")
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 5))
+                .signWith(SignatureAlgorithm.HS256, externalSecretKey)
+                .compact();
+
+        Claims claims = jwtUtil.validateExternalToken(token);
+        assertEquals("externalUser", claims.getSubject());
+    }
+
+    @Test
+    void testValidateExternalTokenInvalid() {
+        String invalidToken = "abc.def.ghi";
+        Exception exception = assertThrows(RuntimeException.class, () -> jwtUtil.validateExternalToken(invalidToken));
+        assertTrue(exception.getMessage().contains("Token externo inválido"));
     }
 }

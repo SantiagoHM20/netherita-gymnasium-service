@@ -62,7 +62,7 @@ public class UserServiceTest {
     @Test
     void shouldThrowExceptionWhenIdIsNullOrEmpty() {
         UserDTO dto = new UserDTO();
-        dto.setId(null); 
+        dto.setId(null);
         dto.setName("Test");
         dto.setEmail("test@example.com");
         dto.setRole(Role.ESTUDIANTE);
@@ -74,7 +74,7 @@ public class UserServiceTest {
     void shouldThrowExceptionWhenNameIsNullOrEmpty() {
         UserDTO dto = new UserDTO();
         dto.setId("user1");
-        dto.setName(""); 
+        dto.setName("");
         dto.setEmail("test@example.com");
         dto.setRole(Role.ESTUDIANTE);
         GYMException exception = assertThrows(GYMException.class, () -> userService.createUser(dto));
@@ -86,7 +86,7 @@ public class UserServiceTest {
         UserDTO dto = new UserDTO();
         dto.setId("user1");
         dto.setName("Test");
-        dto.setEmail(null); 
+        dto.setEmail(null);
         dto.setRole(Role.ESTUDIANTE);
         GYMException exception = assertThrows(GYMException.class, () -> userService.createUser(dto));
         assertEquals(GYMException.USER_NOT_NULL, exception.getMessage());
@@ -284,9 +284,9 @@ public class UserServiceTest {
         existingUser.setEmail("old@example.com");
 
         UserDTO dto = new UserDTO();
-        dto.setEmail(newEmail); 
+        dto.setEmail(newEmail);
 
-        User anotherUserWithSameEmail = new User(); 
+        User anotherUserWithSameEmail = new User();
 
         when(userRepository.findById(id)).thenReturn(Optional.of(existingUser));
         when(userRepository.findByEmail(newEmail)).thenReturn(Optional.of(anotherUserWithSameEmail));
@@ -343,4 +343,97 @@ public class UserServiceTest {
         GYMException exception = assertThrows(GYMException.class, () -> userService.deleteUser(""));
         assertEquals(GYMException.USER_NOT_NULL, exception.getMessage());
     }
+
+    @Test
+    void shouldReturnNullWhenUserIdDoesNotExist() {
+        String id = "nonexistent";
+        when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+        User result = userService.getUsersById(id);
+
+        assertNull(result);
+        verify(userRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void shouldNotCheckDuplicateIfEmailIsSameAsCurrent() throws GYMException {
+        String id = "user123";
+        String sameEmail = "same@example.com";
+
+        User existingUser = new User();
+        existingUser.setId(id);
+        existingUser.setEmail(sameEmail);
+
+        UserDTO dto = new UserDTO();
+        dto.setEmail(sameEmail);
+
+        when(userRepository.findById(id)).thenReturn(Optional.of(existingUser));
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        userService.updateUser(id, dto);
+
+        verify(userRepository, never()).findByEmail(anyString());
+        verify(userRepository, times(1)).save(existingUser);
+    }
+    @Test
+    void shouldThrowExceptionWhenIdIsEmpty() {
+        UserDTO dto = new UserDTO();
+        dto.setId("");  // cadena vacía
+        dto.setName("Test");
+        dto.setEmail("test@example.com");
+        dto.setRole(Role.ESTUDIANTE);
+        GYMException exception = assertThrows(GYMException.class, () -> userService.createUser(dto));
+        assertEquals(GYMException.USER_NOT_NULL, exception.getMessage());
+    }
+    @Test
+    void shouldThrowExceptionWhenUserNotFoundOnUpdate() {
+        String id = "nonexistent";
+        UserDTO dto = new UserDTO();
+
+        when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+        GYMException exception = assertThrows(GYMException.class, () -> userService.updateUser(id, dto));
+        assertEquals(GYMException.USER_NOT_FOUND, exception.getMessage());
+
+        verify(userRepository, times(1)).findById(id);
+    }
+    @Test
+    void shouldThrowExceptionWhenUserNotFoundOnDelete() {
+        String id = "nonexistent";
+
+        when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+        GYMException exception = assertThrows(GYMException.class, () -> userService.deleteUser(id));
+        assertEquals(GYMException.USER_NOT_FOUND, exception.getMessage());
+
+        verify(userRepository, times(1)).findById(id);
+    }
+    @Test
+    void shouldThrowExceptionWhenNameIsEmpty() {
+        UserDTO dto = new UserDTO();
+        dto.setId("user1");
+        dto.setName("");  // cadena vacía
+        dto.setEmail("test@example.com");
+        dto.setRole(Role.ESTUDIANTE);
+        GYMException exception = assertThrows(GYMException.class, () -> userService.createUser(dto));
+        assertEquals(GYMException.USER_NOT_NULL, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenEmailIsEmpty() {
+        UserDTO dto = new UserDTO();
+        dto.setId("user1");
+        dto.setName("Test");
+        dto.setEmail("");  // cadena vacía
+        dto.setRole(Role.ESTUDIANTE);
+        GYMException exception = assertThrows(GYMException.class, () -> userService.createUser(dto));
+        assertEquals(GYMException.USER_NOT_NULL, exception.getMessage());
+    }
+
+    @Test
+    void shouldReturnCustomMessageFromToString() {
+        GYMException exception = new GYMException(GYMException.RESERVE_NOT_FOUND);
+        assertEquals(GYMException.RESERVE_NOT_FOUND, exception.toString());
+    }
+
 }

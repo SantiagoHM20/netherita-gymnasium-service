@@ -47,6 +47,20 @@ public class GymSessionControllerTest {
     }
 
     @Test
+    void shouldUpdateAttendance() throws GYMException {
+        String sessionId = "sess123";
+        List<Boolean> attendance = Arrays.asList(true, false, true);
+        GymSession mockSession = new GymSession();
+        when(gymSessionService.updatedAttendance(sessionId, attendance)).thenReturn(mockSession);
+
+        ResponseEntity<ApiResponse<GymSession>> response = gymSessionController.updateAttendance(sessionId, attendance);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(mockSession, response.getBody().getData());
+        verify(gymSessionService, times(1)).updatedAttendance(sessionId, attendance);
+    }
+
+    @Test
     void shouldReturnGymSessionsByCoachId() {
         String coachId = "coach456";
         List<GymSession> mockSessions = Arrays.asList(new GymSession(), new GymSession());

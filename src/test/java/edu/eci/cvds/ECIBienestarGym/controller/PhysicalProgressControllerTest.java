@@ -48,6 +48,22 @@ public class PhysicalProgressControllerTest {
     }
 
     @Test
+    void shouldReturnPhysicalProgressByUserIdAndDateWhenValidParamsAreGiven() {
+        String userId = "user123";
+        String registrationDate = "2024-05-01";
+        LocalDate date = LocalDate.parse(registrationDate);
+        List<PhysicalProgress> mockProgress = Arrays.asList(new PhysicalProgress(), new PhysicalProgress());
+
+        when(physicalProgressService.getPhysicalProgressByUserIdAndDate(any(User.class), eq(date))).thenReturn(mockProgress);
+
+        ResponseEntity<ApiResponse<List<PhysicalProgress>>> response = physicalProgressController.getPhysicalProgressByUserIdAndDate(userId, registrationDate);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(2, response.getBody().getData().size());
+        verify(physicalProgressService, times(1)).getPhysicalProgressByUserIdAndDate(any(User.class), eq(date));
+    }
+
+    @Test
     void shouldReturnPhysicalProgressByIdWhenExists() throws GYMException {
         String id = "progress123";
         PhysicalProgress mockProgress = new PhysicalProgress();
@@ -61,6 +77,25 @@ public class PhysicalProgressControllerTest {
     }
 
     @Test
+    void shouldReturnPhysicalProgressByUserIdAndDateRangeWhenValidParamsAreGiven() {
+        String userId = "user123";
+        String startDate = "2024-05-01";
+        String endDate = "2024-05-31";
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+        List<PhysicalProgress> mockProgress = Arrays.asList(new PhysicalProgress(), new PhysicalProgress());
+
+        when(physicalProgressService.getPhysicalProgressByUserIdAndDateBetween(any(User.class), eq(start), eq(end))).thenReturn(mockProgress);
+
+        ResponseEntity<ApiResponse<List<PhysicalProgress>>> response = physicalProgressController.getPhysicalProgressByUserIdAndDateRange(userId, startDate, endDate);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(2, response.getBody().getData().size());
+        verify(physicalProgressService, times(1)).getPhysicalProgressByUserIdAndDateBetween(any(User.class), eq(start), eq(end));
+    }
+
+
+    @Test
     void shouldReturnPhysicalProgressByUserIdWhenValidUserIdIsGiven() {
         String userId = "user123";
         List<PhysicalProgress> mockProgress = Arrays.asList(new PhysicalProgress(), new PhysicalProgress());
@@ -71,6 +106,23 @@ public class PhysicalProgressControllerTest {
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(2, response.getBody().getData().size());
         verify(physicalProgressService, times(1)).getPhysicalProgressByUserId(any(User.class));
+    }
+
+    @Test
+    void shouldReturnNotFoundWhenPhysicalProgressIsNull() throws GYMException {
+        String id = "someId";
+
+        // Simula que el servicio retorna null (aunque la lógica real lanza excepción)
+        when(physicalProgressService.getPhysicalProgressById(id)).thenReturn(null);
+
+        ResponseEntity<ApiResponse<PhysicalProgress>> response = physicalProgressController.getPhysicalProgressById(id);
+
+        assertEquals(404, response.getStatusCodeValue());
+        assertEquals(false, response.getBody().isSuccess());
+        assertEquals("Registro de progreso físico no encontrado", response.getBody().getMessage());
+        assertEquals(null, response.getBody().getData());
+
+        verify(physicalProgressService, times(1)).getPhysicalProgressById(id);
     }
 
     @Test

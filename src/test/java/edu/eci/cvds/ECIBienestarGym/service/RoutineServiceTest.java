@@ -148,4 +148,48 @@ public class RoutineServiceTest {
         verify(routineRepository, times(1)).findById(id);
         verify(routineRepository, times(1)).delete(mockRoutine);
     }
+
+    @Test
+    void ShouldThrowExceptionWhenRoutineNotFoundById() {
+        String id = "nonexistent-id";
+        when(routineRepository.findById(id)).thenReturn(Optional.empty());
+
+        GYMException exception = org.junit.jupiter.api.Assertions.assertThrows(
+                GYMException.class,
+                () -> routineService.getRoutineById(id)
+        );
+
+        assertEquals(GYMException.ROUTINE_NOT_FOUND, exception.getMessage());
+        verify(routineRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void ShouldThrowExceptionWhenUpdatingNonexistentRoutine() {
+        String id = "nonexistent-id";
+        RoutineDTO routineDTO = new RoutineDTO(); // puedes dejarlo vacío para este test
+
+        when(routineRepository.findById(id)).thenReturn(Optional.empty());
+
+        GYMException exception = org.junit.jupiter.api.Assertions.assertThrows(
+                GYMException.class,
+                () -> routineService.updateRoutine(id, routineDTO)
+        );
+
+        assertEquals(GYMException.ROUTINE_NOT_FOUND, exception.getMessage());
+        verify(routineRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void ShouldThrowExceptionWhenDeletingNonexistentRoutine() {
+        String id = "nonexistent-id";
+        when(routineRepository.findById(id)).thenReturn(Optional.empty());
+
+        GYMException exception = org.junit.jupiter.api.Assertions.assertThrows(
+                GYMException.class,
+                () -> routineService.deleteRoutine(id)
+        );
+
+        assertEquals(GYMException.ROUTINE_NOT_FOUND, exception.getMessage());
+        verify(routineRepository, times(1)).findById(id);
+    }
 }
