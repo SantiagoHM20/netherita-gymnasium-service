@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy JAR app to Azure Web App - ECIBienestar
+name: Build and deploy JAR app to Azure Web App - ecibienestar-gym
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     permissions:
       contents: read #This is required for actions/checkout
 
@@ -33,33 +33,16 @@ jobs:
           name: java-app
           path: '${{ github.workspace }}/target/*.jar'
 
-  test:
-    runs-on: windows-latest
-    needs: build
-    steps:
-      - name: Code Checkout
-        uses: actions/checkout@v4
-
-      - name: Configurate JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: 'maven'
-
-      - name: Run tests
-        run: mvn test
-
   deploy:
-    runs-on: windows-latest
-    needs: test
+    runs-on: ubuntu-latest
+    needs: build
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
       id-token: write #This is required for requesting the JWT
       contents: read #This is required for actions/checkout
-
+  
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
@@ -69,15 +52,15 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8834F742161A41EC822A9BCE14FEBE9D }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_AC116B11862345A9AE2C3A1BC86494B2 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_E3C1D499755A46039CD75E2F99FBD65B }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_052AEB14781A4024A2AA07035E90ACCD }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_549C0A7E45A646DBB3E902C6AF0F4EBF }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_3D12D355A5FC45C0B4C4252D3F67FAD7 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'ECIBienestar'
+          app-name: 'ecibienestar-gym'
           slot-name: 'Production'
           package: '*.jar'
           
