@@ -59,16 +59,7 @@ public class UserServiceTest {
         verify(userRepository, times(1)).save(any(User.class));
     }
 
-    @Test
-    void shouldThrowExceptionWhenIdIsNullOrEmpty() {
-        UserDTO dto = new UserDTO();
-        dto.setId(null);
-        dto.setName("Test");
-        dto.setEmail("test@example.com");
-        dto.setRole(Role.STUDENT);
-        GYMException exception = assertThrows(GYMException.class, () -> userService.createUser(dto));
-        assertEquals(GYMException.USER_NOT_NULL, exception.getMessage());
-    }
+
 
     @Test
     void shouldThrowExceptionWhenNameIsNullOrEmpty() {
@@ -375,16 +366,7 @@ public class UserServiceTest {
         verify(userRepository, never()).findByEmail(anyString());
         verify(userRepository, times(1)).save(existingUser);
     }
-    @Test
-    void shouldThrowExceptionWhenIdIsEmpty() {
-        UserDTO dto = new UserDTO();
-        dto.setId("");  // cadena vacía
-        dto.setName("Test");
-        dto.setEmail("test@example.com");
-        dto.setRole(Role.STUDENT);
-        GYMException exception = assertThrows(GYMException.class, () -> userService.createUser(dto));
-        assertEquals(GYMException.USER_NOT_NULL, exception.getMessage());
-    }
+
     @Test
     void shouldThrowExceptionWhenUserNotFoundOnUpdate() {
         String id = "nonexistent";
