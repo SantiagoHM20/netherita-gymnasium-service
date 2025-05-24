@@ -40,9 +40,7 @@ public class UserService {
     public User getUsersById(String id) {return userRepository.findById(id).orElse(null);}
 
     public User createUser(UserDTO userDTO) throws GYMException {
-        if (userDTO.getId() == null || userDTO.getId().isEmpty()) {
-            throw new GYMException(GYMException.USER_NOT_NULL);
-        }
+
         if (userDTO.getName() == null || userDTO.getName().isEmpty()) {
             throw new GYMException(GYMException.USER_NOT_NULL);
         }
