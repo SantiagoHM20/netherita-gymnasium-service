@@ -12,7 +12,7 @@ public class ApiResponseTest {
         String id = "user123";
         String name = "Juan Pérez";
         String email = "juan@example.com";
-        Role role = Role.ADMINISTRADOR; // asumiendo que tienes este enum
+        Role role = Role.ADMINISTRATOR; // asumiendo que tienes este enum
 
         UserDTO user = new UserDTO(id, name, email, role);
 

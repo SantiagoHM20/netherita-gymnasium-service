@@ -26,7 +26,7 @@ public class AuthServiceTest {
     @Test
     public void shouldReturnUserWhenEmailAndRoleMatch() throws GYMException {
         String email = "test@example.com";
-        Role role = Role.ESTUDIANTE;
+        Role role = Role.STUDENT;
 
         User user = new User();
         user.setEmail(email);
@@ -44,7 +44,7 @@ public class AuthServiceTest {
     @Test
     public void shouldThrowExceptionWhenUserNotFound() {
         String email = "missing@example.com";
-        Role role = Role.ADMINISTRADOR;
+        Role role = Role.ADMINISTRATOR;
 
         when(userRepository.findByEmailAndRole(email, role)).thenReturn(Optional.empty());
 

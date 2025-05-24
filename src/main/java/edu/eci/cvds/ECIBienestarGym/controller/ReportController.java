@@ -30,7 +30,7 @@ public class ReportController {
     }
 
     @GetMapping("/trainer/reports")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER')")
     @Operation(summary = "Obtener todos los reportes")
     public ResponseEntity<ApiResponse<List<Report>>> getAllReports() {
         List<Report> reports = reportService.getAllReports();
@@ -38,7 +38,7 @@ public class ReportController {
     }
 
     @GetMapping("/trainer/reports/{id}")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER')")
     @Operation(summary = "Obtener un reporte por su ID")
     public ResponseEntity<ApiResponse<Report>> getReportById(
             @Parameter(description = "ID del reporte", example = "abc123") @PathVariable String id) throws GYMException {
@@ -51,18 +51,18 @@ public class ReportController {
     }
 
     @GetMapping("/trainer/reports/coach/{coachId}")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR')")
-    @Operation(summary = "Obtener reportes por ID del entrenador")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER')")
+    @Operation(summary = "Obtener reportes por ID del TRAINER")
     public ResponseEntity<ApiResponse<List<Report>>> getReportsByCoach(
-            @Parameter(description = "ID del entrenador", example = "coach123") @PathVariable String coachId) {
+            @Parameter(description = "ID del TRAINER", example = "coach123") @PathVariable String coachId) {
         User coach = new User();
         coach.setId(coachId);
         List<Report> reports = reportService.getReportsByCoach(coach);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Reportes del entrenador obtenidos", reports));
+        return ResponseEntity.ok(new ApiResponse<>(true, "Reportes del TRAINER obtenidos", reports));
     }
 
     @GetMapping("/trainer/reports/date")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER')")
     @Operation(summary = "Obtener reportes por fecha de generación")
     public ResponseEntity<ApiResponse<List<Report>>> getReportsByGeneratedAt(
             @Parameter(description = "Fecha en formato ISO (yyyy-MM-dd)", example = "2024-05-01")
@@ -73,7 +73,7 @@ public class ReportController {
     }
 
     @GetMapping("/trainer/reports/type")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER')")
     @Operation(summary = "Obtener reportes por tipo")
     public ResponseEntity<ApiResponse<List<Report>>> getReportsByType(
             @Parameter(description = "Tipo de reporte", example = "WEEKLY") @RequestParam("type") ReportType type) {
@@ -82,7 +82,7 @@ public class ReportController {
     }
 
     @PostMapping("/trainer/reports")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER')")
     @Operation(summary = "Crear un nuevo reporte")
     public ResponseEntity<ApiResponse<Report>> createReport(@RequestBody ReportDTO report) {
         Report createdReport = reportService.createReport(report);

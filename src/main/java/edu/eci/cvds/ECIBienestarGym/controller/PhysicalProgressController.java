@@ -29,7 +29,7 @@ public class PhysicalProgressController {
     }
 
     @GetMapping("/trainer/progress")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER')")
     @Operation(summary = "Obtener todos los registros de progreso físico")
     public ResponseEntity<ApiResponse<List<PhysicalProgress>>> getAllPhysicalProgress() {
         List<PhysicalProgress> progressList = physicalProgressService.getAllPhysicalProgress();
@@ -37,7 +37,7 @@ public class PhysicalProgressController {
     }
 
     @GetMapping("/trainer/progress/{id}")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER')")
     @Operation(summary = "Obtener un registro de progreso físico por su ID")
     public ResponseEntity<ApiResponse<PhysicalProgress>> getPhysicalProgressById(
             @Parameter(description = "ID del registro", example = "abc123") @PathVariable String id) throws GYMException {
@@ -50,7 +50,7 @@ public class PhysicalProgressController {
     }
 
     @GetMapping("/user/progress/{userId}")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR', 'ESTUDIANTE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER', 'STUDENT')")
     @Operation(summary = "Obtener registros de progreso físico por ID de usuario")
     public ResponseEntity<ApiResponse<List<PhysicalProgress>>> getPhysicalProgressByUserId(
             @Parameter(description = "ID del usuario", example = "user123") @PathVariable String userId) {
@@ -61,7 +61,7 @@ public class PhysicalProgressController {
     }
 
     @GetMapping("/trainer/progress/date")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER')")
     @Operation(summary = "Obtener registros de progreso físico por fecha de registro")
     public ResponseEntity<ApiResponse<List<PhysicalProgress>>> getPhysicalProgressByRegistrationDate(
             @Parameter(description = "Fecha en formato ISO (yyyy-MM-dd)", example = "2024-05-01")
@@ -72,7 +72,7 @@ public class PhysicalProgressController {
     }
     
     @GetMapping("/user/progess/{userId}/date")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR', 'ESTUDIANTE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER', 'STUDENT')")
     @Operation(summary = "Obtener registros de progreso físico por ID de usuario y fecha de registro")
     public ResponseEntity<ApiResponse<List<PhysicalProgress>>> getPhysicalProgressByUserIdAndDate(
             @Parameter(description = "ID del usuario", example = "user123") @PathVariable String userId,
@@ -85,7 +85,7 @@ public class PhysicalProgressController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Registros de progreso físico encontrados por usuario y fecha", progressList));
     }
     @GetMapping("/user/progress/{userId}/date-range")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR', 'ESTUDIANTE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER', 'STUDENT')")
     @Operation(summary = "Obtener registros de progreso físico por ID de usuario y rango de fechas")
     public ResponseEntity<ApiResponse<List<PhysicalProgress>>> getPhysicalProgressByUserIdAndDateRange(
             @Parameter(description = "ID del usuario", example = "user123") @PathVariable String userId,
@@ -102,7 +102,7 @@ public class PhysicalProgressController {
     }
     
     @PostMapping("/user/progress")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ENTRENADOR', 'ESTUDIANTE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER', 'STUDENT')")
     @Operation(summary = "Registrar nuevo progreso físico")
     public ResponseEntity<ApiResponse<PhysicalProgress>> createPhysicalProgress(
             @Parameter(description = "Datos del progreso físico a registrar") @RequestBody PhysicalProgressDTO physicalProgress) {
