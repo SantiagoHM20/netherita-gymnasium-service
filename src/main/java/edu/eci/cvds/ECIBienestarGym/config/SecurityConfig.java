@@ -18,6 +18,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 
 import java.util.List;
 
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -60,4 +61,13 @@ public class SecurityConfig {
         ));
         configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true); // I
+        configuration.setAllowCredentials(true); // IMPORTANTE si usas tokens o cookies
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+
+
+}
