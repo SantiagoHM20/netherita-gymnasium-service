@@ -44,7 +44,10 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
-                "http://localhost:5173"
+                "http://localhost:5173",
+                "https://ecibienestar-age6hsb9g4dmegea.canadacentral-01.azurewebsites.net",
+                "http://ecibienestar-age6hsb9g4dmegea.canadacentral-01.azurewebsites.net",
+                "http://localhost:3000"
         ));
         configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));
