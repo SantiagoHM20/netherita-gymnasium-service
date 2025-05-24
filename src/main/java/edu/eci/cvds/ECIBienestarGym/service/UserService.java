@@ -56,6 +56,9 @@ public class UserService {
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
         user.setRole(userDTO.getRole());
+        user.setGender(userDTO.getGender());
+        user.setRegistrationDate(userDTO.getRegistrationDate());
+        user.setRegistered(userDTO.isRegistered());
 
         return userRepository.save(user);
     }
