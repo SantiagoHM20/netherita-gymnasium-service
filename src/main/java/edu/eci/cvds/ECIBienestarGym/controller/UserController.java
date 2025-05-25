@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 @Tag(name = "Usuarios", description = "Operaciones para gestionar usuarios del sistema")
 public class UserController {
 
