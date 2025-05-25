@@ -53,7 +53,7 @@ public class UserController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuarios con nombre: " + name, userService.getUsersByName(name)));
     }
 
-    @GetMapping("/traienr/users/email")
+    @GetMapping("/user/users/email")
 
     @Operation(summary = "Buscar usuario por correo electrónico", description = "Busca un usuario en el sistema según su correo electrónico.")
     public ResponseEntity<ApiResponse<Optional<User>>> getUserByEmail(
