@@ -19,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 @Tag(name = "Physical Progress", description = "Operaciones relacionadas con el progreso físico")
 public class PhysicalProgressController {
 

@@ -20,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 @Tag(name = "Routines", description = "Operaciones relacionadas con rutinas de entrenamiento")
 public class RoutineController {
 
