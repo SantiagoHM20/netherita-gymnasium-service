@@ -55,7 +55,7 @@
       runs-on: windows-latest
       needs: test
       environment:
-        name: 'Staging'
+        name: 'Production'
         url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
       permissions:
         id-token: write #This is required for requesting the JWT
