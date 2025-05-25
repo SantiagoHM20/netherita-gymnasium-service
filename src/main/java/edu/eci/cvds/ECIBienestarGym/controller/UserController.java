@@ -66,7 +66,7 @@ public class UserController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuario encontrado", user));
     }
 
-    @GetMapping("trainer/users/role/{role}")
+    @GetMapping("/trainer/users/role/{role}")
 
     @Operation(summary = "Obtener usuarios por rol", description = "Retorna una lista de usuarios con el rol especificado.")
     public ResponseEntity<ApiResponse<List<User>>> getUsersByRole(
@@ -92,7 +92,7 @@ public class UserController {
                 .body(new ApiResponse<>(true, "Usuario creado", userService.createUser(userDTO)));
     }
 
-    @PutMapping("users/{id}")
+    @PutMapping("/users/{id}")
 
     @Operation(summary = "Actualizar usuario", description = "Actualiza un usuario existente en el sistema.")
     public ResponseEntity<ApiResponse<User>> updateUser(
