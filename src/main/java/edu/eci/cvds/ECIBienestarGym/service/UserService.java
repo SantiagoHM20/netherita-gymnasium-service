@@ -57,6 +57,7 @@ public class UserService {
         user.setEmail(userDTO.getEmail());
         user.setRole(userDTO.getRole());
         user.setGender(userDTO.getGender());
+        user.setPassword(userDTO.getPassword());
         user.setRegistrationDate(userDTO.getRegistrationDate());
         user.setRegistered(userDTO.isRegistered());
 
