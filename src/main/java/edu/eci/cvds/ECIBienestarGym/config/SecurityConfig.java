@@ -37,7 +37,10 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html"
+                                "/swagger-ui.html",
+                                "/swagger-resources/**",
+                                "/webjars/**",
+                                "/api/**"
                         ).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(
@@ -52,8 +55,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:5173",
                 "https://ecibienestar-age6hsb9g4dmegea.canadacentral-01.azurewebsites.net",
-                "http://ecibienestar-age6hsb9g4dmegea.canadacentral-01.azurewebsites.net",
-                "http://localhost:3000"
+                "http://ecibienestar-age6hsb9g4dmegea.canadacentral-01.azurewebsites.net"
         ));
         configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));
