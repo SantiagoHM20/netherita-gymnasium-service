@@ -33,14 +33,14 @@ public class ReservationController {
 
     @Operation(summary = "Obtener todas las reservas", description = "Devuelve una lista con todas las reservas registradas.")
     @GetMapping("/trainer/reservations")
-    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER')")
+
     public ResponseEntity<ApiResponse<List<Reservation>>> getAllReservations() {
         return ResponseEntity.ok(new ApiResponse<>(true, "Reservas obtenidas exitosamente", reservationService.getAllReservations()));
     }
 
     @Operation(summary = "Obtener reserva por ID", description = "Devuelve una reserva específica por su ID.")
     @GetMapping("/user/reservations/{id}")
-    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER', 'STUDENT')")
+
     public ResponseEntity<ApiResponse<Reservation>> getReservationById(
             @Parameter(description = "ID de la reserva") @PathVariable String id) throws GYMException {
         Reservation reservation = reservationService.getReservationById(id);
@@ -53,7 +53,7 @@ public class ReservationController {
 
     @Operation(summary = "Obtener reservas por ID de usuario", description = "Devuelve las reservas asociadas a un usuario.")
     @GetMapping("/user/reservations/{userId}")
-    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER', 'STUDENT')")
+
     public ResponseEntity<ApiResponse<List<Reservation>>> getReservationsByUserId(
             @Parameter(description = "ID del usuario") @PathVariable String userId) {
         User user = new User();
@@ -63,7 +63,7 @@ public class ReservationController {
 
     @Operation(summary = "Obtener reservas por sesión de gimnasio", description = "Devuelve las reservas asociadas a una sesión específica del gimnasio.")
     @GetMapping("/trainer/reservations/{sessionId}")
-    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER')")
+
     public ResponseEntity<ApiResponse<List<Reservation>>> getReservationsByGymSession(
             @Parameter(description = "ID de la sesión del gimnasio") @PathVariable String sessionId) {
         GymSession gymSession = new GymSession();
@@ -73,7 +73,7 @@ public class ReservationController {
 
     @Operation(summary = "Obtener reservas por fecha de reserva", description = "Devuelve las reservas que coinciden con una fecha determinada.")
     @GetMapping("/trainer/reservations/date")
-    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER')")
+
     public ResponseEntity<ApiResponse<List<Reservation>>> getReservationsByReservationDate(
             @Parameter(description = "Fecha de la reserva en formato ISO") @RequestParam("datetime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime reservationDate) {
         return ResponseEntity.ok(new ApiResponse<>(true, "Reservas en la fecha especificada encontradas", reservationService.getReservationsByReservationDate(reservationDate)));
@@ -81,7 +81,7 @@ public class ReservationController {
 
     @Operation(summary = "Obtener reservas por estado", description = "Devuelve las reservas con un estado específico (por ejemplo: CONFIRMADA, CANCELADA).")
     @GetMapping("/trainer/reservations/status/{status}")
-    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER')")
+
     public ResponseEntity<ApiResponse<List<Reservation>>> getReservationsByState(
             @Parameter(description = "Estado de la reserva") @PathVariable Status status) {
         return ResponseEntity.ok(new ApiResponse<>(true, "Reservas encontradas por estado", reservationService.getReservationsByState(status)));
@@ -89,7 +89,7 @@ public class ReservationController {
 
     @Operation(summary = "Crear una nueva reserva", description = "Crea una nueva reserva en el sistema.")
     @PostMapping("/user/reservations")
-    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER', 'STUDENT')")
+
     public ResponseEntity<ApiResponse<Reservation>> createReservation(
             @Parameter(description = "Detalles de la reserva") @RequestBody ReservationDTO reservation) {
         Reservation createdReservation = reservationService.createReservation(reservation);
@@ -99,7 +99,7 @@ public class ReservationController {
 
     @Operation(summary = "Actualizar una reserva existente", description = "Actualiza los detalles de una reserva existente.")
     @PutMapping("/user/reservations/{id}")
-    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER', 'STUDENT')")
+
     public ResponseEntity<ApiResponse<Reservation>> updateReservation(
             @Parameter(description = "ID de la reserva a actualizar") @PathVariable String id,
             @Parameter(description = "Detalles actualizados de la reserva") @RequestBody ReservationDTO reservation) throws GYMException {
@@ -109,7 +109,7 @@ public class ReservationController {
 
     @Operation(summary = "Eliminar una reserva", description = "Elimina una reserva del sistema.")
     @DeleteMapping("/user/reservations/{id}")
-    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER', 'STUDENT')")
+
     public ResponseEntity<ApiResponse<Void>> deleteReservation(
             @Parameter(description = "ID de la reserva a eliminar") @PathVariable String id) throws GYMException {
         reservationService.deleteReservation(id);

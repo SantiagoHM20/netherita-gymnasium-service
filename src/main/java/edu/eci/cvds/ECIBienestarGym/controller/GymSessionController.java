@@ -31,7 +31,6 @@ public class GymSessionController {
     }
 
     @GetMapping("/user/session")
-    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER', 'STUDENT')")
     @Operation(summary = "Obtener todas las sesiones de gimnasio")
     public ResponseEntity<ApiResponse<List<GymSession>>> getAllGymSessions() {
         List<GymSession> sessions = gymSessionService.getAllGymSessions();
