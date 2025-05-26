@@ -4,6 +4,7 @@ import edu.eci.cvds.ECIBienestarGym.dto.GymSessionDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.ReservationDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.UserDTO;
 import edu.eci.cvds.ECIBienestarGym.enums.Status;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.GymSession;
 import edu.eci.cvds.ECIBienestarGym.model.Reservation;
 import edu.eci.cvds.ECIBienestarGym.model.User;
@@ -23,7 +24,7 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    public Reservation getReservationById(String id){return reservationRepository.findById(id).orElseThrow(() -> new RuntimeException("No se encontró la reserva"));}
+    public Reservation getReservationById(String id) throws GYMException{return reservationRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.RESERVE_NOT_FOUND));}
 
     public List<Reservation> getReservationsByUserId(User userId){
         return reservationRepository.findByUserId(userId);
@@ -36,16 +37,36 @@ public class ReservationService {
     public List<Reservation> getReservationsByState(Status status){return reservationRepository.findReservationByState(status);}
 
     public Reservation createReservation(ReservationDTO reservationDTO) {
+        // Crear la reserva principal
         Reservation reservation = new Reservation();
         reservation.setUserId(mapToUser(reservationDTO.getUserId()));
         reservation.setGymSessionId(mapToGymSession(reservationDTO.getGymSessionId()));
         reservation.setReservationDate(reservationDTO.getReservationDate());
         reservation.setState(reservationDTO.getState());
-        return reservationRepository.save(reservation);
+
+        GymSession gymSession = reservation.getGymSessionId();
+        gymSession.getUsers().add(reservation.getUserId());
+        gymSession.setCurrentReservations(gymSession.getCurrentReservations() + 1);
+
+        // Guardar la reserva principal
+        Reservation savedReservation = reservationRepository.save(reservation);
+
+        // Crear y guardar las reservas recurrentes (5 semanas adicionales)
+        for (int i = 1; i <= 5; i++) {
+            Reservation recurringReservation = new Reservation();
+            recurringReservation.setUserId(reservation.getUserId());
+            recurringReservation.setGymSessionId(reservation.getGymSessionId());
+            recurringReservation.setReservationDate(reservation.getReservationDate().plusWeeks(i));
+            recurringReservation.setState(reservation.getState());
+            reservationRepository.save(recurringReservation);
+        }
+
+        // Retornar la reserva principal guardada
+        return savedReservation;
     }
 
-    public Reservation updateReservation(String id, ReservationDTO reservationDTO) {
-        Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new RuntimeException("No se encontró la reserva"));
+    public Reservation updateReservation(String id, ReservationDTO reservationDTO) throws GYMException {
+        Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.RESERVE_NOT_FOUND));
         reservation.setUserId(mapToUser(reservationDTO.getUserId()));
         reservation.setGymSessionId(mapToGymSession(reservationDTO.getGymSessionId()));
         reservation.setReservationDate(reservationDTO.getReservationDate());
@@ -53,8 +74,8 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
-    public void deleteReservation(String id) {
-        Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new RuntimeException("No se encontró la reserva"));
+    public void deleteReservation(String id) throws GYMException {
+        Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.RESERVE_NOT_FOUND));
         reservationRepository.delete(reservation);
     }
 

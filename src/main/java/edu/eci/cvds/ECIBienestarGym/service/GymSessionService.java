@@ -2,6 +2,7 @@ package edu.eci.cvds.ECIBienestarGym.service;
 
 import edu.eci.cvds.ECIBienestarGym.dto.GymSessionDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.UserDTO;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.GymSession;
 import edu.eci.cvds.ECIBienestarGym.model.User;
 import edu.eci.cvds.ECIBienestarGym.repository.GymSessionRepository;
@@ -22,13 +23,13 @@ public class GymSessionService {
         return gymSessionRepository.findAll();
     }
 
-    public GymSession getGymSessionById(String id) {return gymSessionRepository.findById(id).orElseThrow(() -> new RuntimeException("No se encontró la sesión de gimnasio"));}
+    public GymSession getGymSessionById(String id) throws GYMException {return gymSessionRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.GYM_SESION_NOT_FOUND));}
 
     public List<GymSession> getGymSessionsByCoachId(User coachId){return gymSessionRepository.findByCoachId(coachId);}
 
     public List<GymSession> getGymSessionsByCapacity(int capacity){return gymSessionRepository.findByCapacity(capacity);}
 
-    public List<GymSession> getGymSessionsByDate(LocalDateTime date){return gymSessionRepository.findByDate(LocalDate.from(date));}
+    public List<GymSession> getGymSessionsByDate(LocalDate date){return gymSessionRepository.findByDate(LocalDate.from(date));}
 
     public List<GymSession> getGymSessionsByDateAndTime(LocalDate date, LocalTime startTime, LocalTime endTime) {
         LocalDateTime startDateTime = date.atTime(startTime);
@@ -44,22 +45,27 @@ public class GymSessionService {
         GymSession gymSession = mapToGymSession(gymSessionDTO);
         return gymSessionRepository.save(gymSession);
     }
-    public GymSession updateGymSession(String id, GymSessionDTO gymSessionDTO) {
+    public GymSession updateGymSession(String id, GymSessionDTO gymSessionDTO) throws GYMException {
         GymSession existingSession = gymSessionRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("No se encontró la sesión de gimnasio"));
+            .orElseThrow(() -> new GYMException(GYMException.GYM_SESION_NOT_FOUND));
         GymSession updatedSession = mapToGymSession(gymSessionDTO);
         updatedSession.setId(existingSession.getId());
         return gymSessionRepository.save(updatedSession);
     }
 
-    public void deleteGymSession(String id) {
-        GymSession gymSession = gymSessionRepository.findById(id).orElseThrow(() -> new RuntimeException("No se encontró la sesión de gimnasio"));
+    public GymSession updatedAttendance(String id, List<Boolean> attendance) throws GYMException {
+        GymSession gymSession = gymSessionRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.GYM_SESION_NOT_FOUND));
+        gymSession.setAttendance(attendance);
+        return gymSessionRepository.save(gymSession);
+    }
+
+    public void deleteGymSession(String id) throws GYMException {
+        GymSession gymSession = gymSessionRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.GYM_SESION_NOT_FOUND));
         gymSessionRepository.delete(gymSession);
     }
 
     private GymSession mapToGymSession(GymSessionDTO gymSessionDTO) {
         GymSession gymSession = new GymSession();
-        gymSession.setId(gymSessionDTO.getId());
         gymSession.setCoachId(mapToUser(gymSessionDTO.getCoachId()));
         gymSession.setDate(gymSessionDTO.getDate());
         gymSession.setStartTime(gymSessionDTO.getStartTime());

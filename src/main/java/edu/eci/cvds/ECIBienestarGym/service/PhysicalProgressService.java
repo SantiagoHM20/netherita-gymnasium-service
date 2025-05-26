@@ -5,6 +5,7 @@ import edu.eci.cvds.ECIBienestarGym.dto.PhysicalProgressDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.RoutineDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.UserDTO;
 import edu.eci.cvds.ECIBienestarGym.embeddables.Exercise;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.PhysicalProgress;
 import edu.eci.cvds.ECIBienestarGym.model.Routine;
 import edu.eci.cvds.ECIBienestarGym.model.User;
@@ -26,8 +27,8 @@ public class PhysicalProgressService {
         return physicalProgressRepository.findAll();
     }
 
-    public PhysicalProgress getPhysicalProgressById(String id){
-        return physicalProgressRepository.findById(id).orElseThrow(() -> new RuntimeException("No se encontró el progreso Físico"));
+    public PhysicalProgress getPhysicalProgressById(String id) throws GYMException {
+        return physicalProgressRepository.findById(id).orElseThrow(() -> new  GYMException(GYMException.PHYSICAL_PROGRESS_NOT_FOUND));
     }
 
     public List<PhysicalProgress> getPhysicalProgressByUserId(User userId){
@@ -49,20 +50,6 @@ public class PhysicalProgressService {
         return physicalProgressRepository.save(progress);
     }
 
-    public PhysicalProgress updatePhysicalProgress(String id, PhysicalProgressDTO physicalProgressDTO) {
-        PhysicalProgress progress = physicalProgressRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("No se encontró el progreso físico"));
-        PhysicalProgress updatedProgress = mapToPhysicalProgress(physicalProgressDTO);
-        updatedProgress.setId(progress.getId());
-        return physicalProgressRepository.save(updatedProgress);
-    }
-
-    public void deletePhysicalProgress(String id) {
-        PhysicalProgress progress = physicalProgressRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("PhysicalProgress not found with id: " + id));
-        physicalProgressRepository.deleteById(id);
-    }
-
     private PhysicalProgress mapToPhysicalProgress(PhysicalProgressDTO physicalProgressDTO) {
         PhysicalProgress physicalProgress = new PhysicalProgress();
         physicalProgress.setUserId(mapToUser(physicalProgressDTO.getUserId()));
@@ -73,10 +60,10 @@ public class PhysicalProgressService {
         physicalProgress.setHeight(physicalProgressDTO.getHeight());
         physicalProgress.setWaists(physicalProgressDTO.getWaists());
         physicalProgress.setChest(physicalProgressDTO.getChest());
-        physicalProgress.setArms(physicalProgressDTO.getArms());
-        physicalProgress.setLegs(physicalProgressDTO.getLegs());
-        physicalProgress.setShoulders(physicalProgressDTO.getShoulders());
-
+        physicalProgress.setRightarm(physicalProgressDTO.getRightarm());
+        physicalProgress.setLeftarm(physicalProgressDTO.getLeftarm());
+        physicalProgress.setRightleg(physicalProgressDTO.getRightleg());
+        physicalProgress.setLeftleg(physicalProgressDTO.getLeftleg());
         return physicalProgress;
     }
 

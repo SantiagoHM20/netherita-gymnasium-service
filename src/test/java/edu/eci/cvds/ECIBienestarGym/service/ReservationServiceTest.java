@@ -4,12 +4,14 @@ import edu.eci.cvds.ECIBienestarGym.dto.GymSessionDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.ReservationDTO;
 import edu.eci.cvds.ECIBienestarGym.dto.UserDTO;
 import edu.eci.cvds.ECIBienestarGym.enums.Status;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.GymSession;
 import edu.eci.cvds.ECIBienestarGym.model.Reservation;
 import edu.eci.cvds.ECIBienestarGym.model.User;
 import edu.eci.cvds.ECIBienestarGym.repository.ReservationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -17,11 +19,11 @@ import org.mockito.MockitoAnnotations;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class ReservationServiceTest {
@@ -38,7 +40,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void getAllReservations() {
+    void shouldReturnAllReservations() {
         List<Reservation> mockReservations = Arrays.asList(new Reservation(), new Reservation());
         when(reservationRepository.findAll()).thenReturn(mockReservations);
 
@@ -49,7 +51,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void getReservationById() {
+    void shouldReturnReservationById() throws GYMException {
         String id = "res123";
         Reservation mockReservation = new Reservation();
         when(reservationRepository.findById(id)).thenReturn(Optional.of(mockReservation));
@@ -61,7 +63,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void getReservationsByUserId() {
+    void shouldReturnReservationsByUserId() {
         User user = new User();
         List<Reservation> mockReservations = Arrays.asList(new Reservation(), new Reservation());
         when(reservationRepository.findByUserId(user)).thenReturn(mockReservations);
@@ -73,7 +75,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void getReservationsByGymSession() {
+    void shouldReturnReservationsByGymSession() {
         GymSession gymSession = new GymSession();
         List<Reservation> mockReservations = Arrays.asList(new Reservation(), new Reservation());
         when(reservationRepository.findByGymSessionId(gymSession)).thenReturn(mockReservations);
@@ -85,7 +87,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void getReservationsByReservationDate() {
+    void shouldReturnReservationsByReservationDate() {
         LocalDateTime reservationDate = LocalDateTime.now();
         List<Reservation> mockReservations = Arrays.asList(new Reservation(), new Reservation());
         when(reservationRepository.findByReservationDate(reservationDate)).thenReturn(mockReservations);
@@ -97,8 +99,8 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void getReservationsByState() {
-        Status status = Status.APPROVED;
+    void shouldReturnReservationsByState() {
+        Status status = Status.APROBADO;
         List<Reservation> mockReservations = Arrays.asList(new Reservation(), new Reservation());
         when(reservationRepository.findReservationByState(status)).thenReturn(mockReservations);
 
@@ -108,35 +110,104 @@ public class ReservationServiceTest {
         verify(reservationRepository, times(1)).findReservationByState(status);
     }
 
-    @Test
-    void createReservation() {
+   @Test
+    void shouldCreateMainReservationSuccessfully() {
+        // Arrange
         ReservationDTO reservationDTO = new ReservationDTO();
-        reservationDTO.setId("res123");
         reservationDTO.setUserId(new UserDTO("user123", "John Doe", "johndoe@example.com"));
         reservationDTO.setGymSessionId(new GymSessionDTO(
-            "session123",
-            new UserDTO("coach123", "Jane Doe", "janedoe@example.com"), LocalDate.now(), LocalTime.of(9, 0), LocalTime.of(10, 0), 20, 5));
-        reservationDTO.setReservationDate(LocalDateTime.now());
-        reservationDTO.setState(Status.APPROVED);
+                "session123",
+                new UserDTO("coach123", "Jane Doe", "janedoe@example.com"),
+                LocalDate.now(),
+                LocalTime.of(9, 0),
+                LocalTime.of(10, 0),
+                20,
+                5,
+                Collections.emptyList(),
+                Collections.emptyList()
+        ));
+        LocalDateTime now = LocalDateTime.now();
+        reservationDTO.setReservationDate(now);
+        reservationDTO.setState(Status.APROBADO);
+
+
+        User user = new User("user123", "John Doe", "johndoe@example.com");
+        GymSession gymSession = new GymSession();
+        gymSession.setId("session123");
 
         Reservation mockReservation = new Reservation();
         mockReservation.setId("res123");
+        mockReservation.setUserId(user);
+        mockReservation.setGymSessionId(gymSession);
+        mockReservation.setReservationDate(now);
+        mockReservation.setState(Status.APROBADO);
 
         when(reservationRepository.save(any(Reservation.class))).thenReturn(mockReservation);
 
+        // Act
         Reservation createdReservation = reservationService.createReservation(reservationDTO);
 
-        assertEquals(mockReservation, createdReservation);
-        verify(reservationRepository, times(1)).save(any(Reservation.class));
+        // Assert
+        assertEquals(mockReservation.getId(), createdReservation.getId());
+        assertEquals(mockReservation.getUserId(), createdReservation.getUserId());
+        assertEquals(mockReservation.getGymSessionId(), createdReservation.getGymSessionId());
+        assertEquals(mockReservation.getReservationDate(), createdReservation.getReservationDate());
+        assertEquals(mockReservation.getState(), createdReservation.getState());
     }
 
     @Test
-    void updateReservation() {
+    void shouldCreateRecurringReservationsAfterMainReservation() {
+        ReservationDTO reservationDTO = new ReservationDTO();
+        reservationDTO.setUserId(new UserDTO("user123", "John Doe", "johndoe@example.com"));
+        reservationDTO.setGymSessionId(new GymSessionDTO(
+                "session123",
+                new UserDTO("coach123", "Jane Doe", "janedoe@example.com"),
+                LocalDate.now(),
+                LocalTime.of(9, 0),
+                LocalTime.of(10, 0),
+                20,
+                5,
+                Collections.emptyList(),
+                Collections.emptyList()
+        ));
+        LocalDateTime now = LocalDateTime.now();
+        reservationDTO.setReservationDate(now);
+        reservationDTO.setState(Status.APROBADO);
+
+        when(reservationRepository.save(any(Reservation.class))).thenReturn(new Reservation());
+
+        // Act
+        reservationService.createReservation(reservationDTO);
+
+        // Assert
+        ArgumentCaptor<Reservation> captor = ArgumentCaptor.forClass(Reservation.class);
+        verify(reservationRepository, times(6)).save(captor.capture());
+
+        List<Reservation> savedReservations = captor.getAllValues();
+
+        for (int i = 0; i < 6; i++) {
+            assertEquals(now.plusWeeks(i), savedReservations.get(i).getReservationDate());
+        }
+    }
+
+    @Test
+    void shouldUpdateReservationSuccessfully() throws GYMException {
         String id = "res123";
         ReservationDTO reservationDTO = new ReservationDTO();
         reservationDTO.setUserId(new UserDTO("user123", "John Doe", "johndoe@example.com"));
-        reservationDTO.setGymSessionId(new GymSessionDTO("session123", new UserDTO("coach123", "Jane Doe", "janedoe@example.com"), LocalDate.now(), LocalTime.of(9, 0), LocalTime.of(10, 0), 20, 5));reservationDTO.setReservationDate(LocalDateTime.now());
-        reservationDTO.setState(Status.APPROVED);
+        reservationDTO.setGymSessionId(new GymSessionDTO(
+                "session123",
+                new UserDTO("coach123", "Jane Doe", "janedoe@example.com"),
+                LocalDate.now(),
+                LocalTime.of(9, 0),
+                LocalTime.of(10, 0),
+                20,
+                5,
+                Collections.emptyList(),
+                Collections.emptyList()
+        ));
+        reservationDTO.setReservationDate(LocalDateTime.now());
+        reservationDTO.setState(Status.APROBADO);
 
         Reservation mockReservation = new Reservation();
         mockReservation.setId(id);
@@ -152,7 +223,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void deleteReservation() {
+    void shouldDeleteReservationSuccessfully() throws GYMException {
         String id = "res123";
         Reservation mockReservation = new Reservation();
         mockReservation.setId(id);
@@ -164,5 +235,50 @@ public class ReservationServiceTest {
 
         verify(reservationRepository, times(1)).findById(id);
         verify(reservationRepository, times(1)).delete(mockReservation);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenReservationNotFoundById() {
+        String id = "non-existent-id";
+        when(reservationRepository.findById(id)).thenReturn(Optional.empty());
+
+        GYMException exception = assertThrows(
+                GYMException.class,
+                () -> reservationService.getReservationById(id)
+        );
+
+        assertEquals(GYMException.RESERVE_NOT_FOUND, exception.getMessage());
+        verify(reservationRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUpdatingNonExistentReservation() {
+        String id = "non-existent-id";
+        ReservationDTO reservationDTO = new ReservationDTO(); // no importa el contenido para este test
+
+        when(reservationRepository.findById(id)).thenReturn(Optional.empty());
+
+        GYMException exception = assertThrows(
+                GYMException.class,
+                () -> reservationService.updateReservation(id, reservationDTO)
+        );
+
+        assertEquals(GYMException.RESERVE_NOT_FOUND, exception.getMessage());
+        verify(reservationRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenDeletingNonExistentReservation() {
+        String id = "non-existent-id";
+
+        when(reservationRepository.findById(id)).thenReturn(Optional.empty());
+
+        GYMException exception = assertThrows(
+                GYMException.class,
+                () -> reservationService.deleteReservation(id)
+        );
+
+        assertEquals(GYMException.RESERVE_NOT_FOUND, exception.getMessage());
+        verify(reservationRepository, times(1)).findById(id);
     }
 }

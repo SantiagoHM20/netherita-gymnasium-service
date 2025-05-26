@@ -1,13 +1,16 @@
 package edu.eci.cvds.ECIBienestarGym.dto;
 
+import edu.eci.cvds.ECIBienestarGym.enums.Gender;
 import edu.eci.cvds.ECIBienestarGym.enums.Role;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDTO {
@@ -16,6 +19,8 @@ public class UserDTO {
     private String email;
     private String password;
     private Role role;
+    private Gender gender;
+    private boolean registered;
     private LocalDate registrationDate;
 
     public UserDTO(String id, String name, String email, Role role) {
@@ -30,5 +35,9 @@ public class UserDTO {
         this.name = name;
         this.email = email;
 
+    }
+
+    public UserDTO(String id) {
+        this.id = id;
     }
 }

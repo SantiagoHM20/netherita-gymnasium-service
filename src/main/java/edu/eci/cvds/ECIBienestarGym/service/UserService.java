@@ -2,6 +2,7 @@ package edu.eci.cvds.ECIBienestarGym.service;
 
 import edu.eci.cvds.ECIBienestarGym.dto.UserDTO;
 import edu.eci.cvds.ECIBienestarGym.enums.Role;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.User;
 import edu.eci.cvds.ECIBienestarGym.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -38,18 +39,16 @@ public class UserService {
 
     public User getUsersById(String id) {return userRepository.findById(id).orElse(null);}
 
-    public User createUser(UserDTO userDTO) {
-        if (userDTO.getId() == null || userDTO.getId().isEmpty()) {
-            throw new IllegalArgumentException("User ID cannot be null or empty");
-        }
+    public User createUser(UserDTO userDTO) throws GYMException {
+
         if (userDTO.getName() == null || userDTO.getName().isEmpty()) {
-            throw new IllegalArgumentException("User name cannot be null or empty");
+            throw new GYMException(GYMException.USER_NOT_NULL);
         }
         if (userDTO.getEmail() == null || userDTO.getEmail().isEmpty()) {
-            throw new IllegalArgumentException("User email cannot be null or empty");
+            throw new GYMException(GYMException.USER_NOT_NULL);
         }
         if (userDTO.getRole() == null) {
-            throw new IllegalArgumentException("User role cannot be null");
+            throw new GYMException(GYMException.USER_NOT_NULL);
         }
 
         User user = new User();
@@ -57,31 +56,30 @@ public class UserService {
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
         user.setRole(userDTO.getRole());
+        user.setGender(userDTO.getGender());
+        user.setPassword(userDTO.getPassword());
+        user.setRegistrationDate(userDTO.getRegistrationDate());
+        user.setRegistered(userDTO.isRegistered());
 
         return userRepository.save(user);
     }
 
-    public User updateUser(String id, UserDTO userDTO) {
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("No se encontró el usuario"));
-        if(userDTO.getName() != null) user.setName(userDTO.getName());
-        if(userDTO.getEmail() != null && !user.getEmail().equals(userDTO.getEmail())) {
-            if(userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
-                throw new IllegalArgumentException("El usuario ya tiene ese email");
-            }
-            user.setEmail(userDTO.getEmail());
-        }
-        if(userDTO.getPassword() != null) user.setPassword(userDTO.getPassword());
+    public User updateUser(String id, UserDTO userDTO) throws GYMException {
+        User user = userRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.USER_NOT_FOUND));
+        user.setGender(userDTO.getGender());
+        user.setRegistered(userDTO.isRegistered());
+        user.setRegistrationDate(LocalDate.now());
 
         return userRepository.save(user);
     }
 
-    public void deleteUser(String id) {
+    public void deleteUser(String id) throws GYMException {
         if (id == null || id.isEmpty()) {
-            throw new IllegalArgumentException("El Id no puede ser nulo o vacío");
+            throw new GYMException(GYMException.USER_NOT_NULL);
         }
 
-        User user = userRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con el id: " + id));
+        userRepository.findById(id)
+            .orElseThrow(() -> new GYMException(GYMException.USER_NOT_FOUND));
 
         userRepository.deleteById(id);
     }

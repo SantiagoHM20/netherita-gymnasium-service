@@ -2,6 +2,7 @@ package edu.eci.cvds.ECIBienestarGym.controller;
 
 import edu.eci.cvds.ECIBienestarGym.dto.UserDTO;
 import edu.eci.cvds.ECIBienestarGym.enums.Role;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.ApiResponse;
 import edu.eci.cvds.ECIBienestarGym.model.User;
 import edu.eci.cvds.ECIBienestarGym.service.UserService;
@@ -35,7 +36,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void getAllUsers() {
+    void shouldReturnAllUsersWhenGetAllUsersIsCalled() {
         List<User> mockUsers = Arrays.asList(new User(), new User());
         when(userService.getAllUsers()).thenReturn(mockUsers);
 
@@ -47,7 +48,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void getUserById() {
+    void shouldReturnUserByIdWhenValidIdIsProvided() {
         String id = "user123";
         User mockUser = new User();
         when(userService.getUsersById(id)).thenReturn(mockUser);
@@ -60,7 +61,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void getUserByEmail() {
+    void shouldReturnUserByEmailWhenValidEmailIsProvided() {
         String email = "johndoe@example.com";
         User mockUser = new User();
         mockUser.setEmail(email);
@@ -75,9 +76,9 @@ public class UserControllerTest {
     }
 
     @Test
-    void getUsersByRegistrationDate() {
+    void shouldReturnUsersByRegistrationDateWhenValidDateIsGiven() {
         LocalDate date = LocalDate.now();
-        String formattedDate = date.toString(); // Convierte LocalDate a String
+        String formattedDate = date.toString(); 
         List<User> mockUsers = Arrays.asList(new User(), new User());
 
         when(userService.getUsersByRegistrationDate(date)).thenReturn(mockUsers);
@@ -90,7 +91,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void getUsersByRole() {
+    void shouldReturnUsersByRoleWhenValidRoleIsProvided() {
         Role role = Role.STUDENT;
         List<User> mockUsers = Arrays.asList(new User(), new User());
 
@@ -104,7 +105,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void getUsersByName() {
+    void shouldReturnUsersByNameWhenValidNameIsGiven() {
         String name = "John Doe";
         List<User> mockUsers = Arrays.asList(new User(), new User());
 
@@ -118,7 +119,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void createUser() {
+    void shouldCreateUserWhenValidUserDTOIsProvided() throws GYMException {
         UserDTO userDTO = new UserDTO();
         User mockUser = new User();
         when(userService.createUser(userDTO)).thenReturn(mockUser);
@@ -131,7 +132,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void updateUser() {
+    void shouldUpdateUserWhenValidIdAndUserDTOAreProvided() throws GYMException {
         String id = "user123";
         UserDTO userDTO = new UserDTO();
         User mockUser = new User();
@@ -145,7 +146,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void deleteUser() {
+    void shouldDeleteUserWhenValidIdIsGiven() throws GYMException {
         String id = "user123";
         doNothing().when(userService).deleteUser(id);
 
@@ -153,5 +154,17 @@ public class UserControllerTest {
 
         assertEquals(200, response.getStatusCodeValue());
         verify(userService, times(1)).deleteUser(id);
+    }
+
+    @Test
+    void shouldReturnNotFoundWhenUserByEmailDoesNotExist() {
+        String email = "nonexistent@example.com";
+        when(userService.getUsersByEmail(email)).thenReturn(Optional.empty());
+
+        ResponseEntity<ApiResponse<Optional<User>>> response = userController.getUserByEmail(email);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals("Usuario no encontrado", response.getBody().getMessage());
+        verify(userService, times(1)).getUsersByEmail(email);
     }
 }

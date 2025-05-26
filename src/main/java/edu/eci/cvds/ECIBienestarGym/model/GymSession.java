@@ -2,20 +2,27 @@ package edu.eci.cvds.ECIBienestarGym.model;
 
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Document(collection = "gymSessions")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class GymSession {
+
+
     @Id
     private String id;
     @DBRef
@@ -25,4 +32,6 @@ public class GymSession {
     private LocalTime endTime;
     private int capacity;
     private int currentReservations;
+    private List<User> users = new ArrayList<>();
+    private List<Boolean> attendance = new ArrayList<>();
 }

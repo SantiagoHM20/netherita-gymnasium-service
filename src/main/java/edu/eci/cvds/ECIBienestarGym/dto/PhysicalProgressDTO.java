@@ -1,13 +1,15 @@
 package edu.eci.cvds.ECIBienestarGym.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class PhysicalProgressDTO {
@@ -20,8 +22,9 @@ public class PhysicalProgressDTO {
     private float height;
     private float waists;
     private float chest;
-    private float arms;
-    private float legs;
-    private float shoulders;
+    private float rightarm;
+    private float leftarm;
+    private float rightleg;
+    private float leftleg;
     private List<PhysicalProgressCommentsDTO> comments;
 }

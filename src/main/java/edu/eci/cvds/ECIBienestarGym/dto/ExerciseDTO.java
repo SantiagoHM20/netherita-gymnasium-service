@@ -1,11 +1,16 @@
 package edu.eci.cvds.ECIBienestarGym.dto;
 
-import edu.eci.cvds.ECIBienestarGym.enums.ExerciseType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.List;
 
-@Data
+import edu.eci.cvds.ECIBienestarGym.enums.ExerciseType;
+import edu.eci.cvds.ECIBienestarGym.enums.MuscleGroup;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExerciseDTO {
@@ -14,4 +19,5 @@ public class ExerciseDTO {
     private int sets;
     private int duration;
     private ExerciseType type;
+    private List<MuscleGroup> muscleGroup;
 }

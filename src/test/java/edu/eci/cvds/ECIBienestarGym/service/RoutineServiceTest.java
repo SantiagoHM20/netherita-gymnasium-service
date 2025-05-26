@@ -5,6 +5,8 @@ import edu.eci.cvds.ECIBienestarGym.dto.RoutineDTO;
 import edu.eci.cvds.ECIBienestarGym.embeddables.Exercise;
 import edu.eci.cvds.ECIBienestarGym.enums.DifficultyLevel;
 import edu.eci.cvds.ECIBienestarGym.enums.ExerciseType;
+import edu.eci.cvds.ECIBienestarGym.enums.MuscleGroup;
+import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.model.Routine;
 import edu.eci.cvds.ECIBienestarGym.repository.RoutineRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class RoutineServiceTest {
@@ -29,12 +32,12 @@ public class RoutineServiceTest {
     private RoutineService routineService;
 
     @BeforeEach
-    void setUp() {
+    void SetUp() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void getAllRoutines() {
+    void ShouldReturnAllRoutines() {
         List<Routine> mockRoutines = Arrays.asList(new Routine(), new Routine());
         when(routineRepository.findAll()).thenReturn(mockRoutines);
 
@@ -45,7 +48,7 @@ public class RoutineServiceTest {
     }
 
     @Test
-    void getRoutineById() {
+    void ShouldReturnRoutineById() throws GYMException {
         String id = "routine123";
         Routine mockRoutine = new Routine();
         when(routineRepository.findById(id)).thenReturn(Optional.of(mockRoutine));
@@ -57,7 +60,7 @@ public class RoutineServiceTest {
     }
 
     @Test
-    void getRoutinesByName() {
+    void ShouldReturnRoutinesByName() {
         String name = "Cardio";
         List<Routine> mockRoutines = Arrays.asList(new Routine(), new Routine());
         when(routineRepository.findByName(name)).thenReturn(mockRoutines);
@@ -69,7 +72,7 @@ public class RoutineServiceTest {
     }
 
     @Test
-    void getRoutinesByExercises() {
+    void ShouldReturnRoutinesByExercises() {
         List<Exercise> exercises = Arrays.asList(new Exercise(), new Exercise());
         List<Routine> mockRoutines = Arrays.asList(new Routine(), new Routine());
         when(routineRepository.findByExercises(exercises)).thenReturn(mockRoutines);
@@ -81,8 +84,8 @@ public class RoutineServiceTest {
     }
 
     @Test
-    void getRoutinesByDifficulty() {
-        DifficultyLevel difficulty = DifficultyLevel.MEDIUM;
+    void ShouldReturnRoutinesByDifficulty() {
+        DifficultyLevel difficulty = DifficultyLevel.MEDIANO;
         List<Routine> mockRoutines = Arrays.asList(new Routine(), new Routine());
         when(routineRepository.findByDifficulty(difficulty)).thenReturn(mockRoutines);
 
@@ -93,12 +96,14 @@ public class RoutineServiceTest {
     }
 
     @Test
-    void createRoutine() {
+    void ShouldCreateRoutine() {
         RoutineDTO routineDTO = new RoutineDTO();
         routineDTO.setName("Strength");
         routineDTO.setDescription("Strength training routine");
-        routineDTO.setDifficulty(DifficultyLevel.HARD);
-        routineDTO.setExercises(Arrays.asList(new ExerciseDTO("Push-ups", 10, 3, 0, ExerciseType.FUERZA)));
+        routineDTO.setDifficulty(DifficultyLevel.DIFICIL);
+        routineDTO.setExercises(Arrays.asList(
+            new ExerciseDTO("Push-ups", 10, 3, 0, ExerciseType.FUERZA, List.of(MuscleGroup.PIERNALES))
+        ));
 
         Routine mockRoutine = new Routine();
         when(routineRepository.save(any(Routine.class))).thenReturn(mockRoutine);
@@ -110,13 +115,15 @@ public class RoutineServiceTest {
     }
 
     @Test
-    void updateRoutine() {
+    void ShouldUpdateRoutine() throws GYMException {
         String id = "routine123";
         RoutineDTO routineDTO = new RoutineDTO();
         routineDTO.setName("Updated Routine");
         routineDTO.setDescription("Updated description");
-        routineDTO.setDifficulty(DifficultyLevel.EASY);
-        routineDTO.setExercises(Arrays.asList(new ExerciseDTO("Squats", 15, 3, 0, ExerciseType.FUERZA)));
+        routineDTO.setDifficulty(DifficultyLevel.FACIL);
+        routineDTO.setExercises(Arrays.asList(
+            new ExerciseDTO("Squats", 15, 3, 0, ExerciseType.FUERZA, List.of(MuscleGroup.PIERNALES))
+        ));
 
         Routine mockRoutine = new Routine();
         when(routineRepository.findById(id)).thenReturn(Optional.of(mockRoutine));
@@ -130,7 +137,7 @@ public class RoutineServiceTest {
     }
 
     @Test
-    void deleteRoutine() {
+    void ShouldDeleteRoutine() throws GYMException {
         String id = "routine123";
         Routine mockRoutine = new Routine();
         when(routineRepository.findById(id)).thenReturn(Optional.of(mockRoutine));
@@ -140,5 +147,49 @@ public class RoutineServiceTest {
 
         verify(routineRepository, times(1)).findById(id);
         verify(routineRepository, times(1)).delete(mockRoutine);
+    }
+
+    @Test
+    void ShouldThrowExceptionWhenRoutineNotFoundById() {
+        String id = "nonexistent-id";
+        when(routineRepository.findById(id)).thenReturn(Optional.empty());
+
+        GYMException exception = org.junit.jupiter.api.Assertions.assertThrows(
+                GYMException.class,
+                () -> routineService.getRoutineById(id)
+        );
+
+        assertEquals(GYMException.ROUTINE_NOT_FOUND, exception.getMessage());
+        verify(routineRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void ShouldThrowExceptionWhenUpdatingNonexistentRoutine() {
+        String id = "nonexistent-id";
+        RoutineDTO routineDTO = new RoutineDTO(); // puedes dejarlo vacío para este test
+
+        when(routineRepository.findById(id)).thenReturn(Optional.empty());
+
+        GYMException exception = org.junit.jupiter.api.Assertions.assertThrows(
+                GYMException.class,
+                () -> routineService.updateRoutine(id, routineDTO)
+        );
+
+        assertEquals(GYMException.ROUTINE_NOT_FOUND, exception.getMessage());
+        verify(routineRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void ShouldThrowExceptionWhenDeletingNonexistentRoutine() {
+        String id = "nonexistent-id";
+        when(routineRepository.findById(id)).thenReturn(Optional.empty());
+
+        GYMException exception = org.junit.jupiter.api.Assertions.assertThrows(
+                GYMException.class,
+                () -> routineService.deleteRoutine(id)
+        );
+
+        assertEquals(GYMException.ROUTINE_NOT_FOUND, exception.getMessage());
+        verify(routineRepository, times(1)).findById(id);
     }
 }
