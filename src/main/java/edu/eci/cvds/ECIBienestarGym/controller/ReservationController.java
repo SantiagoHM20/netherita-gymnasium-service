@@ -1,5 +1,22 @@
 package edu.eci.cvds.ECIBienestarGym.controller;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import edu.eci.cvds.ECIBienestarGym.dto.ReservationDTO;
 import edu.eci.cvds.ECIBienestarGym.enums.Status;
 import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
@@ -10,16 +27,7 @@ import edu.eci.cvds.ECIBienestarGym.model.User;
 import edu.eci.cvds.ECIBienestarGym.service.ReservationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
-import java.util.List;
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
@@ -53,7 +61,7 @@ public class ReservationController {
     }
 
     @Operation(summary = "Obtener reservas por ID de usuario", description = "Devuelve las reservas asociadas a un usuario.")
-    @GetMapping("/user/reservations/{userId}")
+    @GetMapping("/user/reservations/user/{userId}")
 
     public ResponseEntity<ApiResponse<List<Reservation>>> getReservationsByUserId(
             @Parameter(description = "ID del usuario") @PathVariable String userId) {
