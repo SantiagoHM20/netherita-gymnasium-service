@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 @Tag(name = "Reservations", description = "Operaciones relacionadas con reservas del gimnasio")
 public class ReservationController {
 

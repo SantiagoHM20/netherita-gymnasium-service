@@ -66,7 +66,6 @@ public class GymSessionService {
 
     private GymSession mapToGymSession(GymSessionDTO gymSessionDTO) {
         GymSession gymSession = new GymSession();
-        gymSession.setId(gymSessionDTO.getId());
         gymSession.setCoachId(mapToUser(gymSessionDTO.getCoachId()));
         gymSession.setDate(gymSessionDTO.getDate());
         gymSession.setStartTime(gymSessionDTO.getStartTime());

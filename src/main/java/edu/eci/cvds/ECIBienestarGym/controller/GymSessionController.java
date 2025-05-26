@@ -21,6 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 @Tag(name = "Gym Sessions", description = "Operaciones relacionadas con las sesiones de gimnasio")
 public class GymSessionController {
 

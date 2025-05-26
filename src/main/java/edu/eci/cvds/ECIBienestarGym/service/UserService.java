@@ -66,15 +66,9 @@ public class UserService {
 
     public User updateUser(String id, UserDTO userDTO) throws GYMException {
         User user = userRepository.findById(id).orElseThrow(() -> new GYMException(GYMException.USER_NOT_FOUND));
-        if(userDTO.getName() != null) user.setName(userDTO.getName());
-        if(userDTO.getEmail() != null && !user.getEmail().equals(userDTO.getEmail())) {
-            if(userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
-                throw new GYMException(GYMException.NO_MAIL_CHANGED);
-            }
-            user.setEmail(userDTO.getEmail());
-        }
-        if(userDTO.getPassword() != null) user
-                .setPassword(userDTO.getPassword());
+        user.setGender(userDTO.getGender());
+        user.setRegistered(userDTO.isRegistered());
+        user.setRegistrationDate(LocalDate.now());
 
         return userRepository.save(user);
     }
