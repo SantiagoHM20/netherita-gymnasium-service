@@ -74,7 +74,7 @@ public class GymSessionController {
     @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'TRAINER', 'STUDENT')")
     @Operation(summary = "Obtener sesiones de gimnasio por fecha")
     public ResponseEntity<ApiResponse<List<GymSession>>> getGymSessionsByDate(
-            @Parameter(description = "Fecha de la sesión", example = "2023-10-01T10:00:00") @PathVariable LocalDateTime date) {
+            @Parameter(description = "Fecha de la sesión", example = "2023-10-01T10:00:00") @PathVariable LocalDate date) {
         List<GymSession> sessions = gymSessionService.getGymSessionsByDate(date);
         return ResponseEntity.ok(new ApiResponse<>(true, "Sesiones de gimnasio en la fecha " + date + " obtenidas", sessions));
     }

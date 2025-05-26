@@ -29,7 +29,7 @@ public class GymSessionService {
 
     public List<GymSession> getGymSessionsByCapacity(int capacity){return gymSessionRepository.findByCapacity(capacity);}
 
-    public List<GymSession> getGymSessionsByDate(LocalDateTime date){return gymSessionRepository.findByDate(LocalDate.from(date));}
+    public List<GymSession> getGymSessionsByDate(LocalDate date){return gymSessionRepository.findByDate(LocalDate.from(date));}
 
     public List<GymSession> getGymSessionsByDateAndTime(LocalDate date, LocalTime startTime, LocalTime endTime) {
         LocalDateTime startDateTime = date.atTime(startTime);

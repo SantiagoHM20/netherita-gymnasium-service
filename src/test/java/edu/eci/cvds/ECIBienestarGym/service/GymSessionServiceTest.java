@@ -150,7 +150,7 @@ public class GymSessionServiceTest {
     @Test
     void ShouldGetGymSessionsByDate() {
         LocalDate date = LocalDate.now();
-        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDate startOfDay = LocalDate.from(date.atStartOfDay());
         List<GymSession> mockSessions = Arrays.asList(new GymSession(), new GymSession());
         when(gymSessionRepository.findByDate(date)).thenReturn(mockSessions);
 

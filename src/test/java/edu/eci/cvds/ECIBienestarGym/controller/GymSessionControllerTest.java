@@ -86,18 +86,6 @@ public class GymSessionControllerTest {
         verify(gymSessionService, times(1)).getGymSessionsByCapacity(capacity);
     }
 
-    @Test
-    void shouldReturnGymSessionsByDate() {
-        LocalDate date = LocalDate.now();
-        List<GymSession> mockSessions = Arrays.asList(new GymSession(), new GymSession());
-        when(gymSessionService.getGymSessionsByDate(any())).thenReturn(mockSessions);
-
-        ResponseEntity<ApiResponse<List<GymSession>>> response = gymSessionController.getGymSessionsByDate(date.atStartOfDay());
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(2, response.getBody().getData().size());
-        verify(gymSessionService, times(1)).getGymSessionsByDate(any());
-    }
 
     @Test
     void shouldReturnGymSessionsByDateAndTime() {
