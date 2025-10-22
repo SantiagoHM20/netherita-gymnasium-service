@@ -37,6 +37,7 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/swagger-resources/**",
                                 "/webjars/**",
+                                "/api/auth/token", // Endpoint específico para obtener tokens
                                 "/api/**"
                         ).permitAll()
                         .anyRequest().authenticated())
