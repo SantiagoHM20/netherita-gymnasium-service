@@ -36,12 +36,12 @@ public class AuthController {
 
     @PostMapping("/token")
     @Operation(
-        summary = "Generar token JWT",
-        description = "Genera un token JWT basado en el correo electrónico y el rol del usuario",
-        responses = {
-            @ApiResponse(responseCode = "200", description = "Token generado con éxito"),
-            @ApiResponse(responseCode = "401", description = "Usuario no encontrado o no validado")
-        }
+            summary = "Generar token JWT",
+            description = "Genera un token JWT basado en el correo electrónico y el rol del usuario",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Token generado con éxito"),
+                    @ApiResponse(responseCode = "401", description = "Usuario no encontrado o no validado")
+            }
     )
     public ResponseEntity<AuthResponse> generateToken(@RequestBody AuthRequest authRequest) {
         try {
@@ -54,20 +54,20 @@ public class AuthController {
 
     @PostMapping("/register")
     @Operation(
-        summary = "Registrar usuario",
-        description = "Registra un nuevo usuario en el sistema como STUDENT o TRAINER y retorna el token JWT",
-        responses = {
-            @ApiResponse(responseCode = "200", description = "Usuario registrado con éxito"),
-            @ApiResponse(responseCode = "400", description = "El correo ya está registrado o el rol es inválido")
-        }
+            summary = "Registrar usuario",
+            description = "Registra un nuevo usuario en el sistema como STUDENT o TRAINER y retorna el token JWT",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Usuario registrado con éxito"),
+                    @ApiResponse(responseCode = "400", description = "El correo ya está registrado o el rol es inválido")
+            }
     )
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body("El correo ya está registrado.");
         }
         // Validar rol
-        if (user.getRole() == null || 
-            (!user.getRole().equals(STUDENT) && !user.getRole().equals(TRAINER))) {
+        if (user.getRole() == null ||
+                (!user.getRole().equals(STUDENT) && !user.getRole().equals(TRAINER))) {
             return ResponseEntity.badRequest().body("El rol debe ser STUDENT o TRAINER.");
         }
         User savedUser = userRepository.save(user);
