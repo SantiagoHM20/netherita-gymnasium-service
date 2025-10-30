@@ -23,17 +23,22 @@ public class AuthService {
         this.jwtUtil = jwtUtil;
     }
 
-    public User isUserValidate(String email, Role role) throws GYMException {
+    public User isUserValidate(String email, Role role, String password) throws GYMException {
         Optional<User> userOptional = userRepository.findByEmailAndRole(email, role);
         if(userOptional.isPresent()) {
-            return userOptional.get();
+            User user = userOptional.get();
+            if (user.getPassword() != null && user.getPassword().equals(password)) {
+                return user;
+            } else {
+                throw new GYMException(GYMException.INVALID_PASSWORD);
+            }
         } else {
             throw new GYMException(GYMException.USER_NOT_FOUND);
         }
     }
     
     public AuthResponse authenticate(AuthRequest authRequest) throws GYMException {
-        User user = isUserValidate(authRequest.getEmail(), authRequest.getRole());
+        User user = isUserValidate(authRequest.getEmail(), authRequest.getRole(), authRequest.getPassword());
         String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
         return new AuthResponse(token, user);
     }

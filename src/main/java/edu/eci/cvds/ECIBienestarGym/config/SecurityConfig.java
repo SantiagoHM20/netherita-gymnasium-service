@@ -38,8 +38,7 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/webjars/**",
                                 "/api/auth/token", // Endpoint específico para obtener tokens
-                                "/api/**",
-                                "/sonar/**" 
+                                "/api/**"
                         ).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

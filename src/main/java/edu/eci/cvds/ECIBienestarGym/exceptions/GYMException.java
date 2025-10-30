@@ -9,6 +9,7 @@ public class GYMException extends Exception {
     public static final String GYM_SESION_NOT_FOUND = "Sesion No Encontrada";
     public static final String NO_MAIL_CHANGED = "No se ha cambiado el correo";
     public static final String USER_NOT_NULL = "Usuario No Puede Ser Nulo";
+    public static final String INVALID_PASSWORD = "Contraseña invalida";
 
     public GYMException(String message) {
         super(message);
