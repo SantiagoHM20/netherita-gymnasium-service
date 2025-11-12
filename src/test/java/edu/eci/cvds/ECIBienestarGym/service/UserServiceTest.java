@@ -59,8 +59,6 @@ public class UserServiceTest {
         verify(userRepository, times(1)).save(any(User.class));
     }
 
-
-
     @Test
     void shouldThrowExceptionWhenNameIsNullOrEmpty() {
         UserDTO dto = new UserDTO();
@@ -213,46 +211,66 @@ public class UserServiceTest {
         verify(userRepository, times(1)).save(any(User.class));
     }
 
+    // TESTS CORREGIDOS PARA EL NUEVO MÉTODO deleteUser
+
     @Test
     void shouldDeleteUserWhenIdIsValid() throws GYMException {
         String id = "user123";
-        User mockUser = new User();
-        mockUser.setId(id);
 
-        when(userRepository.findById(id)).thenReturn(Optional.of(mockUser));
+        when(userRepository.existsById(id)).thenReturn(true);
         doNothing().when(userRepository).deleteById(id);
 
         userService.deleteUser(id);
 
-        verify(userRepository, times(1)).findById(id);
+        verify(userRepository, times(1)).existsById(id);
         verify(userRepository, times(1)).deleteById(id);
+        verify(userRepository, never()).findById(id); // Ya no debe llamar a findById
     }
 
     @Test
     void shouldDeleteUserWithValidId() throws GYMException {
         String id = "user123";
-        User mockUser = new User();
-        mockUser.setId(id);
 
-        when(userRepository.findById(id)).thenReturn(Optional.of(mockUser));
+        when(userRepository.existsById(id)).thenReturn(true);
         doNothing().when(userRepository).deleteById(id);
 
         userService.deleteUser(id);
 
-        verify(userRepository, times(1)).findById(id);
+        verify(userRepository, times(1)).existsById(id);
         verify(userRepository, times(1)).deleteById(id);
+        verify(userRepository, never()).findById(id); // Ya no debe llamar a findById
     }
 
     @Test
     void shouldThrowExceptionWhenIdIsNullForDeletion() {
         GYMException exception = assertThrows(GYMException.class, () -> userService.deleteUser(null));
         assertEquals(GYMException.USER_NOT_NULL, exception.getMessage());
+
+        verify(userRepository, never()).existsById(anyString());
+        verify(userRepository, never()).deleteById(anyString());
     }
 
     @Test
     void shouldThrowExceptionWhenIdIsEmptyForDeletion() {
         GYMException exception = assertThrows(GYMException.class, () -> userService.deleteUser(""));
         assertEquals(GYMException.USER_NOT_NULL, exception.getMessage());
+
+        verify(userRepository, never()).existsById(anyString());
+        verify(userRepository, never()).deleteById(anyString());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUserNotFoundOnDelete() {
+        String id = "nonexistent";
+
+        when(userRepository.existsById(id)).thenReturn(false);
+
+        GYMException exception = assertThrows(GYMException.class, () -> userService.deleteUser(id));
+        assertEquals(GYMException.USER_NOT_FOUND, exception.getMessage());
+
+        verify(userRepository, times(1)).existsById(id);
+        verify(userRepository, never()).deleteById(id);
+        verify(userRepository, never()).findById(id); // Ya no debe llamar a findById
     }
 
     @Test
@@ -299,17 +317,7 @@ public class UserServiceTest {
 
         verify(userRepository, times(1)).findById(id);
     }
-    @Test
-    void shouldThrowExceptionWhenUserNotFoundOnDelete() {
-        String id = "nonexistent";
 
-        when(userRepository.findById(id)).thenReturn(Optional.empty());
-
-        GYMException exception = assertThrows(GYMException.class, () -> userService.deleteUser(id));
-        assertEquals(GYMException.USER_NOT_FOUND, exception.getMessage());
-
-        verify(userRepository, times(1)).findById(id);
-    }
     @Test
     void shouldThrowExceptionWhenNameIsEmpty() {
         UserDTO dto = new UserDTO();
@@ -337,5 +345,4 @@ public class UserServiceTest {
         GYMException exception = new GYMException(GYMException.RESERVE_NOT_FOUND);
         assertEquals(GYMException.RESERVE_NOT_FOUND, exception.toString());
     }
-
 }

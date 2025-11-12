@@ -1,11 +1,11 @@
 package edu.eci.cvds.ECIBienestarGym.util;
 
 import edu.eci.cvds.ECIBienestarGym.enums.Role;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -18,8 +18,16 @@ import java.util.Map;
 @Service
 public class JwtUtil {
 
-    private String secretKey = "EPRiC0Bt0/2KcBRRWqVKhEWzModEtI6Q4K05RWuLgVQV4Xw92Ulk9kHPmQVjiRW5c9XtLNm4lgNoridiLgvZpg==";
+    private final String secretKey;
     private final long jwtExpiration = 86400000; // 24 horas en milisegundos
+
+    // Inyectar la clave secreta desde variables de entorno o application.properties
+    public JwtUtil(@Value("${jwt.secret:}") String secretKey) {
+        if (secretKey == null || secretKey.trim().isEmpty()) {
+            throw new IllegalStateException("JWT secret key must be configured. Set JWT_SECRET environment variable or jwt.secret in application.properties");
+        }
+        this.secretKey = secretKey;
+    }
 
     private SecretKey getKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);

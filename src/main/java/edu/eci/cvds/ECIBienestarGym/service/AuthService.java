@@ -13,7 +13,7 @@ import edu.eci.cvds.ECIBienestarGym.util.JwtUtil;
 
 @Service
 public class AuthService {
-    
+
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
@@ -30,13 +30,14 @@ public class AuthService {
             if (user.getPassword() != null && user.getPassword().equals(password)) {
                 return user;
             } else {
-                throw new GYMException(GYMException.INVALID_PASSWORD);
+                // ✅ CORREGIDO: Cambiado de INVALID_PASSWORD a INVALID_CREDENTIALS
+                throw new GYMException(GYMException.INVALID_CREDENTIALS);
             }
         } else {
             throw new GYMException(GYMException.USER_NOT_FOUND);
         }
     }
-    
+
     public AuthResponse authenticate(AuthRequest authRequest) throws GYMException {
         User user = isUserValidate(authRequest.getEmail(), authRequest.getRole(), authRequest.getPassword());
         String token = jwtUtil.generateToken(user.getEmail(), user.getRole());

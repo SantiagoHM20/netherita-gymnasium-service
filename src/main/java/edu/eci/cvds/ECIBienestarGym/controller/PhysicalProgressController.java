@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "https://red-water-09204b80f.3.azurestaticapps.net")
 @Tag(name = "Physical Progress", description = "Operaciones relacionadas con el progreso físico")
 public class PhysicalProgressController {
 

@@ -1,5 +1,6 @@
 package edu.eci.cvds.ECIBienestarGym.controller;
 
+import edu.eci.cvds.ECIBienestarGym.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,10 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.eci.cvds.ECIBienestarGym.dto.AuthRequest;
 import edu.eci.cvds.ECIBienestarGym.dto.AuthResponse;
+import edu.eci.cvds.ECIBienestarGym.dto.UserRegistrationDTO;
 import edu.eci.cvds.ECIBienestarGym.exceptions.GYMException;
 import edu.eci.cvds.ECIBienestarGym.service.AuthService;
+import edu.eci.cvds.ECIBienestarGym.service.UserService;
 import edu.eci.cvds.ECIBienestarGym.model.User;
-import edu.eci.cvds.ECIBienestarGym.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,12 +28,12 @@ import static edu.eci.cvds.ECIBienestarGym.enums.Role.TRAINER;
 public class AuthController {
 
     private final AuthService authService;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public AuthController(AuthService authService, UserRepository userRepository) {
+    public AuthController(AuthService authService, UserService userService) {
         this.authService = authService;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @PostMapping("/token")
@@ -61,26 +63,42 @@ public class AuthController {
                     @ApiResponse(responseCode = "400", description = "El correo ya está registrado o el rol es inválido")
             }
     )
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+    public ResponseEntity<?> registerUser(@RequestBody UserRegistrationDTO registrationDTO) {
+        // Validar que el correo no esté registrado
+        if (userService.getUsersByEmail(registrationDTO.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body("El correo ya está registrado.");
         }
+
         // Validar rol
-        if (user.getRole() == null ||
-                (!user.getRole().equals(STUDENT) && !user.getRole().equals(TRAINER))) {
+        if (registrationDTO.getRole() == null ||
+                (!registrationDTO.getRole().equals(STUDENT) && !registrationDTO.getRole().equals(TRAINER))) {
             return ResponseEntity.badRequest().body("El rol debe ser STUDENT o TRAINER.");
         }
-        User savedUser = userRepository.save(user);
 
-        // Generar token JWT para el usuario registrado
-        AuthRequest authRequest = new AuthRequest();
-        authRequest.setEmail(savedUser.getEmail());
-        authRequest.setRole(savedUser.getRole());
         try {
+            // Convertir DTO a entidad de forma controlada
+            User savedUser = userService.createUser(convertToUserDTO(registrationDTO));
+
+            // Generar token JWT para el usuario registrado
+            AuthRequest authRequest = new AuthRequest();
+            authRequest.setEmail(savedUser.getEmail());
+            authRequest.setRole(savedUser.getRole());
+
             AuthResponse response = authService.authenticate(authRequest);
             return ResponseEntity.ok(response);
         } catch (GYMException e) {
-            return ResponseEntity.status(401).body("No se pudo autenticar el usuario recién registrado.");
+            return ResponseEntity.badRequest().body("Error al crear el usuario: " + e.getMessage());
         }
+    }
+
+    private UserDTO convertToUserDTO(UserRegistrationDTO registrationDTO) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setName(registrationDTO.getName());
+        userDTO.setEmail(registrationDTO.getEmail());
+        userDTO.setRole(registrationDTO.getRole());
+        userDTO.setGender(registrationDTO.getGender());
+        userDTO.setPassword(registrationDTO.getPassword());
+        // Campos como id, registrationDate, registered se controlan en el servicio
+        return userDTO;
     }
 }

@@ -21,7 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "https://red-water-09204b80f.3.azurestaticapps.net")
 @Tag(name = "Gym Sessions", description = "Operaciones relacionadas con las sesiones de gimnasio")
 public class GymSessionController {
 

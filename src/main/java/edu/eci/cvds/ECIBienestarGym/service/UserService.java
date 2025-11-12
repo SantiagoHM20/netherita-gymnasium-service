@@ -35,9 +35,13 @@ public class UserService {
         return userRepository.findByRole(role);
     }
 
-    public List<User> getUsersByRegistrationDate(LocalDate registrationDate) {return userRepository.findByRegistrationDate(registrationDate);}
+    public List<User> getUsersByRegistrationDate(LocalDate registrationDate) {
+        return userRepository.findByRegistrationDate(registrationDate);
+    }
 
-    public User getUsersById(String id) {return userRepository.findById(id).orElse(null);}
+    public User getUsersById(String id) {
+        return userRepository.findById(id).orElse(null);
+    }
 
     public User createUser(UserDTO userDTO) throws GYMException {
 
@@ -78,10 +82,11 @@ public class UserService {
             throw new GYMException(GYMException.USER_NOT_NULL);
         }
 
-        userRepository.findById(id)
-            .orElseThrow(() -> new GYMException(GYMException.USER_NOT_FOUND));
+        // Verificar si el usuario existe antes de eliminar
+        if (!userRepository.existsById(id)) {
+            throw new GYMException(GYMException.USER_NOT_FOUND);
+        }
 
         userRepository.deleteById(id);
     }
 }
-
