@@ -83,6 +83,7 @@ public class AuthController {
             AuthRequest authRequest = new AuthRequest();
             authRequest.setEmail(savedUser.getEmail());
             authRequest.setRole(savedUser.getRole());
+            authRequest.setPassword(registrationDTO.getPassword()); // ✅ AGREGADO: Incluir password para autenticación
 
             AuthResponse response = authService.authenticate(authRequest);
             return ResponseEntity.ok(response);
