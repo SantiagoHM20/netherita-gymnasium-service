@@ -20,7 +20,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "https://red-water-09204b80f.3.azurestaticapps.net")
 @Tag(name = "Reports", description = "Operaciones relacionadas con los reportes")
 public class ReportController {
 

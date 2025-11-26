@@ -30,7 +30,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "https://red-water-09204b80f.3.azurestaticapps.net")
 @Tag(name = "Reservations", description = "Operaciones relacionadas con reservas del gimnasio")
 public class ReservationController {
 
