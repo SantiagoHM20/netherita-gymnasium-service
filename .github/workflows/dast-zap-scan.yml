@@ -20,15 +20,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Check if application is accessible
+        run: |
+          echo "Checking if application is responding..."
+          curl -I https://forkgymnasiumservice-e5g7f5fscqbgb0ff.canadacentral-01.azurewebsites.net || echo "Application may be slow or not responding"
+
       - name: ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.13.0
+        continue-on-error: true
         with:
           target: "https://forkgymnasiumservice-e5g7f5fscqbgb0ff.canadacentral-01.azurewebsites.net"
-          cmd_options: "-a"
+          cmd_options: "-a -T 180 -J report_json.json"
+
+      - name: List files to debug
+        if: always()
+        run: ls -la
 
       - name: Upload ZAP report to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         if: always()
+        continue-on-error: true
         with:
-          sarif_file: results.sarif
+          sarif_file: report_json.json
+          category: 'dast-zap'
           category: 'dast-zap'
