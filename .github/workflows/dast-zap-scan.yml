@@ -30,11 +30,21 @@ jobs:
         continue-on-error: true
         with:
           target: "https://forkgymnasiumservice-e5g7f5fscqbgb0ff.canadacentral-01.azurewebsites.net"
-          cmd_options: "-a -T 180 -J report_json.json"
+          cmd_options: "-a"
 
       - name: List files to debug
         if: always()
         run: ls -la
+
+      - name: Upload ZAP report as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-reports
+          path: |
+            report_html.html
+            report_md.md
+            report_json.json
 
       - name: Upload ZAP report to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
