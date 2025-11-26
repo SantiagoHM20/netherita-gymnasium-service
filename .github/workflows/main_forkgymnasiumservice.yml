@@ -1,5 +1,8 @@
 name: Build and deploy JAR app to Azure Web App - ECIBienestar
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:

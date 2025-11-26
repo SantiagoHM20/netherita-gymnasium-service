@@ -1,5 +1,8 @@
 name: IaC Security Scan
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:
