@@ -1,4 +1,4 @@
-package com.tuempresa.config;
+package edu.eci.cvds.ECIBienestarGym.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
