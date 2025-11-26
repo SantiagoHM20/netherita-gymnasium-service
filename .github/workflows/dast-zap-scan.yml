@@ -1,0 +1,32 @@
+name: DAST - ZAP Scan
+
+on:
+  schedule:
+    - cron: "0 3 * * *"   # Corre todos los días a las 3am
+  workflow_dispatch:       # Permite correrlo manualmente
+
+jobs:
+  zap_scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write   # Necesario para subir SARIF
+      actions: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.7.0
+        with:
+          target: "https://forkgymnasiumservice-e5g7f5fscqbgb0ff.canadacentral-01.azurewebsites.net"
+          rules_file_name: ".zap-rules.tsv"
+          cmd_options: "-a"
+
+      - name: Upload ZAP report to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: zap.sarif
+          category: 'dast-zap'
