@@ -33,9 +33,17 @@ public class SecurityConfig {
         CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
         requestHandler.setCsrfRequestAttributeName(null); // Use default attribute name
         
+        // Configure CSRF token repository with HttpOnly and Secure flags
+        CookieCsrfTokenRepository tokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
+        tokenRepository.setCookieCustomizer(cookie -> cookie
+                .httpOnly(true)  // Fix: Cookie No HttpOnly Flag
+                .secure(true)    // Ensure cookie is only sent over HTTPS
+                .sameSite("Strict")  // Fix: Cookie with SameSite Attribute - protect against CSRF
+        );
+        
         return http
                 .csrf(csrf -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRepository(tokenRepository)
                         .csrfTokenRequestHandler(requestHandler)
                         .ignoringRequestMatchers(
                                 "/v3/api-docs/**",
@@ -46,6 +54,16 @@ public class SecurityConfig {
                                 "/api/auth/token", // Authentication endpoint doesn't need CSRF
                                 "/api/**" // JWT-based API endpoints
                         )
+                )
+                .headers(headers -> headers
+                        .xssProtection(xss -> xss.headerValue(
+                                org.springframework.security.web.header.writers.XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK))
+                        .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'"))
+                        .httpStrictTransportSecurity(hsts -> hsts
+                                .includeSubDomains(true)
+                                .maxAgeInSeconds(31536000))
+                        .frameOptions(frame -> frame.deny())
+                        .contentTypeOptions(Customizer.withDefaults())
                 )
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
