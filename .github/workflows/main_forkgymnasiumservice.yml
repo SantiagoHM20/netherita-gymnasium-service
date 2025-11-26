@@ -33,6 +33,10 @@ jobs:
   test:
     runs-on: windows-latest
     needs: build
+    
+    permissions:
+      contents: read
+    
     steps:
       - name: Code Checkout
         uses: actions/checkout@v4
