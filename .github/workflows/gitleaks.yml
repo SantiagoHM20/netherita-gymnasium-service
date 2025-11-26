@@ -7,7 +7,7 @@ on:
 jobs:
   gitleaks:
     runs-on: ubuntu-latest
-    
+
     permissions:
       contents: read
       security-events: write
@@ -16,18 +16,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Gitleaks (free)
+      - name: Install Gitleaks (OSS v8.17.0)
         run: |
-          curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64 \
-            -o gitleaks
+          curl -sSL https://github.com/gitleaks/gitleaks/releases/download/v8.17.0/gitleaks_8.17.0_linux_x64.tar.gz -o gitleaks.tar.gz
+          tar -xzf gitleaks.tar.gz
           chmod +x gitleaks
+          mv gitleaks /usr/local/bin/gitleaks
 
       - name: Run Gitleaks
         run: |
-          ./gitleaks detect \
+          gitleaks detect \
             --source . \
             --report-format sarif \
-            --report-path gitleaks-report.sarif \
+            --report-path=gitleaks-report.sarif \
             --exit-code 0
 
       - name: Upload SARIF
