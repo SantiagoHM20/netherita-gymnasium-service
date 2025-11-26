@@ -1,39 +1,27 @@
-name: "Gitleaks Secret Scan"
+name: Gitleaks Scan
 
 on:
   push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
-  workflow_dispatch:
 
 jobs:
   gitleaks:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write   # Necesario para subir reportes a GitHub Security
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Escanea todo el historial
 
-      - name: Install Gitleaks
+      - name: Download Gitleaks
         run: |
-          curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64 -o gitleaks
+          wget -O gitleaks.tar.gz https://github.com/gitleaks/gitleaks/releases/download/v8.18.0/gitleaks_8.18.0_linux_x64.tar.gz
+          tar -xvf gitleaks.tar.gz
           chmod +x gitleaks
 
-      - name: Run Gitleaks scan
+      - name: Run Gitleaks
         run: |
           ./gitleaks detect \
             --source . \
             --report-format sarif \
             --report-path gitleaks-report.sarif \
             --exit-code 0
-
-      - name: Upload SARIF Report to GitHub Security Tab
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: gitleaks-report.sarif
